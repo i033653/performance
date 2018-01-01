@@ -1,0 +1,25 @@
+define(["sap/watt/platform/plugin/perspective/command/AbstractUIPartToggler"],
+
+
+    function (AbstractUIPartToggler) { // eslint-disable-line no-reserved-keys
+        "use strict";
+
+        function ToggleTestPartCommand() {
+            return this;
+        }
+
+        $.extend(ToggleTestPartCommand.prototype, AbstractUIPartToggler.prototype, {
+
+            isAvailable: function () {
+                var that = this;
+
+                var promises = [that.context.service.test.testresult.hasProviders(), AbstractUIPartToggler.prototype.isAvailable.call(that)];
+                return Q.all(promises).spread(function (bHasProviders, bIsPerspectiveAvailable) {
+                    return bHasProviders && bIsPerspectiveAvailable;
+                });
+            }
+        });
+
+        return ToggleTestPartCommand;
+    }
+);

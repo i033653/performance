@@ -1,0 +1,6 @@
+HTTP/1.1 204 No Content
+Date: Tue, 26 Sep 2017 11:06:03 GMT
+X-Cnection: close
+Server: SAP
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+

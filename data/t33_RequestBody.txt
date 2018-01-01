@@ -1,0 +1,3 @@
+"{\"generatorDescription\":{\"options\":{\"application_id\":\"MTA\",\"application_version\":\"0"
+".0.1\"}},\"name\":\"MTA\",\"visibility\":null,\"runners\":null,\"builders\":{\"configs\":{},\""
+"default\":null},\"mixins\":[],\"type\":\"mta\",\"description\":null,\"attributes\":{}}"

@@ -1,0 +1,13 @@
+[t48]
+FileName1=t48.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/MTA/Java
+Total=2
+RequestHeaderFile=t48_RequestHeader.txt
+RequestBodyFile=t48_RequestBody.txt
+ResponseHeaderFile=t48_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_48.xml
+FileName2=t48.html
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/
+[ProtocolInfo]
+ProtocolId=QTWeb

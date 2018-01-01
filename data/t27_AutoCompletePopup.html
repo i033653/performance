@@ -1,0 +1,257 @@
+sap.ui.define([
+	"sap/ui/core/Control",
+	"sap/ui/core/Popup",
+	"sap/m/ScrollContainer",
+	"./AutoCompleteList"
+], function(Control, Popup, ScrollContainer, List) {
+	"use strict";
+
+	var AutoCompletePopup = Control.extend("sap.watt.ideplatform.plugin.intellisence.control.AutoCompletePopup", {
+
+		metadata: {
+			properties: {},
+			aggregations: {
+				items: {
+					type: "sap.watt.ideplatform.plugin.intellisence.control.AutoCompleteItem",
+					multiple: true,
+					singularName: "item"
+				}
+			},
+			events: {
+				itemSelected: {},
+				rightClicked: {}
+			}
+		},
+
+		init: function() {
+			var that = this;
+			this._oList = null;
+			this._oCoords = null;
+			this._oScrollContainer = null;
+
+			var oContent = this._initPopupContent();
+			this._oPopup = new sap.ui.core.Popup(oContent);
+			this._oPopup.attachClosed(function() {
+				that.destroyItems();
+			});
+			this._oKeyDownListener = this._onKeyDown.bind(this);
+			this._oMouseUpListener = this._onMouseUp.bind(this);
+		},
+
+		_initPopupContent: function() {
+			var that = this;
+			this._oList = new List({
+				itemPress: [this._onItemSelected, this],
+				width: "400px",
+				noDataText: " "
+			});
+
+			//Need to update the position of the popup after the list is rendered so that the height is already set and Y axis can be adjusted.
+			this._oList.addEventDelegate({
+				onAfterRendering: function() {
+					var oOffset = that._calculateOffset(that._oCoords);
+					that._oPopup.setPosition(sap.ui.core.Popup.Dock.LeftTop, sap.ui.core.Popup.Dock.LeftTop, undefined, oOffset.x + " " + oOffset.y, "fit");
+				}
+			});
+			
+			this._oScrollContainer = new ScrollContainer("intellisencePopup", {
+				horizontal: false,
+				vertical: true,
+				content: [this._oList]
+			}).addStyleClass("sapUiSizeCompact");
+
+			this._oScrollContainer.attachBrowserEvent("contextmenu", function(oEvent) {
+				oEvent.preventDefault();
+				that.fireRightClicked();
+			});
+			
+			this._oScrollContainer.attachBrowserEvent("mouseup", function(oEvent) {
+				oEvent.stopPropagation();
+			});
+
+			this._oScrollContainer.attachBrowserEvent("scroll", function() {
+				// Do not open popover while scrolling
+				this._oList.closePopover();
+			}, this);
+			
+			return this._oScrollContainer;
+		},
+
+		exit: function() {
+			this._oPopup = null;
+		},
+
+		open: function(oCoords) {
+			this._oCoords = oCoords;
+			var oOffset = this._calculateOffset(oCoords);
+			if (this._oPopup.isOpen()) {
+				this._oPopup.setPosition(sap.ui.core.Popup.Dock.LeftTop, sap.ui.core.Popup.Dock.LeftTop, undefined, oOffset.x + " " + oOffset.y, "fit");
+			} else {
+				document.addEventListener("keydown", this._oKeyDownListener, true);
+				document.addEventListener("mouseup", this._oMouseUpListener);
+				this._oPopup.open(sap.ui.core.Popup.Dock.LeftTop, sap.ui.core.Popup.Dock.LeftTop, undefined, oOffset.x + " " + oOffset.y, "fit");
+			}
+		},
+
+		close: function() {
+			this._oList.closePopover();
+			this._oPopup.close();
+			document.removeEventListener("keydown", this._oKeyDownListener, true);
+			document.removeEventListener("mouseup", this._oMouseUpListener);
+		},
+
+		// Delegate Items aggregation methods to List
+		addItem: function(oItem) {
+			this._oList.addItem(oItem);
+		},
+
+		bindItems: function(oBindingInfo) {
+			this._oList.bindItems(oBindingInfo);
+		},
+
+		destroyItems: function() {
+			this._oList.destroyItems();
+		},
+
+		getItems: function() {
+			return this._oList.getItems();
+		},
+
+		indexOfItem: function(oItem) {
+			return this._oList.indexOfItem(oItem);
+		},
+
+		insertItem: function(oItem, iIndex) {
+			this._oList.insertItem(oItem, iIndex);
+		},
+
+		removeAllItems: function() {
+			this._oList.removeAllItems();
+		},
+
+		removeItem: function(vItem) {
+			this._oList.removeItem(vItem);
+		},
+
+		unbindItems: function() {
+			this._oList.setItems();
+		},
+
+		getModel: function(sName) {
+			return this._oList.getModel(sName);
+		},
+
+		setModel: function(oModel, sName) {
+			this._oList.setModel(oModel, sName);
+		},
+
+		bindAggregation: function(sName, oBindingInfo) {
+			if (sName === "items") {
+				this._oList.bindAggregation(sName, oBindingInfo);
+			} else {
+				Control.prototype.bindAggregation.apply(this, arguments);
+			}
+		},
+
+		unbindAggregation: function(sName, bSuppressReset) {
+			if (sName === "items") {
+				this._oList.bindAggregation(sName, bSuppressReset);
+			} else {
+				Control.prototype.unbindAggregation.apply(this, arguments);
+			}
+		},
+
+		refreshItems: function() {
+			this._oList.refreshItems();
+		},
+
+		updateItems: function() {
+			this._oList.updateItems();
+		},
+
+		_onKeyDown: function(oEvent) {
+			switch (oEvent.keyCode) {
+				case 38: // Up arrow
+					this._oList.navigateToPreviousItem();
+					break;
+				case 40: // Down arrow
+					this._oList.navigateToNextItem();
+					break;
+				case 33: // PageUp
+					this._oList.navigateToPreviousPage();
+					break;
+				case 34: // PageDown
+					this._oList.navigateToNextPage();
+					break;
+				case 35: // End
+					this._oList.navigateToLastItem();
+					break;
+				case 36: // Home
+					this._oList.navigateToFirstItem();
+					break;
+				case 13: // Enter
+				case 9: // Tab
+					this._onItemSelected();
+					break;
+				case 27: //Escape
+					this.close();
+					break;
+				default:
+					return;
+			}
+			oEvent.stopPropagation();
+			oEvent.preventDefault();
+		},
+
+		isOpen: function() {
+			return this._oPopup.isOpen();
+		},
+
+		setBusy: function(bBusy) {
+			this._oList.setBusy(bBusy);
+		},
+
+		_onMouseUp: function() {
+			this.close();
+		},
+
+		_onItemSelected: function() {
+			var oActiveItem = this._oList.getActiveItem();
+			if (oActiveItem.getUnselectable()) {
+				return;
+			}
+
+			this.fireItemSelected({
+				index: this.indexOfItem(oActiveItem)
+			});
+
+			this.close();
+		},
+
+		_calculateOffset: function(oCoords) {
+			var oOffset = {
+				x: oCoords.pageX,
+				y: oCoords.pageY
+			};
+
+			//Calculate x offset
+			var iRightSpace = oCoords.pageLeft + oCoords.pageWidth - oCoords.pageX - parseInt(this._oList.getWidth());
+			//If not space for the width of the popup from the rigth side -> offset to the left
+			if (iRightSpace < 0) {
+				oOffset.x = oCoords.pageX - parseInt(this._oList.getWidth());
+			}
+
+			//Calculate y offset
+			var iPopupHeight = parseInt(this._oPopup._$().height());
+			var iBottomSpace = oCoords.pageTop + oCoords.pageHeight - oCoords.pageY - iPopupHeight - oCoords.lineHeight;
+
+			if (iBottomSpace < 0) {
+				oOffset.y = oCoords.pageY - iPopupHeight - oCoords.lineHeight;
+			}
+
+			return oOffset;
+		}
+	});
+
+	return AutoCompletePopup;
+});

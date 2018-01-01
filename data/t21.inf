@@ -1,0 +1,6 @@
+[t21]
+FileName1=t21_seed.html
+URL1=https://clientservices.googleapis.com/chrome-variations/seed?osname=win
+Total=1
+ContentType=
+SnapshotXmlFile=snapshot_21.xml

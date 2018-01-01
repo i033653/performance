@@ -1,0 +1,53 @@
+<mvc:View controllerName="sap.watt.ideplatform.plugin.runconsole.view.RunConsole" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core"
+   xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m">
+   <l:FixFlex id="FixFlex" class="fixFlexVertical" >
+      <l:fixContent height="28px">
+         <OverflowToolbar id="projectheader" class="runconsoleheader">
+            <Label text="{i18n>run_console_lbl_run} {projectName}" class="runConsoleTitle"/>
+         </OverflowToolbar>
+      </l:fixContent>
+      <l:flexContent>
+         <l:Splitter id="runconfigSplitter">
+            <l:layoutData><l:SplitterLayoutData size="auto"/></l:layoutData>
+            <l:VerticalLayout width="100%" class="runconsoleconfigList console">
+               <l:layoutData><l:SplitterLayoutData size="180px"/></l:layoutData>
+               <List id="configurationsList"
+                  items="{ path: 'ProjectRunners', sorter: { path: 'sRelativeModulePath', descending: false, group: true }, groupHeaderFactory: '.getGroupHeader' }"
+                  selectionChange="onConfigSelectionChange" itemPress="onListItemPress" includeItemInSelection="true" mode="SingleSelectMaster" showNoData="false">
+                  <StandardListItem icon="{eStatusIcon}" title="{sConfigurationName}" type="Active" class="runconsoleconfigList" tooltip="{parts:[{path:'sConfigurationName'},{path:'eStatus'}], formatter:'.listTooltipFormatter'}">
+                     <customData>
+                        <core:CustomData id="runconsoleCustomColorHook" key="status" writeToDom="true" value="{eStatusIcon}"/>
+                     </customData>
+                  </StandardListItem>
+               </List>
+            </l:VerticalLayout>
+            <l:Splitter id="logToolbarSplitter" orientation="Vertical">
+               <l:layoutData><l:SplitterLayoutData size="auto"/></l:layoutData>
+               <OverflowToolbar id="logToolbar" height="100%" class="runconsoletoolbar">
+                  <layoutData><l:SplitterLayoutData size="28px" resizable="false"/></layoutData>
+                  <ToolbarSpacer/>
+                  <Label text="{i18n>run_console_lbl_application}">
+                     <layoutData></layoutData>
+                  </Label>
+                  <Link text="{sUrl}" target="_blank" href="{sUrl}" class="newRunConsoleLink selectable"/>
+                  <ToolbarSpacer width="15px"/>
+                  <ToolbarSeparator icon=""></ToolbarSeparator>
+                  <ToolbarSpacer width="15px"/>
+                  <Link id="logLink" text="{i18n>logs_linktext}" target="_blank" href="{sLogUrl}" class="newRunConsoleLink selectable" visible="{= !!${sLogUrl} }" />
+                  <ToolbarSpacer width="15px"/>
+                  <Button text="" icon="sap-icon://watt/runConsoleClear" tooltip="{i18n>run_console_tltp_clear}" press="onCleanPress" type="Transparent" class="runConsoleClearButton" enabled="{= !!${sLogs} }"/>
+                  <ToolbarSpacer width="15px"/>
+                  <Button id="stopApplicationBtn" text="" icon="sap-icon://watt/runConsoleStop" tooltip="{i18n>run_console_tltp_shut_down}" press="onStopBtnPress" enabled="{path: 'eStatus', formatter:'.stopBtnEnabledFormatter'}" type="Transparent" class="runConsoleShutDownButton"/>
+                  <ToolbarSpacer width="15px"/>
+                  <Button id="runApplicationBtn" text="" icon="sap-icon://watt/run" tooltip="{i18n>run_console_tltp_run}" press="onRunBtnPress" enabled="{path: 'eStatus', formatter:'.runBtnEnabledFormatter'}" type="Transparent" class="runConsoleRunButton"/>
+                  <ToolbarSpacer width="15px"/>
+               </OverflowToolbar>
+               <l:VerticalLayout id="logVerticalLayout" width="100%" class="runconsoleheight console">
+                 <l:layoutData><l:SplitterLayoutData size="auto"/></l:layoutData>
+                  <core:HTML id="logBody" content="{sLogs}"></core:HTML>
+               </l:VerticalLayout>
+            </l:Splitter>
+         </l:Splitter>
+      </l:flexContent>
+   </l:FixFlex>
+</mvc:View>

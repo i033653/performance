@@ -1,0 +1,79 @@
+define({
+    _sUI5BootScript: '<script src="/resources/sap-ui-core.js"	id="sap-ui-bootstrap" data-sap-ui-libs="sap.ui.commons"></script>',
+
+	/* This method checks if the run process suppose to run with mock data.
+	 // If yes, it should extend the runnable document with mock server script.
+	 // Otherwise, it should exit without do anything.
+	 */
+    extendRunnableHtml: function(oConfiguration) {
+        // check whether the process should run with mock - if yes extend the runnable document with mock script. Otherwise, exit.
+        var isMockScriptInRunConfig = oConfiguration && oConfiguration.runnerConfiguration && oConfiguration.runnerConfiguration.oRunConfiguration && oConfiguration.runnerConfiguration.oRunConfiguration.bIsMock === true;
+
+        if (!isMockScriptInRunConfig){
+            // nothing to extend - return undefined
+            return Q();
+        }
+
+        var that = this;
+        var oFileService = this.context.service.filesystem.documentProvider;
+        var sFolderParentPath = oConfiguration.projectDocument.getEntity().getParentPath(); // projectDocument is the html file
+        var sOriginalHtml;
+
+        return oConfiguration.projectDocument.getContent()
+            .then(function(sOriginalHtmlContent) {
+                sOriginalHtml = sOriginalHtmlContent;
+                // in Fiori projects a html file can already contain a mock server. in that case don't add another one
+                // check that mock server is not already in the HTML (NOT -1)
+                var mockServerSearchRes = sOriginalHtml.search(new RegExp("MockServer", "i"));
+                if (mockServerSearchRes !== -1 ){ //  mock server is already in the HTML
+                    return;
+                }
+
+                // add mock script
+                return oFileService.getDocument(sFolderParentPath)
+                    .then(function(oParentFolderDocument) {
+                        return that.context.service.mockpreview.getNewRunnableDocumentContent(oParentFolderDocument, oConfiguration.projectDocument);
+                    })
+                    .then(function(sNewHtmlContent) {
+                        // search for a sap-ui5 loading script
+                        var iBootstrapScriptTagPos = sOriginalHtml.search('<script[^>]+id(| )*=(| )*"(| )*sap-ui-bootstrap(| )*"');
+                        var oHtmlConfig;
+                        if (iBootstrapScriptTagPos === -1) {
+                            // sapui5 doesn't exist, add both scripts under the head tag
+                            oHtmlConfig = [{
+                                action: "new",
+                                type: "script",
+                                attributes: null,
+                                content: that._sUI5BootScript,
+                                position: null
+                            },
+                                {
+                                    action: "new",
+                                    type: "script",
+                                    attributes: null,
+                                    content: sNewHtmlContent,
+                                    position: {
+                                        anchor: "sap-ui-bootstrap",
+                                        placement: "after"
+                                    }
+                                }
+                            ];
+                        } else {
+                            // add mock server script after the sapui5 loading script
+                            oHtmlConfig = [{
+                                action: "new",
+                                type: "script",
+                                attributes: null,
+                                content: sNewHtmlContent,
+                                position: {
+                                    anchor: "sap-ui-bootstrap",
+                                    placement: "after"
+                                }
+                            }];
+                        }
+                        return oHtmlConfig;
+                    });
+            });
+    }
+
+});

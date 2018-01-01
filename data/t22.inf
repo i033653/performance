@@ -1,0 +1,11 @@
+[t22]
+FileName1=t22.htm
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+Total=1
+RequestHeaderFile=t22_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t22_ResponseHeader.txt
+ContentType=text/html
+SnapshotXmlFile=snapshot_22.xml
+[ProtocolInfo]
+ProtocolId=QTWeb

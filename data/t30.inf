@@ -1,0 +1,12 @@
+[t30]
+FileName1=t30_WhatsNewVideo.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/watt/saptoolsets/fiori/common/plugin/welcomescreenimpl/WhatsNewVideo.html
+Total=4
+ContentType=application/xml
+SnapshotXmlFile=snapshot_30.xml
+FileName2=t30_RunConsole.view.xml
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/watt/ideplatform/plugin/runconsole/view/RunConsole.view.xml
+FileName3=t30_RunConsole.controller.html
+URL3=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/watt/ideplatform/plugin/runconsole/view/RunConsole.controller.js
+FileName4=t30_DynEditorProvider.html
+URL4=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/sap/watt/ideplatform/plugin/openwith/service/DynEditorProvider.js

@@ -1,0 +1,4 @@
+﻿<Properties>
+  <WatchEntry0 value="lr_eval_string(&quot;{TaskType}&quot;)" />
+  <WatchEntry1 value="&quot;{TaskType}&quot;" />
+</Properties>

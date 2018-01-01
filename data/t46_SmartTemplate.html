@@ -1,0 +1,36 @@
+define(["sap/watt/lib/jszip/jszip-shim"], function(JSZip) {
+	return function() {
+		
+		return {
+
+			onBeforeTemplateGenerate: function(templateZip, model) {
+				// check if the selected destiantion was defined in the cockpit as a "full_url" destination 
+				if (model.connectionData && model.connectionData.destination && model.connectionData.destination.additionalData) {
+					model.isFullUrl = model.connectionData.destination.additionalData.indexOf("full_url") !== -1 ? true : false;
+				}
+				else {
+					model.isFullUrl = false;
+				}
+
+				// register HandleBars helpers
+				this._registerHandlebarsHelpers(model);
+				
+				return [templateZip, model];
+			},
+
+			_registerHandlebarsHelpers: function(model) {
+				Handlebars.registerHelper('if_eq', function(s1, s2, opts) {
+					if (s1 === s2) {
+						return opts.fn(this);
+					} else {
+						return opts.inverse(this);
+					}
+				});
+			},
+			
+			onAfterGenerate: function(projectZip, model) {
+				return [projectZip, model];
+			}
+		};
+	};
+});

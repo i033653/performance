@@ -1,0 +1,17 @@
+[t44]
+FileName1=t44_getHashedUser.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/usageAnalytics/getHashedUser
+Total=4
+ContentType=image/gif
+SnapshotXmlFile=snapshot_44.xml
+RequestHeaderFile=t44_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t44_ResponseHeader.txt
+FileName2=t44_splitter_vert_grip.gif
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/ui/commons/themes/base/img/splitter/splitter_vert_grip.gif
+FileName3=t44_log.txt
+URL3=https://trackerexta90daed17.hana.ondemand.com/tracker/log?action_name=SAP%20Web%20IDE&idsite=7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5&rec=1&r=384344&h=14&m=6&s=14&url=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&urlref=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&_id=7cd32b5af1ea91a2&_idts=1506423901&_idvc=1&_idn=0&_refts=1506423901&_viewts=1506423901&_ref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&send_image=0&pdf=1&qt=0&realp=0&wma=0&dir=0&fla=0&java=0&gears=0&ag=0&cookie=1&res=1630x983&gt_ms=88&timezone=-180&locale=en-US&pageTitle=SAP+Web+IDE&pageWidth=1630&pageHeight=877&custom1=featureLoaded&custom2=USAGE&custom3=NONE_SAP&custom4=wf1f52214&custom5=javatoolsclient_w9b8ba97a&custom6=171012&custom7=CANARY&custom8=&custom9=&custom10=wf1f52214&custom11=&element_type=page&event_type=load
+FileName4=t44.html
+URL4=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/
+[ProtocolInfo]
+ProtocolId=QTWeb

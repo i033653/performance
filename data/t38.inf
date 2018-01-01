@@ -1,0 +1,15 @@
+[t38]
+FileName1=t38.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/MTA
+Total=3
+RequestHeaderFile=t38_RequestHeader.txt
+RequestBodyFile=t38_RequestBody.txt
+ResponseHeaderFile=t38_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_38.xml
+FileName2=t38_sinon.html
+URL2=https://sapui5.hana.ondemand.com/1.46.7/resources/sap/ui/thirdparty/sinon.js
+FileName3=t38_.html
+URL3=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/tree/MTA/.che?depth=1000&includeFiles=true
+[ProtocolInfo]
+ProtocolId=QTWeb

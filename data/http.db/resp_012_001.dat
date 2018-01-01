@@ -1,0 +1,264 @@
+TD.MCPColor {
+	BACKGROUND: #ffffff
+}
+TD.LandingPageModuleColor {
+	BACKGROUND: #e3e3e3
+}
+DIV.MainContentPanel {
+	MARGIN: 0px 20px 20px; VERTICAL-ALIGN: text-top; TEXT-ALIGN: left
+}
+TD.Breadcrumb {
+	COLOR: #888888
+}
+TD.Breadcrumb A {
+	COLOR: #888888
+}
+TD.Breadcrumb A:visited {
+	COLOR: #888888
+}
+TD.Breadcrumb A:hover {
+	COLOR: #888888
+}
+IMG.GraphicalH1 {
+	PADDING-BOTTOM: 9px; PADDING-TOP: 25px
+}
+SPAN.Lowercase {
+	TEXT-TRANSFORM: none
+}
+H1 {
+	MARGIN-TOP: 25px; MARGIN-BOTTOM: 25px; FONT: 19px/22px Arial Black, Arial, Helvetica, sans-serif; TEXT-TRANSFORM: uppercase; COLOR: #f0ab00; LETTER-SPACING: -0.05em
+}
+H1 EM {
+	COLOR: #999999; FONT-STYLE: normal
+}
+H2 {
+	MARGIN-TOP: -20px; MARGIN-BOTTOM: 25px; FONT: 16px/19px Arial, Helvetica, sans-serif; TEXT-TRANSFORM: uppercase; COLOR: #666666
+}
+H3 {
+	MARGIN-BOTTOM: -10px; FONT: bold 15px/17px Arial, Helvetica, sans-serif
+}
+H4 {
+	MARGIN-BOTTOM: -10px; FONT: bold 13px/16px Arial, Helvetica, sans-serif
+}
+H4.AllCaps {
+	FONT: bold 12px/16px Arial, Helvetica, sans-serif; TEXT-TRANSFORM: uppercase
+}
+H5 {
+	MARGIN-BOTTOM: -10px; FONT: bold 12px/15px Arial, Helvetica, sans-serif
+}
+H6 {
+	MARGIN-BOTTOM: -10px; FONT: bold 11px/13px Arial, Helvetica, sans-serif
+}
+DIV.Dove H3 {
+	COLOR: #44697d
+}
+DIV.Dove H4 {
+	COLOR: #44697d
+}
+DIV.Dove H5 {
+	COLOR: #44697d
+}
+DIV.Dove H6 {
+	COLOR: #44697d
+}
+DIV.Petrol H3 {
+	COLOR: #156570
+}
+DIV.Petrol H4 {
+	COLOR: #156570
+}
+DIV.Petrol H5 {
+	COLOR: #156570
+}
+DIV.Petrol H6 {
+	COLOR: #156570
+}
+DIV.WarmGreen H3 {
+	COLOR: #557630
+}
+DIV.WarmGreen H4 {
+	COLOR: #557630
+}
+DIV.WarmGreen H5 {
+	COLOR: #557630
+}
+DIV.WarmGreen H6 {
+	COLOR: #557630
+}
+DIV.WarmRed H3 {
+	COLOR: #774a39
+}
+DIV.WarmRed H4 {
+	COLOR: #774a39
+}
+DIV.WarmRed H5 {
+	COLOR: #774a39
+}
+DIV.WarmRed H6 {
+	COLOR: #774a39
+}
+DIV.VioletMauve H3 {
+	COLOR: #644459
+}
+DIV.VioletMauve H4 {
+	COLOR: #644459
+}
+DIV.VioletMauve H5 {
+	COLOR: #644459
+}
+DIV.VioletMauve H6 {
+	COLOR: #644459
+}
+A {
+	COLOR: #04357b; TEXT-DECORATION: underline
+}
+A:visited {
+	COLOR: #644459; TEXT-DECORATION: underline
+}
+A:hover {
+	COLOR: #04357b; TEXT-DECORATION: none
+}
+TABLE.DataTable {
+	BACKGROUND: #ffffff
+}
+.DataTableTH {
+	FONT: bold 12px/15px Arial, Helvetica, sans-serif; VERTICAL-ALIGN: middle; HEIGHT: 27px
+}
+.DataTableFooter {
+	HEIGHT: 21px
+}
+DIV.Dove .DataTableTH {
+	BACKGROUND: url(../images/DataTableTHBgRepeatDove.jpg) #e3e9ec repeat-x
+}
+DIV.Dove .DataTableRow01 {
+	BACKGROUND: #e3e9ec
+}
+DIV.Dove .DataTableRow02 {
+	BACKGROUND: #dae1e5
+}
+DIV.Dove .DataTableFooter {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatDove.jpg) repeat-x
+}
+DIV.Petrol .DataTableTH {
+	BACKGROUND: url(../images/DataTableTHBgRepeatPetrol.jpg) #dce8ea repeat-x
+}
+DIV.Petrol .DataTableRow01 {
+	BACKGROUND: #dce8ea
+}
+DIV.Petrol .DataTableRow02 {
+	BACKGROUND: #d0e0e2
+}
+DIV.Petrol .DataTableFooter {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatPetrol.jpg) repeat-x
+}
+DIV.WarmGreen .DataTableTH {
+	BACKGROUND: url(../images/DataTableTHBgRepeatWarmGreen.jpg) #e6ebe0 repeat-x
+}
+DIV.WarmGreen .DataTableRow01 {
+	BACKGROUND: #e6ebe0
+}
+DIV.WarmGreen .DataTableRow02 {
+	BACKGROUND: #dde4d6
+}
+DIV.WarmGreen .DataTableFooter {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatWarmGreen.jpg) repeat-x
+}
+DIV.WarmRed .DataTableTH {
+	BACKGROUND: url(../images/DataTableTHBgRepeatWarmRed.jpg) #ebe4e1 repeat-x
+}
+DIV.WarmRed .DataTableRow01 {
+	BACKGROUND: #ebe4e1
+}
+DIV.WarmRed .DataTableRow02 {
+	BACKGROUND: #e4dbd7
+}
+DIV.WarmRed .DataTableFooter {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatWarmRed.jpg) repeat-x
+}
+DIV.VioletMauve .DataTableTH {
+	BACKGROUND: url(../images/DataTableTHBgRepeatVioletMauve.jpg) #e8e3e6 repeat-x
+}
+DIV.VioletMauve .DataTableRow01 {
+	BACKGROUND: #e8e3e6
+}
+DIV.VioletMauve .DataTableRow02 {
+	BACKGROUND: #e0dade
+}
+DIV.VioletMauve .DataTableFooter {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatVioletMauve.jpg) repeat-x
+}
+.DataTableTHDoveDk {
+	BACKGROUND: url(../images/DataTableTHBgRepeatDoveDk.jpg) #d0d9de repeat-x; FONT: bold 12px/15px Arial, Helvetica, sans-serif; VERTICAL-ALIGN: middle; HEIGHT: 27px
+}
+.DataTableRow02DoveDk {
+	BACKGROUND: #d0d9de
+}
+.DataTableFooterDoveDk {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatDoveDk.jpg) repeat-x; HEIGHT: 21px
+}
+TABLE.DataTableDove {
+	BACKGROUND: #ffffff
+}
+.DataTableTHDove {
+	BACKGROUND: url(../images/DataTableTHBgRepeatDove.jpg) #e3e9ec repeat-x; VERTICAL-ALIGN: middle; HEIGHT: 27px
+}
+.DataTableRow01Dove {
+	BACKGROUND: #e3e9ec
+}
+.DataTableRow02Dove {
+	BACKGROUND: #dae1e5
+}
+.DataTableFooterDove {
+	BACKGROUND: url(../images/DataTableFooterBgRepeatDove.jpg) repeat-x; HEIGHT: 21px
+}
+UL {
+	PADDING-LEFT: 0px; MARGIN-BOTTOM: 25px; FONT: 11px/17px Arial, Helvetica, sans-serif; MARGIN-LEFT: 30px; COLOR: #333333
+}
+UL UL {
+	PADDING-LEFT: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 30px; COLOR: #333333
+}
+DIV.Dove LI {
+	LIST-STYLE-IMAGE: url(../images/BulletDove.gif)
+}
+DIV.Dove LI LI {
+	LIST-STYLE-IMAGE: url(../images/BulletDove.gif)
+}
+DIV.Petrol LI {
+	LIST-STYLE-IMAGE: url(../images/BulletPetrol.gif)
+}
+DIV.Petrol LI LI {
+	LIST-STYLE-IMAGE: url(../images/BulletPetrol.gif)
+}
+DIV.WarmGreen LI {
+	LIST-STYLE-IMAGE: url(../images/BulletWarmGreen.gif)
+}
+DIV.WarmGreen LI LI {
+	LIST-STYLE-IMAGE: url(../images/BulletWarmGreen.gif)
+}
+DIV.WarmRed LI {
+	LIST-STYLE-IMAGE: url(../images/BulletWarmRed.gif)
+}
+DIV.WarmRed LI LI {
+	LIST-STYLE-IMAGE: url(../images/BulletWarmRed.gif)
+}
+DIV.VioletMauve LI {
+	LIST-STYLE-IMAGE: url(../images/BulletVioletMauve.gif)
+}
+DIV.VioletMauve LI LI {
+	LIST-STYLE-IMAGE: url(../images/BulletVioletMauve.gif)
+}
+HR {
+	BACKGROUND: #cccccc
+}
+TD.VerticalLineMdGray {
+	BACKGROUND: #cccccc
+}
+SELECT {
+	BORDER-RIGHT: #666666 1px solid; BORDER-TOP: #666666 1px solid; FONT: 100% Arial, Helvetica, sans-serif; BORDER-LEFT: #666666 1px solid; COLOR: #333333; BORDER-BOTTOM: #666666 1px solid
+}
+INPUT.form {
+	BORDER-RIGHT: #666666 1px solid; BORDER-TOP: #666666 1px solid; FONT: 100% Arial, Helvetica, sans-serif; BORDER-LEFT: #666666 1px solid; COLOR: #333333; BORDER-BOTTOM: #666666 1px solid
+}
+.warning {
+	FONT: 11px Arial, Helvetica, sans-serif; COLOR: #9e3039
+}

@@ -1,0 +1,57 @@
+.userPrefPluginBorderLayout {
+  background-color: white !important;
+}
+
+.userPrefPluginTopArea {
+  margin-top: 0px;
+}
+
+.userPrefPluginTitle {
+  color: #292e30;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0px 16px 0px 16px;
+}
+
+.userPrefPluginDesc {
+  color: #666666;
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  padding: 0px 16px 0px 16px;
+}
+
+.userPrefPluginDevider {
+  display: block;
+  height: 1px;
+  background-color: #DDDDDD;
+  border: 0;
+  margin: 0px 0px 0px 0px;
+}
+
+.userPrefPluginCenterArea {
+  background-color: #F7F7F7 !important;
+}
+
+.userPrefPluginCenterArea .sapUiPanelHdr {
+  background-color: #F7F7F7 !important;
+  font-family: "Segoe UI Light", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-weight: normal;
+  font-size: medium;
+}
+
+.userPrefPluginCenterArea .sapUiPanelCont {
+  background-color: #F7F7F7 !important;
+  border: 1px none !important;
+}
+
+.userPrefPluginBorderLayout .buttonPanel {
+  padding: 8px 16px 8px 8px;
+}
+
+.userPrefPluginBorderLayout .buttonPanel > button {
+  margin: 0px 0px 0px 8px;
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem;
+}
+

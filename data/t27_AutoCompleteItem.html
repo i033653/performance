@@ -1,0 +1,74 @@
+sap.ui.define([
+	"sap/m/StandardListItem"
+], function(StandardListItem) {
+	"use strict";
+
+	var AutoCompleteItem = StandardListItem.extend("sap.watt.ideplatform.plugin.intellisence.control.AutoCompleteItem", {
+
+		metadata: {
+			properties: {
+				deprecated: {
+					type: "boolean",
+					defaultValue: false
+				},
+				tooltipDescription: {
+					type: "string"
+				},
+				unselectable: {
+					type: "boolean"
+				},
+				isActive: {
+					type: "boolean",
+					defaultValue: false
+				},
+				iconMain: {
+					type: "string"
+				},
+				iconActive: {
+					type: "string"
+				},
+				linkDescription: {
+					type: "string"
+				},
+				linkHref: {
+					type: "string"
+				}
+			}
+		},
+
+		init: function() {
+			StandardListItem.prototype.init.apply(this, arguments);
+			this.setType(sap.m.ListType.Active);
+			this.attachBrowserEvent("mouseenter", this._onMouseEnter, this);
+		},
+
+		_onMouseEnter: function() {
+			this.getList().onItemMouseEnter(this);
+		},
+
+		setIsActive: function(bActive) {
+			this.toggleStyleClass("sapWattIntellisencePopupItemSelected", bActive);
+			this.setProperty("isActive", bActive);
+		},
+
+		onBeforeRendering: function() {
+			var sIcon = this.getIsActive() ? this.getIconActive() : this.getIconMain();
+			this.setProperty("icon", sIcon, true);
+		},
+
+		renderer: {
+			renderLIAttributes: function(rm, oLI) {
+				if (oLI.getDeprecated()) {
+					rm.addClass("sapWattIntellisenceDeprecated");
+				}
+				if (oLI.getUnselectable()) {
+					oLI.setType(sap.m.ListType.NonActive);
+				}
+				sap.m.StandardListItemRenderer.renderLIAttributes.apply(this, arguments);
+			}
+		}
+
+	});
+
+	return AutoCompleteItem;
+});

@@ -1,0 +1,71 @@
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn {
+  width: 70px;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn .sapMBtnInner.sapMBtnText.sapMBtnIconFirst,
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn .sapMBtnInner.sapMBtnText.sapMBtnIconLast {
+  padding: 0;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn .sapMBtnText > .sapMBtnIcon {
+  top: 1rem;
+  left: calc(50% - 1rem);
+  right: auto;
+  font-size: 1rem;
+  line-height: 2rem;
+  width: 2rem;
+  border: 1px solid #416B8E;
+  border-radius: 2rem;
+  max-height: 2rem;
+  margin: 0;
+  background: #ffffff;
+  color: #416B8E;
+}
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn .sapMBtnContent {
+  line-height: initial;
+  padding-top: 3.5rem;
+  padding-bottom: 0.5rem;
+  color: #416B8E;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn.sapMBtnDisabled .sapMBtnText > .sapMBtnIcon {
+  border-color: #95ACC3;
+  background: #95ACC3;
+  color: #FFFFFF;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn.gitToolbarBtnWait {
+  opacity: 0.5;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn > .sapMBtnTransparent.sapMBtnActive,
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn:hover > .sapMBtnTransparent.sapMBtnActive,
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn:hover > .sapMBtnTransparent.sapMBtnHoverable {
+  background: none;
+}
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn:not(.sapMBtnDisabled):not(.gitToolbarBtnWait):hover .sapMBtnIcon {
+  border-color: #95ACC3;
+  background: #95ACC3;
+  color: #FFFFFF;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn:not(.sapMBtnDisabled):not(.gitToolbarBtnWait) > .sapMBtnTransparent.sapMBtnActive .sapMBtnIcon {
+  border-color: #416B8E;
+  background-color: #416B8E;
+  color: #FFFFFF;
+}
+
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn.sapMBtn,
+.sapUiSizeCompact .sapWattSidePane .gitToolbarBtn .sapMBtnInner {
+  height: auto;
+  border: none;
+}
+
+.gitToolbarBtn:last-of-type + .sapMTBSpacer {
+  display: none;
+}
+
+.sapUiSizeCompact .sapWattSidePane .sapWattSidePartForm.gitBranchForm .sapUiGrid .sapUiGridConteinerFirstRow td,
+.sapWattSidePane .sapWattSidePartForm.gitBranchForm .sapUiGrid .sapUiGridConteinerFirstRow td {
+  vertical-align: top;
+}

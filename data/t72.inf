@@ -1,0 +1,13 @@
+[t72]
+FileName1=t72.htm
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+Total=2
+RequestHeaderFile=t72_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t72_ResponseHeader.txt
+ContentType=text/html
+SnapshotXmlFile=snapshot_72.xml
+FileName2=t72_l.html
+URL2=https://translate.googleapis.com/translate_a/l?client=chrome&hl=en&key=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw
+[ProtocolInfo]
+ProtocolId=QTWeb

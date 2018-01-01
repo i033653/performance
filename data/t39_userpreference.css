@@ -1,0 +1,74 @@
+.userPrefPanel {
+  position: relative;
+  background-color: #f0f4f9 !important;
+}
+
+.userPrefPanel .sapUiPanelHdr {
+  background-color: #f0f4f9 !important;
+}
+
+.userPrefPanel .pluginList button.sapMBtnInner {
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem;
+}
+
+.userPrefPanel .pluginList .pluginButton .sapMBtnInner {
+  text-align: left !important;
+  border: none !important;
+  background-color: #f0f4f9 !important;
+}
+
+.userPrefPanel .pluginList .pluginButton:hover .sapMBtnInner {
+  background-color: #d3e1ec !important;
+}
+
+.userPrefPanel .pluginList .selectedPluginButton .sapMBtnInner,
+.userPrefPanel .pluginList .selectedPluginButton:hover .sapMBtnInner {
+  color: white !important;
+  border: none !important;
+  background-color: #007cc0 !important;
+}
+
+.userPrefPanel .pluginList .indentPluginButton {
+  padding-left: 36px !important;
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionCont {
+  border-bottom: 0;
+  border-top: 1px solid white;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionHdr:active,
+.userPrefPanel .pluginList .sapUiAcdSectionColl .sapUiAcdSectionHdr:active {
+  color: #fff;
+  background-color: #007cc0;
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionColl .sapUiAcdSectionHdr {
+  background-color: transparent;
+  color: #000;
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionHdr {
+  background-color: transparent;
+  padding: 0.5rem 0;
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionLabel {
+  left: 12px;
+  font-family: Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: normal !important;
+}
+
+.userPrefPanel .pluginList .sapUiAcd {
+  height: auto !important;
+}
+
+.userPrefPanel .pluginList .sapUiAcdSectionMinArrow {
+  position: absolute;
+  right: 8px;
+}
+

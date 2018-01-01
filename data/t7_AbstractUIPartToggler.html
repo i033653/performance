@@ -1,0 +1,126 @@
+define(function() {
+	"use strict";
+
+	/**
+	 * @public
+	 * @exports sap.watt.common.perspective/command/AbstractUIPartToggler
+	 * @class
+	 * The <i>AbstractUIPartToggler</i> class is an implementation that allows the creation of a service.
+	 * It is mainly used for toggling specific views when the related command is executed.
+	 * The <i>AbstractUIPartToggler</i> class is managed by the framework.
+	 * @example
+	 * "command:commands": [{
+	   "id" : "commandExample",
+	   	"service": {
+			"implements" : "sap.watt.common.service.ide.AbstractUIPartToggler",
+		   	"module" : "sap.watt.common.perspective/command/AbstractUIPartToggler",
+		   	"configuration" : { "id" : "commandExample", "service" : "@serviceExample", "perspective" : "development"}
+		},
+	"label": "{i18n>commandExample_lable}",
+	"keyBinding": "mod+shift+v",
+	"icon" : "commandExample_icon"
+	}
+	 */
+	var oCommand = function() {
+	};
+
+
+	oCommand.prototype = jQuery.extend(oCommand.prototype, {
+		_oUIPart : undefined, // a service implementing UI part
+		_aPerspectives : undefined,
+		_sID : undefined
+	});
+
+	/** Executes the <i>command</i> instance. Toggles the corresponding view visibility.
+	 * @public
+	 * @returns {Promise.<void>} Promise that is resolved when the target view rendering is finished.
+	 */
+	oCommand.prototype.execute = function() {
+		var that = this;
+		return this._oUIPart.isVisible().then(function(bVisible) {
+			that.context.service.perspective.report("UiPartToggleState", that._oUIPart._sName+" "+ !bVisible).done();
+			return that._oUIPart.setVisible(!bVisible);
+		});
+	};
+
+	/** Determines whether a command is available.<br/>
+	 * A command is available only in the following scenarios:<br/>
+	 * <ul>
+	 * <li>If the configured <i>perspective</i> property for the <i>AbstractUIPartToggler</i> instance matches the current perspective.</li>
+	 * <li>If the <i>perspective</i> property is not configured and the <i>service</i> property represents a view that is mapped to the current perspective.</li>
+	 * </ul>
+	 * @public
+	 * @returns {Promise.<boolean>}
+	 */
+	oCommand.prototype.isAvailable = function() {
+		return this._isConfiguredForCurrentPerspective();
+	};
+	/** Determines whether a command is enabled.<br/>
+	 * A command is enabled only in the following scenarios:<br/>
+	 * <ul>
+	 * <li>If the configured <i>perspective</i> property for the <i>AbstractUIPartToggler</i> instance matches the current perspective.</li>
+	 * <li>If the <i>perspective</i> property is not configured and the <i>service</i> property represents a view that is mapped to the current perspective.</li>
+	 * </ul>
+	 * @public
+	 * @returns {Promise.<boolean>}
+	 */
+	oCommand.prototype.isEnabled = function() {
+		return this._isConfiguredForCurrentPerspective();
+	};
+	/** Determines whether a command is active.
+	 * A command is active only if it is set to be both available and enabled while the configured <i>service</i> is set to visible.
+	 * @public
+	 * @returns {Promise.<boolean>}
+	 */
+	oCommand.prototype.isActive = function() {
+		return Q.spread([ this._oUIPart.isVisible(), this._isConfiguredForCurrentPerspective() ], function(bViewIsVisible, bConfigured) {
+			return Q(bViewIsVisible && bConfigured);
+		});
+	};
+	/**
+	 * @private
+	 */
+	oCommand.prototype._onVisibilityChange =  function(){
+		var that = this;
+		this.context.service.command.getCommand(this._sID).then(function(oMetaCommand){
+			return that.context.service.command.context.event.fireInvalidated({ commands : [oMetaCommand] });
+		}).done();
+	};
+	/**
+	 * @private
+	 */
+	oCommand.prototype.configure = function(mConfig) {
+		this._oUIPart = mConfig.service;
+		if (mConfig.perspective) {
+			this._aPerspectives = [mConfig.perspective];
+		} else {
+			this._oGetPerspectivesPromise = undefined;
+		}
+		this._sID = mConfig.id;
+		this._oUIPart.attachEvent("visibilityChanged", this._onVisibilityChange, this);
+	};
+
+	oCommand.prototype._getPerspectives = function () {
+		if (this._aPerspectives) {
+			return Q(this._aPerspectives);
+		}
+		var that = this;
+		// Synchronize the call to getPerspectivesForService
+		if (!this._oGetPerspectivesPromise) {
+			this._oGetPerspectivesPromise = this.context.service.perspective.getPerspectivesForService(this._oUIPart).then(function (aPerspectives) {
+				that._aPerspectives = aPerspectives || [];
+				that._oGetPerspectivesPromise = undefined;
+				return that._aPerspectives;
+			});
+		}
+		return this._oGetPerspectivesPromise;
+	};
+
+	oCommand.prototype._isConfiguredForCurrentPerspective = function() {
+		return Q.spread([this.context.service.perspective.getCurrentPerspective(), this._getPerspectives()], function(sPerspectiveName, aPerspectives) {
+			return aPerspectives.indexOf(sPerspectiveName) >= 0;
+		});
+	};
+
+	return oCommand;
+});

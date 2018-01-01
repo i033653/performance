@@ -1,0 +1,8 @@
+POST http://update.googleapis.com/service/update2?cup2key=7:2333413385&cup2hreq=bc53220302e45bcc712363f2841558a9c3a02b0460c8616be500c01b08d67e67 HTTP/1.1
+Host: update.googleapis.com
+Proxy-Connection: keep-alive
+Content-Length: 3365
+Content-Type: application/xml
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
+Accept-Encoding: gzip, deflate
+

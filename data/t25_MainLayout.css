@@ -1,0 +1,443 @@
+/* turn of user-select in general, if necessary, turn on for specific areas */
+*:not(input):not(textarea) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* allow easy enabling of selection*/
+.selectable {
+  -webkit-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+}
+
+/* allow easy enabling of text selection for input and textareas*/
+.sapWattSelectableText input,
+.sapWattSelectableText textarea{
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* turn of dragging of images in general, if necessary, turn on for specific images: only works in chrome/safari */
+img {
+  -webkit-user-drag: none;
+}
+
+/* set font size before ui5 load - some sap.m controls use this parameter for internal calculations */
+html {
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#prod {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 100;
+  background: #EFF4F9;
+  text-align: center;
+  overflow: auto;
+}
+
+#prod a {
+  color: darkblue;
+  text-decoration: none;
+  font-size: small;
+  font-family: arial;
+}
+
+progress[value] {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  height: 2px;
+  width: 30%;
+  border: none;
+}
+
+#loading progress[value] {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: fixed;
+  top: 300px;
+  left: 0;
+  right: 0;
+  bottom: auto;
+  margin: auto;
+  height: 2px;
+  width: 400px;
+  border: none;
+}
+
+progress[value]::-webkit-progress-bar {
+  background: #e5e5e5;
+}
+
+progress[value]::-webkit-progress-value {
+  background: #007cc0;
+  width: 20%;
+}
+
+progress[value]::-moz-progress-bar {
+  background: #007cc0;
+  width: 20%;
+}
+
+#season-theme {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+#season-theme img {
+  height: 300px;
+  margin-top: 0px;
+}
+
+.fontFamily{
+  font-family: "Segoe UI Light", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#loading .lbl {
+  font-weight: 300;
+  color: #333333;
+  text-align: center;
+  position: fixed;
+  top: 310px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 20px;
+}
+
+#loading .latencyImg {
+  position: relative;
+}
+
+#loading .latencyMsg {
+  color: gray;
+  text-align: left;
+  position: relative;
+  display: inline-block;
+}
+
+#loading .latencyDiv {
+  position: fixed;
+  bottom: 20%;
+  width: 100%;
+  visibility: hidden;
+}
+
+#loading .txt1 {
+  font-size: 28px;
+}
+
+#loading .visibleElemWithAnim{
+  visibility: visible;
+  animation : 1s showEffectVisibility;
+}
+
+@keyframes showEffectVisibility {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+#loading .toplbl {
+  font-weight: 300;
+  color: #333333;
+  text-align: center;
+  position: fixed;
+  top: 236px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 38px;
+}
+
+#topIcon {
+  position: relative;
+  top: 70px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+#bottomIcon {
+  position: relative;
+  top: 600px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+#menubar {
+  -webkit-box-flex: 2;
+  -moz-box-flex: 2;
+  -ms-flex: 2;
+  box-flex: 2;
+}
+
+.userNotificationBarMessage {
+  max-width: 240px;
+}
+
+.userNotificationBarActionBtn {
+  max-width: 60px;
+}
+
+.toolbarGit {
+  height: 0px;
+}
+
+.center {
+  position: fixed;
+  top: 35px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: gray;
+}
+
+.toprightpane {
+}
+
+.toprightpane .sapMBtn.toprightpaneButton .sapMBtnInner{
+  background-color: transparent;
+  width: 3.9rem;
+  border: none;
+  color: #b7cee4;
+}
+
+.toprightpane .sapMBtn.toprightpaneButton .sapMBtnInner .sapMBtnIcon{
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  line-height: 1.625rem;
+  color: #b7cee4;
+  left: 0rem;
+  position: absolute;
+}
+
+.toprightpane .sapMBtn.toprightpaneButton .sapMBtnInner.sapMBtnText.sapMBtnIconFirst{
+  padding-left: 0.5rem;
+}
+
+.toprightpane .sapMBtn.toprightpaneButton:hover {
+  background-color: transparent;
+  color: white;
+}
+
+.toprightpane .sapMBtn.toprightpaneButton.toprightpanedisableBellIcon:hover {
+  color: #b7cee4 !important;
+}
+
+.toprightpane .sapMBtn.toprightpaneButton:focus {
+  background-color: transparent;
+}
+
+.toprightpane .sapWattNotificationMsg .notificationMsg{
+  color: black;
+}
+
+.toprightpane .toprightpanetextDecoration > .sapUiBtnTxt {
+  color: #F0F4F9;
+  font-size: .8rem;
+  background: #e78c07;
+  border-radius: 8px;
+  width: 16px;
+  position: relative;
+  height: 16px;
+  left: -34px;
+  top: 4px;
+  line-height: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  font-family: Arial;
+}
+
+.footer {
+  background-color: #d3d8de;
+  position: absolute;
+  height: 10px;
+  width: 100%;
+  bottom: 0;
+  z-index: 20;
+}
+
+.rightpane {
+  display: none;
+  position: fixed;
+  background-color: white;
+  top: 67px;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 300px;
+  border-left: 5px solid #ddd;
+  height: 100%;
+}
+/* shows in the left side */
+.rightpaneImage {
+  margin-top: 0.2rem;
+  margin-left: 0.5rem;
+  position: absolute;
+  left: 0;
+  height: 16px
+}
+
+.rightpane.rightPaneVisible {
+  display: block;
+}
+
+.maximized {
+  position: absolute !important;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 50;
+}
+
+.centerGit {
+  position: fixed;
+  top: 35px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: white;
+}
+
+
+/******************************************************************
+	About Dialog
+*******************************************************************/
+
+#AboutDialog .sapUiMboxCont {
+  margin-left: 0px
+}
+
+#AboutDialog .sapUiDlgCont * {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/******************************************************************
+	ORION Git Client Styles
+*******************************************************************/
+.explorerGit {
+  width: 0px;
+}
+
+.sapUiTree.sapUiTreeFixedHeight {
+  position: relative;
+}
+
+.sapUiTreeCont.sapUiTreeContScroll {
+  height: 100%;
+}
+
+.translationwizard .sapUiTf {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+}
+
+[id$=tools\.userpreference] {
+  position: absolute;
+}
+
+.privacyLink.sapUiLnk {
+  font-size: inherit;
+}
+
+.privacyFormattedTextView.sapUiFTV {
+  font-size: 0.875rem;
+  margin: 0 0.5rem;
+}
+
+/******************************************************************
+	For WebIDE DI@HCP - temp solution to override style of several controls
+*******************************************************************/
+.sapWebIDEDI {
+  position: relative;
+  min-width: 1200px;
+}
+
+.sapWebIDEDI .leftsidebar {
+  background-color: #3c4347 !important;
+}
+
+.sapWebIDEDI .sapWattMenuItem:hover,
+.sapWebIDEDI .sapWattMenuItem.active {
+  background: #40484c !important;
+  color: #d8e3ec !important;
+}
+
+.sapWebIDEDI .header {
+  background: #232728 !important;
+  border-top: 3px solid #232728 !important;
+}
+
+.sapWebIDEDI .toprightpane {
+  z-index: 1;
+}
+
+.sapWebIDEDI .sapWattMenuBar {
+  position: relative;
+  z-index: 1;
+}
+
+/*Left side bar Hover*/
+.sapWebIDEDI .leftsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnStd:hover, .sapWebIDEDI .leftsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnAct:hover {
+  background-color: #4d565b!important;
+}
+
+/*Left side bar selection color*/
+.sapWebIDEDI .leftsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnDsbl.selected, .sapWebIDEDI .leftsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnDsbl.selected:focus {
+  background-color: #292e30 !important;
+}
+
+
+/*Right side bar hover*/
+.sapWebIDEDI .rightsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnStd:hover, .sapWebIDEDI .rightsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnAct:hover {
+  background-color: rgba(60,67,71,0.1) !important;
+}
+
+/*Right side bar selected*/
+.sapWebIDEDI .rightsidebar .sapUiBtnS.sapUiBtnNorm.sapUiBtnStd.selected {
+  background-color: rgba(60,67,71,0.6) !important;
+}

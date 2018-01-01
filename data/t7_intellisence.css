@@ -1,0 +1,107 @@
+/****Code completion related ****/
+.sapWattIntellisenceDeprecated {
+  text-decoration: line-through;
+}
+
+#intellisencePopup .sapMList .sapMSLI {
+  border: none;
+}
+
+#intellisencePopup .sapMImg {
+  height: 1rem;
+  width: 1rem;
+}
+
+#intellisencePopup {
+  max-height: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+#intellisencePopup .sapMSLI.sapWattIntellisencePopupItemSelected {
+  background-color: #E6F2F9;
+}
+
+#intellisencePopup .sapMSLI.sapMLIBFocusable:focus .sapMSLITitleOnly {
+  color: #333333;
+}
+
+#intellisencePopup .sapMSLITitleOnly {
+  color: #333333;
+}
+
+#intellisencePopup .sapWattIntellisencePopupItemSelected.sapMSLI.sapMLIBFocusable:focus {
+  background-color: #E6F2F9;
+}
+
+#intellisencePopup .sapMSLI.sapMLIBFocusable:focus {
+  outline: none;
+  color: #333333;
+  background-color: #fff;
+}
+
+/* Code completion Tooltip*/
+.sapWattIntellisencePopover .sapMPanelContent {
+  border-top: none;
+}
+
+.sapWattIntellisencePopover.sapMPopover .sapMPopoverScroll {
+  margin-bottom: 1.5rem;
+}
+
+.sapWattIntellisencePopover .sapMTitle {
+  overflow: visible;
+  white-space: normal;
+  line-height: 1.875;
+  font-family: "Segoe UI Regular", "Segoe UI", "Arial", sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #3F5161;
+}
+
+.sapWattIntellisencePopover .sapMPanel .sapMTB.sapMTB-Transparent-CTX {
+  margin: 0.5rem 0 0.5rem 0;
+}
+
+.unselectable-item {
+  background-color: #eeeeee /* @sapFlatLightBG; */
+}
+
+.ace_marker-layer .acmark {
+  position: absolute;
+  z-index: 5;
+  border: 1px solid gray;
+}
+
+.ace_autocomplete_hint {
+  padding: 0px;
+  position: fixed;
+  z-Index: 9;
+  overflow: hidden;
+  width: auto;
+  height: auto;
+  font-style: italic;
+  color: gray;
+  pointer-events: none;
+}
+
+.ace_autocomplete_hint .description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace_autocomplete_hint .arrows {
+  width: 9px;
+  height: 14px;
+  background-color: transparent;
+  background-image: url(../images/cc_arrows.png);
+  background-repeat: no-repeat;
+  background-position: 0% 0%;
+  display: inline-block;
+  margin: 0px 0px 1px 2px;
+}
+
+.ace_autocomplete_hint  span {
+  float: left;
+  vertical-align: top;
+}
+

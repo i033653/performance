@@ -1,0 +1,67 @@
+/*
+
+ <link id="css" rel="stylesheet" href="resources/sap/watt/saptoolsets/common/plugin/ide/css/MainLayout.css" type="text/css">
+
+ <!-- boot IDE framework with require.js (data-sap-ide-* are IDE framework relevant attributes) -->
+ <script src="resources/sap/watt/lib/requirejs/require.js"
+ data-main="resources/sap/watt/core/Global.js"
+ data-sap-ide-main="sap/watt/core/Core"
+ data-sap-ide-basedir="resources/"
+ data-sap-ide-feature-config="resources/sap/watt/uitools/package.json"></script>
+
+ */
+
+(function() {
+    window["sap-ide-perf"] = Date.now();
+	var sWebIDECachebuster = "";
+
+	function addAttributesToDocument (){
+		var sBaseDir = "resources/" + sWebIDECachebuster;
+		var sCssUrl = sBaseDir + "sap/watt/saptoolsets/common/plugin/ide/css/MainLayout.css";
+		var cssLinkEleemnt = document.createElement("link");
+		cssLinkEleemnt.setAttribute("id", "css");
+		cssLinkEleemnt.setAttribute("rel", "stylesheet");
+		cssLinkEleemnt.setAttribute("type", "text/css");
+		cssLinkEleemnt.setAttribute("href", sCssUrl);
+		document.head.appendChild(cssLinkEleemnt);
+
+
+		var sRequireUrl = sBaseDir + "sap/watt/lib/requirejs/require.js";
+		var sMainUrl = sBaseDir + "sap/watt/core/Global.js";
+
+		var scriptElement = document.createElement("script");
+		scriptElement.setAttribute("src", sRequireUrl);
+		scriptElement.setAttribute("data-main", sMainUrl);
+		scriptElement.setAttribute("data-sap-ide-main", "sap/watt/core/Core");
+		scriptElement.setAttribute("data-sap-ide-basedir", sBaseDir);
+		document.head.appendChild(scriptElement);
+	}
+
+	// request the sap-ui-cachebuster that contains the cache buster infos as ~commitId~ (in hcproxy case)
+	// which is used later for creating the dynamic segment for the requests to cache them 
+	var oXHR = new XMLHttpRequest();
+	var sVersionLocation = "sap-ui-cachebuster";
+	oXHR.open("GET", sVersionLocation);
+	oXHR.onload = function(oEvent) {
+		if (oXHR.readyState === 4) {
+			if (oXHR.status === 200) {
+				sWebIDECachebuster = oXHR.response + "/";
+				if (window.console) {
+					window.console.log("bootstrap.js: SAP Web IDE cachebuster timestamp: " + sWebIDECachebuster);
+				}
+			} else {
+				if (window.console) {
+					window.console.warn("bootstrap.js: " + oXHR.statusText);
+				}
+			}
+				addAttributesToDocument();
+		}
+	};
+	oXHR.onerror = function(ex) {
+		if (window.console) {
+			window.console.info("bootstrap.js: " + ex.message);
+		}
+		addAttributesToDocument();
+	};
+	oXHR.send(null);
+}());

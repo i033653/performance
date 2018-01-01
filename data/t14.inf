@@ -1,0 +1,11 @@
+[t14]
+FileName1=t14_log.txt
+URL1=https://trackerexta90daed17.hana.ondemand.com/tracker/log?e_c=ide_module&e_a=sap.watt.ideplatform.languageserverprotocol%2Fservice%2FLSPDocumentAdapter&idsite=7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5&rec=1&r=062470&h=13&m=5&s=26&url=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&urlref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&_id=45af37ff84697ea0&_idts=1506420264&_idvc=1&_idn=0&_refts=1506420264&_viewts=1506420264&_ref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&send_image=0&pdf=1&qt=0&realp=0&wma=0&dir=0&fla=0&java=0&gears=0&ag=0&cookie=1&res=1630x983&gt_ms=80&timezone=-180&locale=en-US&pageTitle=SAP+Web+IDE&pageWidth=1630&pageHeight=877&custom1=serviceTimeout&custom2=USAGE&custom3=NONE_SAP&custom4=method&custom5=onDocumentClosed&custom6=171012&custom7=CANARY&custom8=&custom9=&custom10=wf1f52214&custom11=&event_type=custom&element_type=event
+Total=1
+ContentType=text/plain
+SnapshotXmlFile=snapshot_14.xml
+RequestHeaderFile=t14_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t14_ResponseHeader.txt
+[ProtocolInfo]
+ProtocolId=QTWeb

@@ -1,0 +1,204 @@
+BODY {
+	BACKGROUND: #828282; MARGIN: 0px; FONT: 11px/14px Arial, Helvetica, sans-serif; COLOR: #333333
+}
+TD.Stage {
+	BACKGROUND: #e3e3e3
+}
+TD.BOBJ {
+	BACKGROUND: #000000
+}
+TD.Header {
+	BACKGROUND: url(../images/HeaderBgRepeat.jpg) #f0ab00 repeat-y
+}
+TD.HeaderOutline {
+	BACKGROUND: #e8a300
+}
+P.HeaderText {
+	MARGIN: 0px; VERTICAL-ALIGN: bottom; COLOR: #333333; LINE-HEIGHT: 18px
+}
+.HeaderBracket {
+	PADDING-RIGHT: 7px; PADDING-LEFT: 7px; BACKGROUND: url(../images/HeaderBracket.gif) no-repeat center 50%; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+P.HeaderText A {
+	COLOR: #333333; TEXT-DECORATION: none
+}
+P.HeaderText A:visited {
+	COLOR: #333333; TEXT-DECORATION: none
+}
+P.HeaderText A:hover {
+	COLOR: #333333; TEXT-DECORATION: underline
+}
+A.HeaderLanguageSelector {
+	FONT: 11px/15px Arial, Helvetica, sans-serif; COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.HeaderLanguageSelector:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.HeaderLanguageSelector:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.MainOutline {
+	BACKGROUND: #7e7e7e
+}
+TD.MainTopBar {
+	BACKGROUND: #7e7e7e
+}
+DIV.Dove {
+	
+}
+DIV.Petrol {
+	
+}
+DIV.WarmGreen {
+	
+}
+DIV.WarmRed {
+	
+}
+DIV.VioletMauve {
+	
+}
+TD.PanelPhotoBg {
+	BACKGROUND-REPEAT: no-repeat; BACKGROUND-COLOR: #ffffff
+}
+DIV.YourWorkspace {
+	Z-INDEX: 20; FLOAT: right; MARGIN: 0px; VERTICAL-ALIGN: top; WIDTH: 208px; HEIGHT: 26px
+}
+TD.YourWorkspace {
+	BACKGROUND: url(../images/YourWorkspaceBgRepeat.jpg) #7e7e7e repeat-y
+}
+TD.YourWorkspaceOutline {
+	BACKGROUND: #6c6c6c
+}
+A.YourWorkspaceLink {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.YourWorkspaceLink:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+A.YourWorkspaceLink:hover {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+P.FooterText {
+	MARGIN: 0px; VERTICAL-ALIGN: bottom; COLOR: #ffffff
+}
+SPAN.FooterBracket {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; BACKGROUND: url(../images/FooterBracket.gif) no-repeat center 50%; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+P.FooterText A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+P.FooterText A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+P.FooterText A:hover {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+TD.ButtonGold {
+	BACKGROUND: url(../images/ButtonBgRepeatGold.jpg) #df9c00 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonGold A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonGold A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonGold A:hover {
+	COLOR: #fbe6b3; TEXT-DECORATION: none
+}
+TD.ButtonDarkGray {
+	BACKGROUND: url(../images/ButtonBgRepeatDarkGray.jpg) #666666 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonDarkGray A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonDarkGray A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonDarkGray A:hover {
+	COLOR: #d1d1d1; TEXT-DECORATION: none
+}
+TD.ButtonDove {
+	BACKGROUND: url(../images/ButtonBgRepeatDove.jpg) #44697d repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonDove A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonDove A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonDove A:hover {
+	COLOR: #c7d2d8; TEXT-DECORATION: none
+}
+TD.ButtonPetrol {
+	BACKGROUND: url(../images/ButtonBgRepeatPetrol.jpg) #156570 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonPetrol A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonPetrol A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonPetrol A:hover {
+	COLOR: #b9d1d4; TEXT-DECORATION: none
+}
+TD.ButtonWarmGreen {
+	BACKGROUND: url(../images/ButtonBgRepeatWarmGreen.jpg) #557630 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonWarmGreen A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonWarmGreen A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonWarmGreen A:hover {
+	COLOR: #ccd6c1; TEXT-DECORATION: none
+}
+TD.ButtonWarmRed {
+	BACKGROUND: url(../images/ButtonBgRepeatWarmRed.jpg) #774a39 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonWarmRed A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonWarmRed A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonWarmRed A:hover {
+	COLOR: #d6c9c4; TEXT-DECORATION: none
+}
+TD.ButtonVioletMauve {
+	BACKGROUND: url(../images/ButtonBgRepeatVioletMauve.jpg) #644459 repeat-x; FONT: bold 11px Tahoma, Arial, Helvetica, sans-serif
+}
+TD.ButtonVioletMauve A {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonVioletMauve A:visited {
+	COLOR: #ffffff; TEXT-DECORATION: none
+}
+TD.ButtonVioletMauve A:hover {
+	COLOR: #d1c7ce; TEXT-DECORATION: none
+}
+.FontGold {
+	COLOR: #f0ab00
+}
+.orange {
+	COLOR: #f0ab00
+}
+.FontWhite {
+	COLOR: #ffffff
+}
+.FontDove {
+	COLOR: #44697d
+}
+.FontPetrol {
+	COLOR: #156570
+}
+.FontWarmGreen {
+	COLOR: #557630
+}
+.FontWarmRed {
+	COLOR: #774a39
+}
+.FontVioletMauve {
+	COLOR: #644459
+}

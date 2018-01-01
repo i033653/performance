@@ -1,0 +1,13 @@
+.gitAmountIndicator {
+  direction: inherit;
+  text-align: left;
+  background: white;
+  vertical-align: top;
+  border-radius: 1.25rem;
+  padding: 0 0.75rem;
+}
+
+.gitAmountIndicatorLine label {
+  height: 1rem;
+  line-height: 1rem;
+}

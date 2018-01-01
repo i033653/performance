@@ -1,0 +1,16 @@
+define([], function() {
+
+	return {
+
+
+		initialize: function() {
+			var sPluginURL = jQuery.sap.getModulePath("sap.watt.saptoolsets.fiori.project.servicecatalog");
+
+			var sCatalogViewerURL = sPluginURL + "/lib/CatalogViewer";
+			jQuery.sap.registerModulePath("sap.gateway.uitools", sCatalogViewerURL);
+		}
+
+
+	};
+
+});

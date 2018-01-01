@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=15552000
+Content-Type: text/html
+Content-Encoding: gzip
+Last-Modified: Mon, 19 Sep 2016 18:15:57 GMT
+Vary: Accept-Encoding
+Date: Tue, 26 Sep 2017 11:27:33 GMT
+Content-Length: 1569
+

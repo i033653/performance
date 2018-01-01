@@ -1,0 +1,15 @@
+[t33]
+FileName1=t33.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf?name=MTA
+Total=3
+RequestHeaderFile=t33_RequestHeader.txt
+RequestBodyFile=t33_RequestBody.txt
+ResponseHeaderFile=t33_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_33.xml
+FileName2=t33_MTA.html
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/metadata/MTA
+FileName3=t33.html
+URL3=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/metadata/
+[ProtocolInfo]
+ProtocolId=QTWeb

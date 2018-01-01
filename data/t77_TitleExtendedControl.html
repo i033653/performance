@@ -1,0 +1,49 @@
+sap.ui.define(["sap/ui/core/Control"], function(Control) {
+	"use strict";
+	return Control.extend("sap.watt.ideplatform.plugin.run.ui.TitleExtendedControl", {
+		metadata: {
+			properties: {
+				toolTipText: {
+					type: "string"
+				}
+			},
+			aggregations: {
+				title: {
+					type: 'sap.ui.commons.Title',
+					multiple: false
+				},
+				_oIcon: {
+					type: 'sap.ui.core.Icon',
+					multiple: false
+				}
+			}
+		},
+		init: function() {
+			this.setAggregation("title", new sap.ui.commons.Title({}));
+			this._icon = new sap.ui.core.Icon({
+				src: "sap-icon://watt/help",
+				size: "1rem",
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12"
+				})
+			}).addStyleClass('helpIcon'); 
+			this.setAggregation("_oIcon", this._icon);
+		},
+		onBeforeRendering: function() {
+			//Decorate the icon with the rich tooltip
+			if (this.getToolTipText()) {
+				var oRichTooltip = new sap.ui.commons.RichTooltip({
+					text: this.getToolTipText(),
+					title: "Help"
+				}).addStyleClass("sapWattTooltip");
+				this._icon.setTooltip(oRichTooltip);
+			}
+		},
+		exit: function() {
+			if (this._icon) {
+				this._icon.destroy();
+				delete this._icon;
+			}
+		}
+	});
+});

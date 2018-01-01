@@ -1,0 +1,68 @@
+define(function() {
+	return {
+		buildRequest: function(Id, sMethod, oParams) {
+			var oRpc = {
+				jsonrpc: "2.0",
+				id: "" + Id,
+				method: sMethod,
+				params: oParams
+			};
+			return JSON.stringify(oRpc);
+		},
+		buildNotification: function(sMethod, oParams) {
+			var oRpc = {
+				jsonrpc: "2.0",
+				method: sMethod,
+				params: oParams
+			};
+			return JSON.stringify(oRpc);
+		},
+
+		buildResponse: function(Id, oResult, oError) {
+			var oRpc = {};
+			if (oResult) {
+				oRpc = {
+					jsonrpc: "2.0",
+					id: Id,
+					result: oResult
+				};
+			} else if (oError) {
+				oRpc = {
+					jsonrpc: "2.0",
+					id: Id,
+					error: oError
+				};
+			}
+			return JSON.stringify(oRpc);
+		},
+
+		getRpc: function(sMessage, aHeaders) {
+			var sRpc = sMessage, aHeader, sContentLength,
+				hLen = sRpc.indexOf("\r\n");
+
+			while (hLen > 0) {
+				aHeader = sRpc.substr(0, hLen);
+				if (aHeader.indexOf("Content-Length: ") > -1) {
+					sContentLength = aHeader.split(" ")[1];
+				}
+				aHeaders.push(aHeader);
+				sRpc = sRpc.substr(hLen + 2);
+				hLen = sRpc.indexOf("\r\n");
+			}
+			sRpc = sRpc.substr(2); //remove the leading "\r\n"
+			return parseInt(sContentLength)===sRpc.length ? JSON.parse(sRpc) : {};
+		},
+
+		getType: function(oRpc) {
+			if (oRpc.id && oRpc.method) {
+				return "request";
+			} else if (oRpc.id && (oRpc.result || oRpc.error)) {
+				return "response";
+			} else if (oRpc.method) {
+				return "notification";
+			} else {
+				throw "Unknow type";
+			}
+		}
+	};
+});

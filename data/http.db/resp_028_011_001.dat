@@ -1,0 +1,46 @@
+.console {
+  display: block;
+  background-color: #fdfeff;
+  color: lightgray;
+  font-family: monospace;
+  overflow: auto;
+  width: auto !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+div[data-sap-ui*="console"] {
+  width: 100%;
+}
+
+.gitContent .console {
+  display: none;
+}
+
+.console .info {
+  padding: 3px 6px;
+  color: #000;
+  border-bottom: 1px solid #f0f4f9;
+}
+
+.console .warn {
+  padding: 3px 6px;
+  color: #5c3b00;
+  background: #fffbe6;
+  border-bottom: 1px solid #fff5c2;
+}
+
+.console .error {
+  padding: 3px 6px;
+  color: #ba202f;
+  background: #fff0f0;
+  border-bottom: 1px solid #ffd7d7;
+}
+
+.console .debug {
+  padding: 3px 6px;
+  color: #69767f;
+  border-bottom: 1px solid #f0f4f9;
+}
+

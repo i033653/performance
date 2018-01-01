@@ -1,0 +1,286 @@
+define(function() {
+
+	"use strict";
+	
+	/**
+	 * @public
+	 * @exports sap.watt.common.document/Document
+	 * @class
+	 * Represents a file system object in the workspace.
+	 * It can be a folder that is represented by the <i>FolderDocument</i> class, or a file represented by the <i>FileDocument</i> class, or a project represented by the <i>ProjectDocument</i> class.
+	 */
+	var Document = sap.ui.base.Object.extend("sap.watt.common.plugin.document.Document", /** @lends sap.ui.base.Object */ {
+		constructor: function (oOwner, oDAO, mEntity, oEventEmitter) {
+			this._oOwner = oOwner;
+			this._oDAO = oDAO;
+			this._mEntity = mEntity;
+			this._oEventEmitter = oEventEmitter;
+			this._mState = {
+				bDirty: false,
+				bNew: !mEntity,
+				sETag: null
+			};
+			this._bExtDoc = false;
+			this._mExtInfo = null;
+			this._oHiddenPromise = Q();
+		}
+	});
+
+	/** Gets the key string
+	 * @private
+	 * @returns {string} The key string
+	 */
+	Document.prototype.getKeyString = function() {
+		return this._mEntity.getKeyString(this._mEntity);
+	};
+
+	/** Checks whether the document is of the passed type
+	 * @private
+	 * @param {string} sType
+	 * @returns {boolean}
+	 */
+	Document.prototype.isTypeOf = function(sType) {
+		return (sType === this.getType());
+	};
+	
+	/** 
+	 * Gets the document name, which is the same name as the file or folder on the disk.
+	 * @public
+	 * @example
+	 * oDocument.getName()
+	 * @returns {string} The document name.
+	 */
+	Document.prototype.getName = function() {
+		return this._mEntity.getName();
+	};
+
+	Document.prototype = jQuery.extend(Document.prototype, {
+		/** 
+		 * @deprecated
+		 * Gets the document's entity
+		 * @return {sap.watt.platform.filesystem/document/FileFolderEntity} the document's entity
+		 */
+		getEntity: function() {
+			return this._mEntity;
+		},
+
+		contains: function(oDocument, bOnlyDirectChildren) {
+			bOnlyDirectChildren = (bOnlyDirectChildren === true);
+			return this.getEntity().contains(oDocument.getEntity(), bOnlyDirectChildren);
+		},
+
+		/** Return if the document is read-only,
+		 * to be overwritten by subclasses
+		 * @returns {boolean}
+		 */
+		isReadOnly: function() {
+			if (this.getExtInfo() && this.getExtInfo().readOnly === true) {
+				return true;
+			}
+			return !!this.getEntity().oMetadata.readOnly;
+		},
+
+		/** Gets the entity type instance
+		 * @return {object} the entity type instance
+		 */
+		getType: function() {
+			return this._mEntity.getType();
+		},
+
+		/**
+		 * @deprecated 
+		 * Gets the metadata
+		 * @return {object} the metadata
+		 */
+		getDocumentMetadata: function() {
+			var sErrorMessage = "oDocument.getDocumentMetadata() method is depricated. Use oDocument.getEntity().oMetadata instead";
+			if (this._oDAO.context.service.log) { // use log service when it is available on a document DAO service
+				this._oDAO.context.service.log.error("Document", sErrorMessage, ["user"]).done();
+			} else { // otherwise use console.error
+				console.error(sErrorMessage);
+			}
+
+			return this._mEntity.oMetadata;
+		},
+
+		/** 
+		 * @deprecated
+		 * Sets the metadata
+		 * @param {object} mMetadata the metadata
+		 */
+		setDocumentMetadata: function(mMetadata) {
+			var sErrorMessage = "oDocument.getDocumentMetadata() method is depricated. Use oDocument.getEntity().oMetadata instead";
+			if (this._oDAO.context.service.log) { // use log service when it is available on a document DAO service
+				this._oDAO.context.service.log.error("Document", sErrorMessage, ["user"]).done();
+			} else { // otherwise use console.error
+				console.error(sErrorMessage);
+			}
+
+			this._mEntity.oMetadata = mMetadata;
+		},
+
+		/** Gets the ETag
+		 * @param {boolean} bRefresh indicator to get a fresh ETag
+		 * @return {string} the ETag
+		 */
+		getETag: function(bRefresh) {
+			var that = this;
+			if (bRefresh) {
+				return this._oDAO.readFileMetadata(this, true).then(function(oMetadata) {
+					if (oMetadata) {
+						return that._setState({
+							sETag: oMetadata.sETag
+						}).then(function() {
+							return that._mState.sETag;
+						});
+					}
+
+					return null;
+				});
+			}
+
+			return Q(this._mState.sETag);
+		},
+
+		/** Gets the dirty state
+		 * @return {boolean} the dirty state
+		 */
+		isDirty: function() {
+			return this._mState.bDirty === true;
+		},
+
+		/** Whether the document is new or not.
+		 * @return {boolean} the new state
+		 */
+		isNew: function() {
+			return this._mState.bNew === true;
+		},
+
+		isHidden: function() {
+			var that = this;
+
+			this._oHiddenPromise = this._oHiddenPromise.then(function() {
+				return (that.getEntity().oMetadata.hidden === true);
+			});
+
+			return this._oHiddenPromise;
+		},
+
+		setHidden: function(bHidden, oSource) {
+			var that = this;
+
+			this._oHiddenPromise = this._oHiddenPromise.then(function() {
+				bHidden = (bHidden === true);
+				var bOldHidden = (that.getEntity().oMetadata.hidden === true);
+
+				if (bHidden === bOldHidden) {
+					return Q();
+				}
+
+				that.getEntity().oMetadata.hidden = bHidden;
+				return that.getParent().then(function(oParent) {
+					return that._oEventEmitter.fireChanged({
+						document: that,
+						changeType: "hidden",
+						parent: oParent,
+						options: {
+							source: oSource
+						}
+					});
+				});
+			});
+
+			return this._oHiddenPromise;
+		},
+
+		/** get extra info of the document
+		 * @returns {object} the information
+		 */
+		getExtInfo: function() {
+			return this._mExtInfo;
+		},
+
+		/** Sets the extra info for the document
+		 * @param {object} mExtInfo the information
+		 * @returns {object}
+		 */
+		setExtInfo: function(mExtInfo) {
+			this._mExtInfo = mExtInfo;
+		},
+
+		_hasStateChanged: function(mState) {
+			for (var sKey in mState) {
+				if (this._mState[sKey] !== mState[sKey]) {
+					return true;
+				}
+			}
+			return false;
+		},
+
+		_setState: function(mState) {
+			if (this._hasStateChanged(mState)) {
+				jQuery.extend(this._mState, mState);
+				return this._oEventEmitter.fireStateChanged({
+					document: this
+				});
+			}
+			return Q();
+		},
+
+		_ensureETagExists: function() {
+			return (this._mState.sETag ? Q() : this.getETag(true));
+		},
+
+		/** 
+		 * Releases document resources
+		 */
+		release: function() {
+			return this._oEventEmitter.fireChanged({
+				document: this,
+				changeType: "release"
+			});
+		},
+
+		"delete": function() {
+			// TODO add a bForce param to delete document even if it is dirty
+			throw new Error("Delete not supported for documents of type " + this.getType());
+		},
+
+		/** Gets the title (e.g. path or name, type dependent)
+		 * @return {string} the title
+		 */
+		getTitle: function() {
+			return this._mEntity.getTitle();
+		},
+
+		_notifyAboutNewDocument: function(oParent, oNewDocument) {
+			return Q.all([this._oEventEmitter.fireCreated({
+				document: oNewDocument,
+				parent: oParent
+			}), this._oEventEmitter.fireChanged({
+				document: oParent,
+				changeType: "created"
+			})]);
+		},
+
+		_notifyAboutDeletion: function(oParent, oDeletedDocument) {
+			return Q.all([this._oEventEmitter.fireDeleted({
+				document: oDeletedDocument,
+				parent: oParent
+			}), this._oEventEmitter.fireChanged({
+				document: oDeletedDocument,
+				changeType: "deleted"
+			})]);
+		},
+
+		_notifyAboutMove: function(oNewDocument) {
+			return this._oEventEmitter.fireChanged({
+				document: this,
+				newDocument: oNewDocument,
+				changeType: "renamed"
+			});
+		}
+	});
+
+	return Document;
+});

@@ -1,0 +1,4 @@
+.featuresSettingText {
+  margin-right: 1.5rem;
+  color: #e22525;
+}

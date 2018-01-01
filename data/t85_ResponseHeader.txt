@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=3600
+Content-Type: application/octet-stream
+ETag: PJbJk1AGkNGneHPNYrxjmzoQZT8=
+Vary: Accept-Encoding
+P3P: CP="NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND"
+Date: Tue, 26 Sep 2017 11:27:30 GMT
+Content-Length: 18176
+

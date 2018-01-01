@@ -1,0 +1,19 @@
+sap.ui.define([
+	"sap/m/Popover"
+], function(oPopover) {
+	"use strict";
+
+	var AutoCompletePopover = oPopover.extend("sap.watt.ideplatform.plugin.intellisence.control.AutoCompletePopover", {
+		
+		init: function() {
+			oPopover.prototype.init.apply(this, arguments);
+		},
+
+		_getInitialFocusId: function(){
+			return null;
+		},
+		
+		renderer: {}
+	});
+	return AutoCompletePopover;
+});

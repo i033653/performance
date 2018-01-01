@@ -1,0 +1,11 @@
+[t13]
+FileName1=t13_mode-xml.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/watt/ideplatform/plugin/aceeditor/control/lib/ace-noconflict/mode-xml.js
+Total=1
+ContentType=application/javascript
+SnapshotXmlFile=snapshot_13.xml
+RequestHeaderFile=t13_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t13_ResponseHeader.txt
+[ProtocolInfo]
+ProtocolId=QTWeb

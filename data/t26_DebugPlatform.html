@@ -1,0 +1,34 @@
+define([
+  "sap/watt/ideplatform/debug/core/util/Logger"], function (Logger) {
+
+  "use strict";
+
+  var _instance = null;
+
+  var DebugPlatform = function () {
+    if (!_instance) {
+      _instance = this;
+    }
+    return _instance;
+  };
+
+  DebugPlatform.prototype.configure = function (config) {
+    this._logger = new Logger(this.context);
+  };
+
+  DebugPlatform.prototype.getLogger = function () {
+    if (!this._logger) {
+      this._logger = new Logger(this.context);
+    }
+    return this._logger;
+  };
+
+  DebugPlatform.prototype.getContext = function () {
+    return this.context;
+  };
+
+  // CONSTANTS
+  DebugPlatform.prototype.ERROR_TIMEOUT = "Timeout";
+
+  return new DebugPlatform();
+});

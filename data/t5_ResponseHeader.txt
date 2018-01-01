@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+server: SAP NetWeaver Application Server 7.40 / AS Java 7.31
+set-cookie: MYSAPSSO2=AjExMDAgAA5wb3J0YWw6UDcxMDgwMIgAB2RlZmF1bHQBAAdQNzEwODAwAgADMDAwAwADVVNNBAAMMjAxNzA5MjYxMDAzBQAEAAAACAoAB1A3MTA4MDD%2FAQUwggEBBgkqhkiG9w0BBwKggfMwgfACAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHATGB0DCBzQIBATAiMB0xDDAKBgNVBAMTA1VTTTENMAsGA1UECxMESjJFRQIBADAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcwOTI2MTAwMzQ3WjAjBgkqhkiG9w0BCQQxFgQUijl2v9KWO!P9SAHp!LWLd8a80RIwCQYHKoZIzjgEAwQvMC0CFAwbNvtyn4xWBYtaQjkchA%2FYg5LXAhUArtltLqjIMzjsRep!MHb2784mmJ8%3D;path=/;HttpOnly
+content-type: text/html;charset=utf-8
+cache-control: no-cache, no-store, must-revalidate, private
+pragma: no-cache
+content-encoding: gzip
+date: Tue, 26 Sep 2017 10:03:47 GMT
+transfer-encoding: chunked
+set-cookie: com.sap.engine.security.authentication.original_application_url=; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT; path=/saml2/idp; HttpOnly
+set-cookie: JSESSIONID=_GwjlKDolq_825ola-rJsEaffaS9XgFGFScA_SAP6lNghe2I1qTCRmdhdZEdjSiP; Version=1; Path=/
+set-cookie: JSESSIONMARKID=YZawVQJkdh3Sa8Og0LqmfM247WhJz2y07CTUYVJwA; Version=1; Path=/
+

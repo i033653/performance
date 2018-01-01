@@ -1,0 +1,358 @@
+define({
+
+	_dataProvider: null,
+	_url: null,
+	_context: null,
+
+	/**
+	 * Intialize the DataProviderManager with a specific provider.
+	 * @param oProvider - the specific data provider for RDL (AstLibrary)
+	 * @param sUrl - url for fetching metadata (optional).
+	 *
+	 */
+	init: function(oProvider, sUrl, oContext) {
+		this._dataProvider = oProvider;
+		this._url = sUrl;
+		this._context = oContext;
+	},
+
+	isInitialized: function() {
+		return this._dataProvider !== null;
+	},
+
+	getUrl: function() {
+		return this._url;
+	},
+
+	/**
+	 * @returns a JSON representation of the metadata. the JSON root is the "entities" array.
+	 *
+	 */
+	getModelTemplateRepresentation: function() {
+		if (this._dataProvider) {
+			var oResult = {
+				"entities": []
+			};
+
+			oResult.entities = this._getModelRepresentationFromOData();
+			return oResult;
+		}
+		return null;
+	},
+
+	/*
+	* Get the first entry of kind schema
+	*/
+	_getEntitySchema: function() {
+		var oDataProvider = this._dataProvider;
+
+		return _.findKey(oDataProvider, function(oEntity) {
+			return oEntity.$kind === "Schema";
+		});
+	},
+
+	_getEntityContainerNamespace: function() {
+		var oDataProvider = this._dataProvider;
+
+		return _.findKey(oDataProvider, function(oEntity) {
+			return oEntity.$kind === "EntityContainer";
+		});
+
+	},
+
+	/* Fill missing data from container */
+	_getEntityContainerData: function() {
+		var oDataProvider = this._dataProvider;
+		var oNavigationPropertyBinding = {};
+		var aEntitySets = [];
+		var oEntityContainer = _.find(oDataProvider, function(oEntity, key) {
+			return oEntity.$kind === "EntityContainer";
+		});
+
+		_.forEach(oEntityContainer, function(oEntitySet, key) {
+			if (oEntitySet.$kind === "EntitySet") {
+				var oCurrentEntitySet = {
+					key: key,
+					type: oEntitySet.$Type
+				};
+
+				if (oEntitySet.$NavigationPropertyBinding) {
+					oNavigationPropertyBinding[key] = oEntitySet.$NavigationPropertyBinding;
+				}
+
+				aEntitySets.push(oCurrentEntitySet);
+			}
+		});
+
+		return {
+			navigationPropertyBinding: oNavigationPropertyBinding,
+			entitySets: aEntitySets
+				/* additional data for future*/
+		};
+	},
+
+	_getModelRepresentationFromOData: function() {
+		var that = this;
+		var entities = [];
+		var sNameSpace = that._getEntityContainerNamespace();
+		var oEntityContainerData = that._getEntityContainerData();
+		var sEntitySchema = this._getEntitySchema();
+		var aComplexEntities = [];
+		var aEnumEntitySets = [];
+		var oEntityContainer = this._dataProvider;
+
+		//First pass update leaf properties
+		_.forEach(oEntityContainer, function(oEntitySet, key) {
+			//Already handled
+			if (key === "$Version" || key === "$EntityContainer") {
+				return;
+			}
+
+			if (oEntitySet) {
+				var oEntityExtensions = {
+					"entityType": key
+				};
+				var aEntityNavigationProperties = [];
+				var aEntityProperties = [];
+				var aKeyProperties = oEntitySet.$Key;
+
+				if (oEntitySet.$kind === "EntityType") {
+					_.forEach(oEntitySet, function(oEntity, sEntitykey) {
+						if (oEntity.$kind === "Property") {
+							var bISKey = _.includes(aKeyProperties, sEntitykey);
+							var sPropertyType = that._normalizeType(oEntity, undefined /*Entity extension*/ );
+							var oProperty = {
+								"name": sEntitykey,
+								"isKey": bISKey,
+								"type": oEntity.$Type,
+								"remoteType": sPropertyType,
+								"annotations": {}
+							};
+							that._addAdditionalPropertyAttributes(oProperty, oEntity);
+
+							aEntityProperties.push(oProperty);
+						}
+						if (oEntity.$kind === "NavigationProperty") {
+							var oNavigationProperty = {
+								"name": sEntitykey,
+								"isCollection": oEntity.$isCollection,
+								"type": oEntity.$Type/*,
+								"partner": oEntity.$Partner*/
+							};
+							aEntityNavigationProperties.push(oNavigationProperty);
+						}
+					});
+					var oEntitySetTypeIndex = _.findIndex(oEntityContainerData.entitySets, function(oEntitySet1) {
+						return oEntitySet1.type === key;
+					});
+
+					var sEntitySetName = "";
+					var sEntityName = "";
+					if (oEntitySetTypeIndex >= 0) {
+						sEntitySetName = oEntityContainerData.entitySets[oEntitySetTypeIndex].key;
+						sEntityName = oEntityContainerData.entitySets[oEntitySetTypeIndex].type;
+					}
+
+					if (sEntitySetName !== "" && _.startsWith(sEntityName, sEntitySchema)) {
+						sEntityName = _.trimStart(sEntityName, sEntitySchema);
+					}
+
+					var oEntity = {
+						"name": sEntitySetName,
+						"entityType": key,
+						"fullyQualifiedName": _.endsWith(sNameSpace, ".") ? sNameSpace + sEntitySetName: sNameSpace + "." + sEntityName,
+						"elements": aEntityProperties,
+						"navigationsData": aEntityNavigationProperties,
+						"navigations": [],
+						"annotations": oEntityExtensions,
+						"parameterizedEntity": false
+					};
+					entities.push(oEntity);
+				}
+				//
+				if (oEntitySet.$kind === "ComplexType") {
+					var oComplexEntitySet = {
+						"name": key
+					};
+					var aEntityComplexProperties = [];
+
+					_.forEach(oEntitySet, function(oComplexEntity, sComplexKey) {
+						if (oComplexEntity.$kind === "Property") {
+							var sPropertyType = that._normalizeType(oComplexEntity, undefined /*Entity extension*/ );
+							var oComplexEntity1 = {
+								"name": sComplexKey,
+								"type": oComplexEntity.$Type,
+								"remoteType": sPropertyType
+							};
+							aEntityComplexProperties.push(oComplexEntity1);
+						}
+					});
+					oComplexEntitySet.elements = aEntityComplexProperties;
+					aComplexEntities.push(oComplexEntitySet);
+				}
+
+				if (oEntitySet.$kind === "EnumType") {
+					var oEnumEntitySet = {
+						"name": key,
+						"type": key
+					};
+					var aEntityEnumProperties = [];
+
+					_.forEach(oEntitySet, function(oEnumEntity, sEnumKey) {
+						if (oEnumEntity === "$kind") {
+							return;
+						}
+						oEnumEntity = {
+							"name": sEnumKey,
+							"value": oEnumEntity
+						};
+						aEntityEnumProperties.push(oEnumEntity);
+					});
+					oEnumEntitySet.elements = aEntityEnumProperties;
+					aEnumEntitySets.push(oEnumEntitySet);
+				}
+			}
+
+		});
+
+		//second pass update navigation proeprties and complex types 
+		_.forEach(entities, function(oCurrEntity, allEntitiesKey) {
+			_.forEach(oCurrEntity.navigationsData, function(oNavigation, navDataKey) {
+				var iEntity = _.findIndex(entities, function(oNavEntity) {
+					return oNavEntity.entityType === oNavigation.type;
+				});
+				var oEntityNavigation = {
+					"name": oNavigation.name,
+					"multiplicity": oNavigation.isCollection ? "*" : "1",
+					"elements": "@datasource.entities." + iEntity + ".elements",
+					"navigations": "@datasource.entities." + iEntity + ".navigations"
+				};
+				oCurrEntity.navigations.push(oEntityNavigation);
+
+			});
+			delete oCurrEntity.navigationsData;
+			
+			//Update the Entity model with the complex type navigation and enums
+			oCurrEntity.elements = _(oCurrEntity.elements).map(function(entityElement) {
+				return that._flattenPropertyElements(entityElement, aComplexEntities, aEnumEntitySets);
+			}).flatten().value();
+		});
+
+		return entities;
+	},
+	
+	/*
+	*	recursive method call to build the elements and resolve additional types
+	*
+	*/
+	_flattenPropertyElements: function(oEntityElement, aComplexEntities, aEnumEntitySets){
+		var that = this;
+
+		//Handle atomic type
+		if ( _.startsWith(oEntityElement.type, "Edm.")) {
+			return [
+				oEntityElement
+			];
+		}
+
+		//Handle enum
+		if(_.find(aEnumEntitySets, function(enumEntity) { return enumEntity.name === oEntityElement.type;})){
+			return [
+				oEntityElement
+			];
+		}
+
+		//Handle complex entity
+		var aComplexElements = that._getElementsArrayFromSource(aComplexEntities, oEntityElement);
+		if (aComplexElements) {
+			return _(aComplexElements).map(function (element) {
+				return that._flattenPropertyElements(element, aComplexEntities, aEnumEntitySets).map(function (element) {
+					return {
+						name: oEntityElement.name + "/" + element.name,
+						type: element.type,
+						remoteType: element.remoteType
+					};
+				});
+			}).flatten().value();
+		}
+
+		return null;
+	},
+	
+	_getElementsArrayFromSource: function(aSource, element){
+		var oSourceElement =  _.find(aSource, function(sourceEntity) {
+			return sourceEntity.name === element.type;
+		});
+		return oSourceElement ? oSourceElement.elements : null;
+	},
+
+	/*
+		All new V4 attrubutes need to be traslated to entity model so merge is not possible here
+	*/
+	_addAdditionalPropertyAttributes: function(oProperty, oEntity) {
+		if (oEntity.hasOwnProperty("$Nullable")) {
+			oProperty.nullable = oEntity.$Nullable.toString();
+		}
+
+		if (oEntity.hasOwnProperty("$MaxLength")) {
+			oProperty.maxLength = oEntity.$MaxLength ? oEntity.$MaxLength.toString() : "Max";
+		}
+
+		if (oEntity.hasOwnProperty("$Unicode")) {
+			oProperty.unicode = oEntity.$Unicode ? oEntity.$Unicode.toString() : "";
+		}
+
+		if (oEntity.hasOwnProperty("$Scale")) {
+			oProperty.scale = oEntity.$Scale ? oEntity.$Scale.toString() : "";
+		}
+
+		if (oEntity.hasOwnProperty("$Precision")) {
+			oProperty.precision = oEntity.$Precision ? oEntity.$Precision.toString() : "";
+		}
+	},
+
+	_normalizeType: function(oEntity, oPropertyExtensions) {
+		var oType = oEntity.$Type;
+
+		switch (oType) {
+			case "Edm.String":
+				if (oPropertyExtensions && oPropertyExtensions.filterable === "false") {
+					return "LargeString";
+				}
+				return "String"; // default type
+			case "Edm.Decimal":
+				if (oEntity.$Precision) {
+					return "Decimal";
+				}
+				return "DecimalFloat";
+			case "Edm.Single":
+				return "Decimal";
+			case "Edm.DateTimeOffset":
+			case "Edm.DateTime":
+				if (oEntity.$Precision === "7") {
+					return "UTCTimestamp";
+				}
+				return "UTCDateTime";
+			case "Edm.Time":
+				return "LocalTime";
+			case "Edm.Int16":
+			case "Edm.Int32":
+			case "Edm.Int64":
+			case "Edm.Byte":
+			case "Edm.SByte":
+				return "Integer";
+			case "Edm.Double":
+				return "BinaryFloat";
+			case "Edm.Boolean":
+				return "Boolean";
+			case "Edm.Guid":
+				return "UUID";
+			case "Edm.Binary":
+				if (oPropertyExtensions && oPropertyExtensions.filterable === "false") {
+					return "LargeBinary";
+				}
+				return "Binary";
+		}
+		return oType;
+	}
+});

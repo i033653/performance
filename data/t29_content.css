@@ -1,0 +1,156 @@
+.wattContentView {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.wattEditorArea {
+  width: 100%;
+  height: calc(100% - 28px);
+}
+
+.wattEditorContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.wattEditor {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* TODO: remove the following code after sync with flat */
+/* ========================================================================== */
+/* CSS for control sap.watt.platform.plugin.content.control.NavigationBar     */
+/* Flat                                      								  */
+/* ========================================================================== */
+.sapUiSizeCompact .wattTabStrip,
+.wattTabStrip {
+  height: 28px;
+  box-sizing: border-box;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITH,
+.wattTabStrip.sapMITH {
+  border-bottom: 1px solid #dadce0;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem,
+.wattTabStrip .sapWattNBItem {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.5rem;
+  background: #f0f4f9;
+  border-right: 1px solid #dadce0;
+  border-bottom: 1px solid #dadce0;
+  line-height: 26px;
+  border-top: 2px solid transparent;
+  font-size: 12px;
+  color: #3d3d3d;
+  height: 28px;
+  box-sizing: border-box;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem.sapMITBFilter,
+.wattTabStrip .sapWattNBItem.sapMITBFilter {
+  margin: 0;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem.sapMITBSelected,
+.wattTabStrip .sapWattNBItem.sapMITBSelected {
+  border-top-color: #2f3c48;
+  background: #fdfeff;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem .sapWattNBItemText,
+.wattTabStrip .sapWattNBItem .sapWattNBItemText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0.5rem;
+  max-width: 13rem;
+  margin-right: 1.2rem;
+  padding: 0 0.5rem;
+  pointer-events: none;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem.sapWattNBItemDirty .sapWattNBItemText:before,
+.wattTabStrip .sapWattNBItem.sapWattNBItemDirty .sapWattNBItemText:before {
+  content: "*";
+  padding: 1px;
+  vertical-align: middle;
+  line-height: 24px;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem .sapWattNBItemIcon,
+.wattTabStrip .sapWattNBItem .sapWattNBItemIcon {
+  pointer-events: none;
+}
+.sapUiSizeCompact .wattTabStrip .sapWattNBItem .sapUiTabClose,
+.wattTabStrip .sapWattNBItem .sapUiTabClose {
+  font-family: Sap-icons;
+  font-size: 0.6rem;
+  color: #747474;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  width: 1.5rem;
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0;
+  height: 26px;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITBNotScrollable .sapMITBScrollContainer,
+.wattTabStrip.sapMITBNotScrollable .sapMITBScrollContainer {
+  margin: 0;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITBScrollable.sapMITBScrollForward .sapMITBScrollContainer,
+.wattTabStrip.sapMITBScrollable.sapMITBScrollForward .sapMITBScrollContainer {
+  margin-right: 4.25rem;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITBScrollable.sapMITBNoScrollForward .sapMITBScrollContainer,
+.wattTabStrip.sapMITBScrollable.sapMITBNoScrollForward .sapMITBScrollContainer {
+  margin-right: 2.5rem;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITBScrollable.sapMITBNoScrollBack .sapMITBScrollContainer,
+.wattTabStrip.sapMITBScrollable.sapMITBNoScrollBack .sapMITBScrollContainer {
+  margin-left: 0;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITBScrollable.sapMITBScrollBack .sapMITBScrollContainer,
+.wattTabStrip.sapMITBScrollable.sapMITBScrollBack .sapMITBScrollContainer {
+  margin-left: 1.75rem;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITH,
+.wattTabStrip.sapMITH {
+  box-shadow: none;
+}
+.sapUiSizeCompact .wattTabStrip.sapMITH .sapMBtn,
+.wattTabStrip.sapMITH .sapMBtn,
+.sapUiSizeCompact .wattTabStrip.sapMITH .sapMBtn.sapMBtnInline,
+.wattTabStrip.sapMITH .sapMBtn.sapMBtnInline {
+  top: 0;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITBArrowScroll,
+.wattTabStrip .sapMITBArrowScroll {
+  top: 0;
+  padding: 6px 0.5rem;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITBArrowScroll:hover,
+.wattTabStrip .sapMITBArrowScroll:hover {
+  background-color: #b7dbf9;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITBArrowScrollLeftTextOnly,
+.wattTabStrip .sapMITBArrowScrollLeftTextOnly {
+  left: 0;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITHOverflowList .sapMITBArrowScrollRightTextOnly,
+.wattTabStrip .sapMITHOverflowList .sapMITBArrowScrollRightTextOnly {
+  right: 2.5rem;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITBScrollContainer,
+.wattTabStrip .sapMITBScrollContainer {
+  padding-top: 0;
+}
+.sapUiSizeCompact .wattTabStrip .sapMITBHead,
+.wattTabStrip .sapMITBHead {
+  margin-top: 0;
+  margin-left: 0;
+  padding: 0;
+}
+.sapMITBSelectItem.sapWattNBItem {
+  border-bottom: none;
+}

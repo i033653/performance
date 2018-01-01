@@ -1,0 +1,13 @@
+[t11]
+FileName1=t11.htm
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/?rand=94188
+Total=2
+RequestHeaderFile=t11_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t11_ResponseHeader.txt
+ContentType=text/html
+SnapshotXmlFile=snapshot_11.xml
+FileName2=t11_log.txt
+URL2=https://trackerexta90daed17.hana.ondemand.com/tracker/log?e_c=ide_filepath&e_a=unknown&idsite=7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5&rec=1&r=831344&h=13&m=4&s=50&url=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&urlref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&_id=45af37ff84697ea0&_idts=1506420264&_idvc=1&_idn=0&_refts=1506420264&_viewts=1506420264&_ref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&send_image=0&pdf=1&qt=0&realp=0&wma=0&dir=0&fla=0&java=0&gears=0&ag=0&cookie=1&res=1630x983&gt_ms=80&timezone=-180&locale=en-US&pageTitle=SAP+Web+IDE&pageWidth=1630&pageHeight=877&custom1=unhandledError&custom2=USAGE&custom3=NONE_SAP&custom4=&custom5=&custom6=171012&custom7=CANARY&custom8=&custom9=&custom10=wf1f52214&custom11=&event_type=custom&element_type=event
+[ProtocolInfo]
+ProtocolId=QTWeb

@@ -1,0 +1,81 @@
+define(function() {
+	var PING_INTERVAL = 60000;
+
+	function WebsocketProxy() {
+
+	}
+	
+	WebsocketProxy.prototype.configure = function(mConfig) {
+		this.servicePoint = mConfig.servicePoint;
+		this.options = mConfig.options;
+	};
+	
+	WebsocketProxy.prototype.open = function() {
+		var q = Q.defer();
+		var that = this;
+		if (this.servicePoint.indexOf("ws:") === 0 || this.servicePoint.indexOf("wss:") === 0) {
+			try {
+				if (this.options && this.options.subprotocol) {
+					var subprotocol;
+					if ( Array.isArray(this.options.subprotocol) ) {
+						subprotocol = [];
+						this.options.subprotocol.forEach(function(member) { subprotocol.push(encodeURIComponent(member)); });
+					} else {
+						subprotocol = encodeURIComponent(this.options.subprotocol);
+					}
+					this._socket = new WebSocket(this.servicePoint, subprotocol);
+				} else {
+					this._socket = new WebSocket(this.servicePoint);
+				}
+			} catch (ex) {
+				q.reject(ex.toString());
+				return q.promise;
+			}
+
+			this._socket.onopen = function(event) {
+				q.resolve();
+				// ping to keep connection alive
+				this.pingInterval = setInterval(function () {
+					that.postMessage('');
+				}, PING_INTERVAL);
+			}.bind(this);
+
+			this._socket.onclose = function(wsEvent) {
+				this._socket = null;
+				this.context.event.fireOnclosed(wsEvent);
+			}.bind(this);
+
+			this._socket.onmessage = function(messageEvent) {
+				this.context.event.fireOnmessage(messageEvent);
+			}.bind(this);
+
+			return q.promise;
+		}
+
+		q.reject("Unsupported");
+		return q.promise;
+	};
+
+	WebsocketProxy.prototype.close = function() {
+		var that = this;
+		clearInterval(this.pingInterval);
+		if (that._socket) {
+			var oDeferred = Q.defer();
+			that._socket.onclose = function() {
+				that._socket = null;
+				oDeferred.resolve();
+			};
+			that._socket.close();
+			return oDeferred.promise;
+		}
+		return Q();
+	};
+
+	WebsocketProxy.prototype.postMessage = function(sMessage) {
+		if (this._socket) {
+			this._socket.send(sMessage);
+		}
+	};
+
+	return WebsocketProxy;
+});

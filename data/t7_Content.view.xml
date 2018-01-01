@@ -1,0 +1,13 @@
+<core:View class="wattContentView" controllerName="sap.watt.platform.content.view.Content"
+			xmlns="sap.watt.platform.content.control"
+			xmlns:core="sap.ui.core">
+
+	<NavigationBar id="tabStripNavBar"
+				   tabSelect="onTabSelect"
+				   tabCloseRequest="forwardEvent"
+				   tabContextMenu="forwardEvent"
+				   tabDoubleClicked="forwardEvent"
+				   tabReorder="forwardEvent"/>
+	<EditorArea id="editorArea"/>
+
+</core:View>

@@ -1,0 +1,1099 @@
+jQuery.sap.declare("sap.watt.ideplatform.plugin.template.ui.wizard.WizardControl");
+jQuery.sap.require("sap.watt.ideplatform.plugin.template.ui.wizard.WizardStep");
+jQuery.sap.require("sap.watt.ideplatform.plugin.template.ui.wizard.WizardStepContent");
+
+sap.ui.ux3.OverlayContainer.extend("sap.watt.ideplatform.plugin.template.ui.wizard.WizardControl", {
+
+	fnFinishHandler : null,
+	fnAfterCloseHandler : null,
+	oFinishStepContent : null,
+	bShouldReport : true,
+	bIsDynamicFinish : false,
+
+	metadata : {
+		properties : {
+			"title" : "string",
+			"description" : "string",
+			"summary" : "string",
+			"exitMessage" : "string",
+			"context" : "object",
+			"dynamicFinish" : "boolean"
+		},
+		aggregations : {
+			"headerTitle" : {
+				"type" : "sap.ui.commons.TextView",
+				"visibility" : "hidden",
+				multiple : false
+			},
+			"headerDescription" : {
+				"type" : "sap.ui.commons.TextView",
+				"visibility" : "hidden",
+				multiple : false
+			},
+			"headerGrid" : {
+				"type" : "sap.ui.layout.Grid",
+				"visibility" : "hidden",
+				multiple : false
+			},
+			"steps" : {
+				"type" : "sap.watt.ideplatform.plugin.template.ui.wizard.WizardStep"
+			},
+			"finishStep" : {
+				"type" : "sap.watt.ideplatform.plugin.template.ui.wizard.WizardStep",
+				"visibility" : "hidden",
+				multiple : false
+			},
+			"containerGrid" : {
+				"type" : "sap.ui.layout.Grid",
+				"visibility" : "hidden",
+				multiple : false
+			},
+			"bordedContent" : {
+				"type" : "sap.ui.commons.layout.BorderLayout",
+				"visibility" : "hidden",
+				multiple : false
+			}
+		},
+		events : {
+			"finishClicked" : {}
+		}
+	},
+
+	setFinishHandler : function(finishHandler) {
+		this.fnFinishHandler = finishHandler;
+	},
+
+	setAfterCloseHandler : function(afterCloseHandler) {
+		this.fnAfterCloseHandler = afterCloseHandler;
+	},
+
+	setTitle : function(sTitle) {
+		this.setProperty("title", sTitle, true);
+		this._headerTitle.setText(sTitle);
+		return this;
+	},
+
+	setDescription : function(sDescription) {
+		this.setProperty("description", sDescription, true);
+		this._headerDescription.setText(sDescription);
+		return this;
+	},
+
+	setSummary : function(sSummary) {
+		this.setProperty("summary", sSummary, true);
+		this._finishStep.setDescription(sSummary);
+		return this;
+	},
+	
+	getDynamicFinish : function() {
+		return this.bIsDynamicFinish;
+	},
+	
+	setDynamicFinish : function(bEnabled) {
+		this.bIsDynamicFinish = bEnabled;
+	},
+
+	setFinishStepContent : function(oFinishStepContent, bOptional) {
+		// Set and configure the new content
+		if (oFinishStepContent) {
+			this.oFinishStepContent = oFinishStepContent;
+			this.oFinishStepContent.attachValidation(this.onFinishValidation, this);
+			this.oFinishStepContent.attachValidation(this.onBreadCrumbsValidation, this);
+			this.oFinishStepContent.setLayoutData(new sap.ui.layout.GridData({
+				span : "L12 M12 S12"
+			}));
+			if (bOptional !== undefined) {
+				this._finishStep.setOptional(bOptional);
+			}
+		} else {
+			this.oFinishStepContent = this._createDefaultFinishStepContent();
+		}
+		this._finishStep.cleanWizardStep(); // Destroy previous finish step content (similar concept to removeStep)
+		this._finishStep.setStepContent(this.oFinishStepContent);
+		this._finishStep.invalidate(this); //trigger re-rendering
+		return this;
+	},
+
+	getFinishStepContent : function() {
+		return this.oFinishStepContent;
+	},
+
+	getStepsContainerHeight : function() {
+		var sBorderLayoutCenterId = this.oBordedContent.getId() + "--center";
+		return jQuery("#" + sBorderLayoutCenterId).height();
+	},
+
+	_createDefaultFinishStepContent : function() {
+		return new sap.watt.ideplatform.plugin.template.ui.wizard.WizardStepContent({
+			layoutData : new sap.ui.layout.GridData({
+				span : "L12 M12 S12",
+				linebreak : true
+			})
+		});
+	},
+
+	init : function() {
+
+		var that = this;
+		if (sap.ui.ux3.OverlayContainer.prototype.init) {
+			sap.ui.ux3.OverlayContainer.prototype.init.apply(this, arguments); // call super.init()
+		}
+
+		this.currentVisibleStep = 0;
+		this.bHandleFinishClicked = false;
+		this.i18nAlreadySet = false;
+		this.isLoaded = false;
+
+		this.attachClose(this.close, this);
+
+		this.attachBrowserEvent("keyup", function(e) {
+			if (e.keyCode === 27) {
+				// esc key is pressed
+				that.fireClose({
+					id : "close"
+				});
+			}
+		});
+
+		jQuery(window).resize(function() {
+			//TODO: trigger invalidation only on current visible step! (improve performance)
+			for ( var i = 0; i < that._steps.length; i++) {
+				that._steps[i].invalidate(this); //triggers re-rendering
+			}
+			that._finishStep.invalidate(this); //triggers re-rendering
+		});
+
+
+
+		var fnConfirmUnsaveChanges = function(e) {
+			if (that.isLoaded && that._shouldDisplayMessage()) {
+				var sMsg = that.getContext().i18n.getText("wizardControl_unsavedChanges");
+				if (jQuery.browser.mozilla) {
+					e.returnValue = sMsg;
+				} else {
+					return sMsg;
+				}
+			}
+		};
+
+		if (jQuery.browser.mozilla) {
+			//below doesn't work with firefox
+			window.addEventListener("beforeunload", fnConfirmUnsaveChanges);
+		} else {
+			//needs to be unloaded in tests
+			jQuery(window).bind("beforeunload", fnConfirmUnsaveChanges);
+		}
+
+		var oHeaderGrid = new sap.ui.layout.Grid({
+			layoutData : new sap.ui.layout.GridData({
+				span : "L12 M12 S12"
+			}),
+			vSpacing : 0
+		}).addStyleClass("wizardHeader");
+
+		this.setAggregation("headerGrid", oHeaderGrid);
+		this._headerGrid = oHeaderGrid;
+
+		var headerTextView = new sap.ui.commons.TextView({
+			text : this.getTitle(),
+			design : sap.ui.commons.TextViewDesign.H1,
+			enabled : false,
+			layoutData : new sap.ui.layout.GridData({
+				span : "L12 M12 S12",
+				linebreak : true
+			})
+		}).addStyleClass("wizardControlTitle");
+
+		this.setAggregation("headerTitle", headerTextView);
+		this._headerTitle = headerTextView;
+
+		var subHeaderTextView = new sap.ui.commons.TextView({
+			text : this.getDescription(),
+			enabled : false,
+			layoutData : new sap.ui.layout.GridData({
+				span : "L10 M11 S12",
+				linebreak : true
+			})
+		}).addStyleClass("wizardBody");
+
+		this.setAggregation("headerDescription", subHeaderTextView);
+		this._headerDescription = subHeaderTextView;
+		var oFinishBtn = new sap.m.Button({
+			text : "{i18n>confirmStep_finish}",
+			tooltip : "{i18n>confirmStep_finish}",
+			width : "110px",
+			enabled : false,
+			press : [ this.handleFinishClicked, this ]
+		});
+
+		this._finishButton = oFinishBtn;
+
+		this.oFinishStepContent = this._createDefaultFinishStepContent();
+
+		var oFinishStep = new sap.watt.ideplatform.plugin.template.ui.wizard.WizardStep({
+			title : "{i18n>confirmStep_confirm}",
+			description : "",
+			stepContent : this.oFinishStepContent,
+			nextButton : oFinishBtn,
+			visible : false,
+			optional : true,
+			layoutData : new sap.ui.layout.GridData({
+				span : "L12 M12 S12",
+				linebreak : true
+			})
+		});
+
+		oFinishStep.attachBackClicked(this.onBackClicked, this);
+		oFinishStep.addStyleClass("opacityOfLoadedStep");
+
+		this.setAggregation("finishStep", oFinishStep);
+		this._finishStep = oFinishStep;
+
+		this.oWizardContainerGrid = new sap.ui.layout.Grid({
+			hSpacing : 0,
+			vSpacing : 1
+		}).addStyleClass("mainSectionsGrid");
+
+		this.setAggregation("containerGrid", this.oWizardContainerGrid);
+
+		this.oBordedContent = new sap.ui.commons.layout.BorderLayout({
+			width : "100%",
+			height : "100%"
+		});
+
+		this.oBordedContent.createArea(sap.ui.commons.layout.BorderLayoutAreaTypes.center);
+		this.oBordedContent.setAreaData(sap.ui.commons.layout.BorderLayoutAreaTypes.center, {
+			visible : true
+		});
+
+		this.oBordedContent.createArea(sap.ui.commons.layout.BorderLayoutAreaTypes.top);
+		this.oBordedContent.setAreaData(sap.ui.commons.layout.BorderLayoutAreaTypes.top, {
+			visible : true,
+			size : "40px"
+		});
+
+		this.setAggregation("bordedContent", this.oBordedContent);
+
+		this._steps = [];
+
+	},
+
+	onBackClicked : function(oEvent) {
+		var previousIndex = oEvent.getParameter("previousStepIndex");
+		if(previousIndex === undefined){ // in finish step
+			previousIndex = this._steps.length - 1;
+		}
+		this._toggleBCSelectedStyle(previousIndex);
+
+		//take the oPreviousStep from the array (not from the property previousStepIndex).
+		var oPreviousStep = undefined;
+		var iCurrentStepIndex = 1;
+
+		// if press Back from the Finish step navigate to the last step in the steps array.
+		if (oEvent.oSource === this._finishStep) {
+			iCurrentStepIndex = this._steps.length;
+			this.currentVisibleStep = this._steps.length - 1;
+			oPreviousStep = this._steps[this.currentVisibleStep];
+
+		} else {
+			for ( var index = 0; index < this._steps.length; index++) {
+				if (this._steps[index].sId === oEvent.mParameters.id) {
+					// the current visible is the step that we navigate to.
+					this.currentVisibleStep = index - 1;
+					oPreviousStep = this._steps[this.currentVisibleStep];
+					iCurrentStepIndex = index;
+					break;
+				}
+			}
+		}
+
+		this.addAggregation("steps", oPreviousStep);
+
+	},
+
+	_closeWizard : function(oControlEvent) {
+
+		if (sap.ui.ux3.OverlayContainer.prototype.close) {
+			sap.ui.ux3.OverlayContainer.prototype.close.apply(this, arguments); // call super.init()
+		}
+
+		this.currentVisibleStep = 0;
+		this.isLoaded = false;
+
+		this.cleanWizard();
+		this.destroyContent();
+
+		this._finishStep.cleanWizardStep();
+		this._finishStep.destroy();
+
+		this._headerGrid.destroyContent();
+		this._headerGrid.destroy();
+
+		if (this.fnAfterCloseHandler) {
+			this.fnAfterCloseHandler(oControlEvent);
+		}
+
+		sap.ui.getCore().byId("menubar").setEnabled(true); //TODO: Move to generic WATT dialog
+	},
+
+	_shouldDisplayMessage : function() {
+
+		// check the next button of the first step
+		var bShouldDisplayMessage = false;
+
+		if (this._steps[1] !== undefined) {
+			// first step - next button is disable
+			// second step - if visible then should display msg, else if not visible msg should not be display.
+			bShouldDisplayMessage = this._steps[1].getVisible();
+		} else {
+			bShouldDisplayMessage = this._finishStep.getVisible();
+		}
+
+		return bShouldDisplayMessage;
+	},
+
+	close : function(oControlEvent) {
+		if (oControlEvent !== undefined) {
+			var that = this;
+			var exitMessage = this.getExitMessage() || this.getContext().i18n.getText("wizardControl_exitMessage");
+
+			if (this._shouldDisplayMessage() && oControlEvent.getParameter("id") !== that.sFinish) {
+				// in case that user press 'X' to close the wizard (before or after that he press finish)
+				that.getContext().service.usernotification.confirm(exitMessage).then(function(oResult) {
+					if (oResult.bResult) {
+						that._closeWizard(oControlEvent);
+					}
+				}).fail(function(oError) {
+					/* No error handling is needed - do nothing */
+				});
+			} else {
+				// in case close event was fired by finish process, or user didn't start working on wizard
+				that._closeWizard(oControlEvent);
+			}
+		}
+	},
+
+	open : function(oControlEvent) {
+		if (sap.ui.ux3.OverlayContainer.prototype.open) {
+			sap.ui.ux3.OverlayContainer.prototype.open.apply(this, arguments); // call super.init()
+		}
+		sap.ui.getCore().byId("menubar").setEnabled(false); //TODO: Move to generic WATT dialog
+		this._addBreadCrumbButton(this._finishStep.getTitle());
+		this._enableBreadCrumb(0);
+		this._toggleBCSelectedStyle(0);
+
+	},
+
+	cleanWizard : function() {
+
+		for ( var i = 0; i < this._steps.length; i++) {
+			this._steps[i].cleanWizardStep();
+			this._steps[i].destroyContent();
+		}
+	},
+
+	onNextClicked : function(oEvent) {
+		var that = this;
+		var nextIndex = oEvent.getParameter("nextStepIndex");
+		//if nextIndex is undefined then the next step is the finish step
+		if (!nextIndex) {
+			this._toggleBCSelectedStyle(this._steps.length);
+			this.currentVisibleStep = this._steps.length;
+			this.setAggregation("finishStep", this._finishStep);
+			var sFinishTitle = this.getContext().i18n.getText("confirmStep_confirm");
+			this._finishStep.setDisplayNumber(this.currentVisibleStep + 1);
+			this._finishStep.setVisible(true);
+		}
+
+		if (this._steps.length > nextIndex) {
+			this._toggleBCSelectedStyle(nextIndex);
+			var oNextStep = this._steps[nextIndex];
+			this.currentVisibleStep = nextIndex;
+			oNextStep.setDisplayNumber(this.currentVisibleStep + 1);
+			this.addAggregation("steps", oNextStep);
+
+			oNextStep.setVisible(true);
+		}
+	},
+
+	handleFinishClicked : function(oEvent) {
+		var that = this;
+
+		this._startProcessingFinish();
+
+		if (this.bHandleFinishClicked) {
+			return;
+		}
+
+		this.bHandleFinishClicked = true;
+		var aValidateStepsPromises = [];
+		var allSteps = this._steps;
+		for ( var i = 0; i < allSteps.length; i++) {
+			var currentStep = allSteps[i];
+			if (currentStep.getVisible() && currentStep._step.validateStepContent !== undefined) {
+				if (!currentStep._step.getModel()) {
+					currentStep._step.setModel(this.getModel());
+				}
+				aValidateStepsPromises.push(currentStep._step.validateStepContent());
+			}
+		}
+		if (this._finishStep.getVisible() && this._finishStep._step.validateStepContent !== undefined) {
+			if (!this._finishStep._step.getModel()) {
+				this._finishStep._step.setModel(this.getModel());
+			}
+			aValidateStepsPromises.push(this._finishStep._step.validateStepContent());
+		}
+
+		Q.all(aValidateStepsPromises).then(function() {
+			return that.fnFinishHandler().then(function() {
+				// finish operation succeeded
+				that._endProcessingFinish();
+				that.fireClose({
+					id : "Finish"
+				});
+			}).fail(function(oError) {
+				// finish operation failed
+				that.bHandleFinishClicked = false;
+				that._endProcessingFinish();
+				if (typeof(oError) === "string") {
+					that.getContext().service.usernotification.alert(oError).done();
+				}
+				else {
+					if (oError && oError.stack) {
+						console.log(oError.stack); //display original error stack trace for supportability
+					}
+					that.getContext().service.usernotification.alert(oError.message).done();
+				}
+			});
+		}).fail(function(oError) {
+			// steps validation failed
+			that.bHandleFinishClicked = false;
+			that._endProcessingFinish();
+			if (typeof(oError) === "string") {
+				that.getContext().service.usernotification.alert(oError).done();
+			}
+			else {
+				if (oError && oError.stack) {
+					console.log(oError.stack); //display original error stack trace for supportability
+				}
+				that.getContext().service.usernotification.alert(oError.message).done();
+			}
+		}).done();
+	},
+
+	_startProcessingFinish : function() {
+		this._finishButton.setEnabled(false);
+		this.setBusy(true);
+	},
+
+	_endProcessingFinish : function() {
+		this.setBusy(false);
+		this._finishButton.setEnabled(true);
+	},
+
+	onBreakingStep : function(oEvent) {
+		var oCurrentStep = oEvent.oSource;
+		var bBreak = false;
+		for ( var i = 0; i < this._steps.length; i++) {
+			if (bBreak) {
+				this._steps[i].setEnabled(false);
+			} else if (oCurrentStep === this._steps[i]) {
+				bBreak = true;
+			}
+		}
+	},
+
+	_addBreadCrumbButton : function(sTitle, iStepIndex){
+		if(sTitle){
+			if(!this.oBreadCrumbsLayout) {
+				this.oBreadCrumbsLayout = new sap.ui.layout.HorizontalLayout({
+					layoutData : new sap.ui.layout.GridData({
+						span : "L10 M10 S9"
+					})
+				}).addStyleClass("topLayout");
+			}
+			var oBCButton = this._createBreadCrumbsButton(sTitle, iStepIndex);
+			var aBreadCrumbs = this.oBreadCrumbsLayout.getContent();
+			var iLastBreadCrumbIndex = aBreadCrumbs.length-2; // aBreadCrumbs.length-1 is the last separator
+
+			//get the last bread crumb and check if it of the finish step. if so, insert the new bread crumb before it.
+			var oLastCrumb = aBreadCrumbs[iLastBreadCrumbIndex];
+			if(oLastCrumb) {
+				var oLastCrumbIndex = oLastCrumb.getCustomData()[0].getValue().stepIndex;
+				if (oLastCrumbIndex === null || oLastCrumbIndex === undefined) { // the last is the finish button
+					this.oBreadCrumbsLayout.insertContent(oBCButton, iLastBreadCrumbIndex);
+					this._insertBreadCrumbSeparator(iLastBreadCrumbIndex+1);
+					this._disableBreadCrumb((iStepIndex+1)*2);  // disable all the bread crumbs after the new
+					return;
+				}
+			}
+			this.oBreadCrumbsLayout.addContent(oBCButton);
+			this._addBreadCrumbSeparator();
+		}
+	},
+
+	_insertBreadCrumbButton : function(sTitle, iIndex){
+		if(sTitle) {
+			if (!this.oBreadCrumbsLayout) {
+				this.oBreadCrumbsLayout = new sap.ui.layout.HorizontalLayout({
+					layoutData: new sap.ui.layout.GridData({
+						span: "L10 M10 S9"
+					})
+				}).addStyleClass("topLayout");
+			}
+			var oBCButton = this._createBreadCrumbsButton(sTitle, iIndex);
+			iIndex *= 2; // because the separators
+			this.oBreadCrumbsLayout.insertContent(oBCButton, iIndex);
+			this._insertBreadCrumbSeparator(iIndex + 1);
+			this._disableBreadCrumb((iIndex + 1) * 2);  // disable all the bread crumbs after the new
+			var aBreadCrumbs = this.oBreadCrumbsLayout.getContent();
+			for (var i = iIndex + 2; i < aBreadCrumbs.length; i += 2) { // increase the index of all following crumbs by 1
+				var oCustomDataValue = aBreadCrumbs[i].getCustomData()[0].getValue();
+				var iBreadCrumbStepIndex = oCustomDataValue.stepIndex;
+				if (iBreadCrumbStepIndex || iBreadCrumbStepIndex === 0) {
+					oCustomDataValue.stepIndex = iBreadCrumbStepIndex + 1;
+					aBreadCrumbs[i].getCustomData()[0].setValue(oCustomDataValue);
+				}
+			}
+		}
+	},
+
+	_removeBreadCrumbButton : function(iStepIndex){
+		if(iStepIndex){
+			var aArray = this.oBreadCrumbsLayout.getContent();
+			aArray.splice(iStepIndex*2, 2); // remove the bread crumb and its separator
+			for(var i = iStepIndex*2; i < aArray.length; i += 2){ // decrease the index of all following crumbs by 1
+				var oCustomDataValue = aArray[i].getCustomData()[0].getValue();
+				var iBreadCrumbStepIndex = oCustomDataValue.stepIndex;
+				if(iBreadCrumbStepIndex){
+					oCustomDataValue.stepIndex = iBreadCrumbStepIndex-1;
+					aArray[i].getCustomData()[0].setValue(oCustomDataValue);
+				}
+			}
+			this.oBreadCrumbsLayout.removeAllContent();
+			for(var j = 0; j < aArray.length; j++) {
+				this.oBreadCrumbsLayout.addContent(aArray[j]);
+			}
+		}
+	},
+
+	_addBreadCrumbSeparator : function(){
+		var oBCSeparator = this._createBreadCrumbsSeparator();
+		this.oBreadCrumbsLayout.addContent(oBCSeparator);
+	},
+
+	_insertBreadCrumbSeparator : function(iIndex){
+		var oBCSeparator = this._createBreadCrumbsSeparator();
+		this.oBreadCrumbsLayout.insertContent(oBCSeparator,iIndex);
+	},
+
+	_enableBreadCrumb : function(iBreadCrumbIndex) {
+		if (this.oBreadCrumbsLayout && this.oBreadCrumbsLayout.getContent()[iBreadCrumbIndex] && this._arePreviousBreadCrumbsEnabled(iBreadCrumbIndex)) {
+			this.oBreadCrumbsLayout.getContent()[iBreadCrumbIndex].setEnabled(true);
+		}
+		var oStep = this.getStepAtIndex(iBreadCrumbIndex / 2); // because the separators
+		if (oStep && oStep.getValid()) {
+			this._enableBreadCrumb(iBreadCrumbIndex + 2);
+		}
+	},
+
+	_disableBreadCrumb : function(iBreadCrumbIndex){
+		if(this.oBreadCrumbsLayout && this.oBreadCrumbsLayout.getContent()[iBreadCrumbIndex]){
+			this.oBreadCrumbsLayout.getContent()[iBreadCrumbIndex].setEnabled(false);
+			this._disableBreadCrumb(iBreadCrumbIndex + 2);
+		}
+	},
+
+	_arePreviousBreadCrumbsEnabled : function(iStepIndex){
+		for(var i = 0; i < iStepIndex; i += 2){
+			if(!this.oBreadCrumbsLayout.getContent()[i] || !this.oBreadCrumbsLayout.getContent()[i].getEnabled()){ //one of the previous bread crumbs is disabled
+				return false;
+			}
+		}
+		return true;
+	},
+
+	isValidStep: function (stepParameters) {
+		return !!(stepParameters.isValid || !stepParameters.message || stepParameters.message === '""'
+			|| (stepParameters.severity && stepParameters.severity !== "error"));
+	},
+
+	SEPARATORS_PATH : "sap.watt.ideplatform.template/img/separatorImages/",
+
+	_getSeparatorUrl : function(bIsStep1Valid, bIsStep2Valid, bIsStep1Selected, bIsStep2Selected){
+		switch(true){
+			case (bIsStep1Valid && bIsStep2Valid && !bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_1.png");
+			case (!bIsStep1Valid && bIsStep2Valid && !bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_2.png");
+			case (bIsStep1Valid && !bIsStep2Valid && !bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_3.png");
+			case (!bIsStep1Valid && bIsStep2Valid && bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_4.png");
+			case (bIsStep1Valid && !bIsStep2Valid && !bIsStep1Selected && bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_5.png");
+			case (bIsStep1Valid && bIsStep2Valid && bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_6.png");
+			case (bIsStep1Valid && bIsStep2Valid && !bIsStep1Selected && bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_7.png");
+			case (!bIsStep1Valid && !bIsStep2Valid && bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_8.png");
+			case (!bIsStep1Valid && !bIsStep2Valid && !bIsStep1Selected && bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_9.png");
+			case (bIsStep1Valid && !bIsStep2Valid && bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_10.png");
+			case (!bIsStep1Valid && bIsStep2Valid && !bIsStep1Selected && bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_11.png");
+			case (!bIsStep1Valid && !bIsStep2Valid && !bIsStep1Selected && !bIsStep2Selected):
+				return require.toUrl(this.SEPARATORS_PATH + "separator_12.png");
+		}
+	},
+
+	onBreadCrumbsValidation : function(oEvent) {
+		if (!oEvent.getSource().getParent().getDisplayNumber()) {
+			return;
+		}
+		var stepIndex = oEvent.getSource().getParent().getDisplayNumber()-1;
+		var breadCrumbIndex = stepIndex * 2; // because the separator button
+		var aBreadCrumbs = this.oBreadCrumbsLayout.getContent();
+		var stepCrumb = aBreadCrumbs[breadCrumbIndex];
+		var sIconSource;
+		if(stepCrumb){
+			var bIsValidStep = this.isValidStep(oEvent.getParameters());
+			var oCustomDataValue = stepCrumb.getCustomData()[0].getValue();
+			oCustomDataValue.isValid = bIsValidStep;
+			stepCrumb.getCustomData()[0].setValue(oCustomDataValue);
+			stepCrumb.toggleStyleClass("notValidCrumb", !bIsValidStep);
+			sIconSource = this._getSeparatorUrl(bIsValidStep,this._isValidCrumb(breadCrumbIndex + 2), stepIndex === this.currentVisibleStep, stepIndex+1 === this.currentVisibleStep);
+			aBreadCrumbs[breadCrumbIndex + 1].setIcon(sIconSource);
+
+			if (aBreadCrumbs[breadCrumbIndex - 2]) { // the step who is the event source is not the first
+				sIconSource = this._getSeparatorUrl(this._isValidCrumb(breadCrumbIndex - 2),bIsValidStep, stepIndex-1  === this.currentVisibleStep, stepIndex === this.currentVisibleStep);
+				aBreadCrumbs[breadCrumbIndex - 1].setIcon(sIconSource);
+
+			}
+		}
+	},
+
+	// add selectedCrumb style to the selected crumb and remove it from the previous, and change the separator respectively
+	_toggleBCSelectedStyle : function(iSelectedIndex){
+		iSelectedIndex *= 2; //because the  bread crumb separators
+		var sIconSource;
+		var aBreadCrumbs = this.oBreadCrumbsLayout.getContent();
+		for(var i = 0; i < aBreadCrumbs.length; i += 2){
+			aBreadCrumbs[i].toggleStyleClass("selectedCrumb", i === iSelectedIndex);
+			sIconSource = this._getSeparatorUrl(this._isValidCrumb(i),this._isValidCrumb(i + 2), i === iSelectedIndex, i+2 === iSelectedIndex);
+			aBreadCrumbs[i + 1].setIcon(sIconSource);
+		}
+	},
+
+	_isValidCrumb : function(iIndex) {
+		var oBreadCrumb = this.oBreadCrumbsLayout.getContent()[iIndex];
+		return oBreadCrumb && oBreadCrumb.getCustomData()[0] ? oBreadCrumb.getCustomData()[0].getValue().isValid : true;
+	},
+
+	_isWizardValid : function(oEvent) {
+		var bValid = true;
+		var iStepIndex = 0;
+		var bStepValid;
+		for (iStepIndex; iStepIndex < this._steps.length; iStepIndex++) {
+			var oStep = this._steps[iStepIndex];
+			bStepValid = oStep.getValid();
+			if (oEvent && (oEvent.getSource() === oStep._step)) {
+				bStepValid = oEvent.getParameter("isValid");
+			}
+			if (!bStepValid) {
+				bValid = false;
+				break;
+			}
+		}
+			bStepValid = this._finishStep.getValid();
+			if (oEvent && (oEvent.getSource() === this._finishStep._step)) {
+				bStepValid = oEvent.getParameter("isValid");
+			}
+			if (!bStepValid) {
+				bValid = false;
+			}
+		return bValid;
+	},
+
+	_toggleFinishButtons : function(aWizardSteps, bWizardValid) {
+		if (this.getDynamicFinish() && aWizardSteps) {
+			var iCounter = aWizardSteps.length - 1;
+			while (iCounter > -1 ) {
+				if (aWizardSteps[iCounter].getOptional()) {
+					if (bWizardValid) {
+						aWizardSteps[iCounter].setFinishButtonVisible(bWizardValid);
+					}
+					aWizardSteps[iCounter].setFinishButtonEnabled(bWizardValid);
+					iCounter--;
+				}
+				else {
+					if (bWizardValid) {
+						aWizardSteps[iCounter].setFinishButtonVisible(bWizardValid);
+					}
+					aWizardSteps[iCounter].setFinishButtonEnabled(bWizardValid);
+					break;
+				}
+			}
+		}
+	},
+	
+	onFinishValidation : function(oEvent) {
+		var bValid = this._isWizardValid(oEvent);
+		this._toggleFinishButtons(this._steps, bValid);
+		this._finishButton.setEnabled(bValid);
+	},
+
+	_bStepExistsInStepsArray : function(oStep) {
+		for ( var i = 0; i < this._steps.length; i++) {
+			if (this._steps[i] === oStep) {
+				return true;
+			}
+		}
+		return false;
+	},
+
+	getStepAtIndex : function(iStepIndex) {
+		return this._steps[iStepIndex];
+	},
+
+	getStepsNumber : function() {
+		return this._steps.length;
+	},
+
+	addStep : function(oStep) {
+		// check if the step exists in the steps array
+		if (!this._bStepExistsInStepsArray(oStep)) {
+			//only the first step is visible and added to the aggregation
+			if (this._steps && this._steps.length === 0) {
+				oStep.setDisplayNumber(1);
+				oStep.setVisible(true);
+				this.addAggregation("steps", oStep);
+			} else {
+				//all steps after the first are by default not visible
+				oStep.setVisible(false);
+			}
+			//set the step's relation to this wizard control (by association)
+			oStep.setWizardControl(this.getId());
+
+			//update the last step to point to the new one (TODO: need to check this if previous step should not point to new one)
+			if (this._steps.length > 0) {
+				var oLastStep = this._steps[this._steps.length - 1];
+				oLastStep.setNextStepIndex(this._steps.length);
+				oStep.setPreviousStepIndex(this._steps.length - 1);
+			}
+			//add to _steps
+			this._steps.push(oStep);
+			//attach to events
+			oStep.attachNextClicked(this.onNextClicked, this);
+			oStep.attachBackClicked(this.onBackClicked, this);
+			oStep.attachFinishClicked(this.handleFinishClicked, this);
+			var oStepContent = oStep.getStepContent();
+			if (oStepContent !== null) {
+				oStepContent.attachValidation(this.onFinishValidation, this);
+				oStepContent.attachValidation(this.onBreadCrumbsValidation, this);
+			}
+
+			var iStepIndex = this._steps.length-1;
+			this._addBreadCrumbButton(oStep.getTitle(), iStepIndex);
+			var oPreviousStep = this.getStepAtIndex(iStepIndex-1);
+			if(oPreviousStep && oPreviousStep.getValid()){ // if the previous step is valid -> the current bread crumb should be enabled
+				this._enableBreadCrumb(iStepIndex*2); // *2 because the separators
+			}
+			var iNextStepBreadCrumb = (iStepIndex+1)*2; // *2 because the separators
+			if(oStep.getValid()){ // if the current step is valid -> the next bread crumb should be enabled
+				this._enableBreadCrumb(iNextStepBreadCrumb);
+			} else {
+				this._disableBreadCrumb(iNextStepBreadCrumb);
+			}
+		}
+
+		return oStep;
+	},
+
+	//TODO: support insertion properly
+	//TODO: consider delete this method!!
+	insertStep : function(oStep, iIndex) {
+		var oRetVal = this.insertAggregation("steps", oStep, iIndex);
+		if (iIndex === 0) {
+			oStep.setVisible(true);
+		}
+		this._steps[iIndex] = oStep;
+		oStep.attachNextClicked(this.onNextClicked, this);
+		oStep.attachBackClicked(this.onBackClicked, this);
+		oStep.attachFinishClicked(this.handleFinishClicked, this);
+		var oStepContent = oStep.getStepContent();
+		if (oStepContent !== null) {
+			oStepContent.attachValidation(this.onFinishValidation, this);
+			oStepContent.attachValidation(this.onBreadCrumbsValidation, this);
+		}
+		//set the step's relation to this wizard control (by association)
+		oStep.setWizardControl(this.getId());
+		this._insertBreadCrumbButton(oStep.getTitle(), iIndex);
+		return oRetVal;
+	},
+
+	removeStep : function(vStep) {
+		//Remove from aggregation
+		var oStep = this.removeAggregation("steps", vStep);
+
+		if (this._bStepExistsInStepsArray(vStep)) {
+
+			//if step is already rendered so it is not in the aggregation
+			vStep.cleanWizardStep();
+			vStep.detachNextClicked(this.onNextClicked, this);
+			vStep.detachBackClicked(this.onBackClicked, this);
+			vStep.detachFinishClicked(this.handleFinishClicked, this);
+			this._removeFromSteps(vStep);
+		}
+		return oStep;
+	},
+
+	removeFinishStep : function() {
+		//if finish is already visible remove it
+		if (this._finishStep.getVisible()) {
+			this._finishStep.setVisible(false);
+			this.oContainer.removeContent(this._finishStep);
+		}
+	},
+
+	_removeFromSteps : function(vStep) {
+		//remove step from _steps
+		var iSpliceIndex = -1;
+		for ( var i = 0; i < this._steps.length; i++) {
+			if (this._steps[i] === vStep) {
+				iSpliceIndex = i;
+				break;
+			}
+		}
+
+		if (iSpliceIndex > -1) {
+			this._steps.splice(iSpliceIndex, 1);
+			//explicitly remove step from container
+			this.oContainer.removeContent(vStep);
+			this._removeBreadCrumbButton(iSpliceIndex);
+		}
+
+		//if finish is already visible remove it
+		this.removeFinishStep();
+	},
+
+	removeAllSteps : function() {
+		var aSteps = this.removeAllAggregation("steps");
+		for ( var i = 0, l = aSteps.length; i < l; i++) {
+			aSteps[i].detachNextClicked(this.onNextClick, this);
+			aSteps[i].detachBackClicked(this.onBackClick, this);
+		}
+	},
+
+	renderer : {},
+
+	onBeforeRendering : function() {
+		var that = this;
+		if (sap.ui.ux3.OverlayContainer.prototype.onBeforeRendering) {
+			sap.ui.ux3.OverlayContainer.prototype.onBeforeRendering.apply(this, arguments);
+		}
+
+		if (this.getContext().i18n && !this.i18nAlreadySet) {
+			this.getContext().i18n.applyTo(this);
+			this.i18nAlreadySet = true;
+		}
+
+		if (!this.sNext && !this.sFinish) {
+			this.sNext = "Next";
+			this.sFinish = "Finish";
+		}
+
+		var oTitle = this.getAggregation("headerTitle");
+		var oDescription = this.getAggregation("headerDescription");
+		var oHeader = this.getAggregation("headerGrid");
+		var oFinish = this.getAggregation("finishStep");
+		var oContainerTemp = this.getAggregation("containerGrid");
+		var oBordedContentTemp = this.getAggregation("bordedContent");
+
+		// At the first time the oContainerTemp and oBordedContentTemp are not null.
+		if (oContainerTemp !== null && oBordedContentTemp !== null) {
+			this.oContainer = oContainerTemp;
+			this.oBordedContent = oBordedContentTemp;
+		}
+
+		if (oHeader !== null) {
+			oHeader.addContent(oTitle);
+			oHeader.addContent(oDescription);
+			this.oContainer.addContent(oHeader);
+		}
+
+		var oSteps = this.getSteps();
+		if (oSteps.length > 0) {
+			var oNewVisibleStep = oSteps[0];
+			var oPrevVisibleStep = this.oContainer.getContent()[0];
+			if (oNewVisibleStep !== oPrevVisibleStep) {
+				this.oContainer.removeAllContent();
+				this.oContainer.addContent(oNewVisibleStep);
+
+			}
+			oNewVisibleStep.addStyleClass("opacityOfLoadedStep");
+		}
+
+		// set the finish step context
+		if (!this.oFinishStepContent.getContext()) {
+			this.oFinishStepContent.setContext(this.getContext());
+		}
+
+		if (oFinish !== null && oFinish.getVisible()) {
+			if (!oFinish.getWizardControl()) {
+				oFinish.setWizardControl(this.getId());
+			}
+			this.onFinishValidation();
+			this.oContainer.removeAllContent();
+			this.oContainer.addContent(oFinish);
+		}
+
+		var oWizardTitle = new sap.ui.commons.Label({
+			text : this.getTitle().toUpperCase(),
+			tooltip : this.getTitle()
+		}).addStyleClass("wizardTitle");
+
+		if (!this.bBreadCrumbsLayoutLoaded) {
+			var oCloseButton = new sap.ui.commons.Button({
+				layoutData : new sap.ui.layout.GridData({
+					span : "L1 M1 S2"
+				}),
+				press : function() {
+					that.fireClose({
+						id : "close"
+
+					});
+				},
+				icon : "sap-icon://watt/abort",
+				lite : true
+			}).addStyleClass("wizardCloseButton");
+
+			// hack for preload the separator png's
+			var buttons = new sap.ui.layout.HorizontalLayout({
+				layoutData : new sap.ui.layout.GridData({
+					span : "L1 M1 S1"
+				})
+			}).addStyleClass("preloadButtons");
+
+			for(var i = 1; i < 13; i++){
+				buttons.addContent(new sap.ui.commons.Button({
+					icon: require.toUrl(this.SEPARATORS_PATH + "separator_" + i + ".png")
+				}).addStyleClass("nonDisplayButton"));
+			}
+
+
+			var oTopGrid = new sap.ui.layout.Grid({
+				layoutData : new sap.ui.layout.GridData({
+					span : "L12 M12 S12"
+				}),
+				vSpacing : 0,
+				content : [ this.oBreadCrumbsLayout, buttons, oCloseButton]
+			});
+
+			this.bBreadCrumbsLayoutLoaded = true;
+
+			this.oBordedContent.addContent(sap.ui.commons.layout.BorderLayoutAreaTypes.top, oTopGrid);
+		}
+		this.oBordedContent.addContent(sap.ui.commons.layout.BorderLayoutAreaTypes.center, oTitle, this.oContainer);
+		this.addContent(this.oBordedContent);
+	},
+
+	_createBreadCrumbsButton : function(sBCButtonText, iStepIndex) {
+		var that = this;
+		var breadCrumbsButton = new sap.ui.commons.Button({
+			text: sBCButtonText,
+			lite: true,
+			tooltip: sBCButtonText,
+			enabled : false,
+			customData: new sap.ui.core.CustomData({
+				writeToDom: false,
+				value: {
+					"stepIndex" : iStepIndex,
+					"isValid" : true
+				}
+			}),
+			press: function () {
+				var breadCrumbIndex = this.getCustomData()[0].getValue().stepIndex;
+				if(breadCrumbIndex === null || breadCrumbIndex === undefined){// for finish step
+					breadCrumbIndex = that._steps.length;
+				}
+				if (breadCrumbIndex > 0) {
+					that._steps[breadCrumbIndex-1].onNext();
+				} else {
+					if(that._steps[breadCrumbIndex+1]){
+						that._steps[breadCrumbIndex+1].onBack();
+					} else {
+						that._finishStep.onBack();
+					}
+
+				}
+			}
+		}).addStyleClass("unSelectedCrumb");
+		return breadCrumbsButton;
+	},
+
+	_createBreadCrumbsSeparator : function() {
+		var breadCrumbsSeparator = new sap.ui.commons.Button({
+			icon: require.toUrl(this.SEPARATORS_PATH + "separator_1.png")
+		}).addStyleClass("breadCrumbSeparator");
+		return breadCrumbsSeparator;
+	},
+
+	onAfterRendering : function($Event) {
+		var that = this;
+
+		if (sap.ui.ux3.OverlayContainer.prototype.onAfterRendering) {
+			sap.ui.ux3.OverlayContainer.prototype.onAfterRendering.apply(this, arguments);
+		}
+
+		if (this.isLoaded) {
+			if (this.bShouldReport) {
+				this.getContext().service.usagemonitoring.report("template", "create", "create_new_project").done();
+				this.bShouldReport = false;
+			}
+		}
+
+		var currentStep;
+		if (this.currentVisibleStep < this._steps.length) {
+			currentStep = this._steps[this.currentVisibleStep];
+		} else {
+			currentStep = this._finishStep;
+		}
+
+		this.isLoaded = true;
+
+		var control = jQuery("#" + $Event.srcControl.getId());
+
+		control.animate({
+			opacity : "1"
+		}, "fast", function() {
+
+			var oStep = jQuery("#" + currentStep.getId());
+			oStep.animate({
+				opacity : "1"
+			}, "fast");
+
+			currentStep.removeStyleClass('opacityOfLoadedStep');
+
+			if (currentStep._step !== undefined) {
+				if (currentStep._step.setFocusOnFirstItem !== undefined) {
+					currentStep._step.setFocusOnFirstItem(currentStep.getDisplayNumber() * 100, currentStep._nextButton.getId(),
+						currentStep._backButton.getId());
+				}
+				if (currentStep._step.setTabIndexes !== undefined) {
+					currentStep._step.setTabIndexes(currentStep.getDisplayNumber() * 100, currentStep._nextButton.getId(),
+						currentStep._backButton.getId());
+				}
+			} else {
+				if (currentStep === that._finishStep) {
+					jQuery("#" + that._finishButton.getId()).focus();
+				} else {
+					jQuery("#" + currentStep._nextButton.getId()).focus();
+				}
+			}
+
+		});
+	}
+});

@@ -1,0 +1,53 @@
+define([], function () {
+	var FIORI_PROJECT_TYPE = "sap.watt.uitools.ide.fiori";
+	var NO_TEMPLATE_SUPPLIED_MESSAGE = "no template supplied after project generation";
+	var NO_PROJECT_SETTINGS_TEAMPLATE_MESSAGE = "no project-settings fields supplied";
+	var NO_PROJECT_SETTINGS_FIELD_IN_TEAMPLATE_MESSAGE = " not in git pre push settings";
+	var NO_PROJECT_SUPPLIED_MESSAGE = "no project document supplied by generation service";
+	var NO_PROJECT_TYPES_SUPPLIED_MESSAGE = "no project types supplied for the generated project ";
+
+	var DEFAULT_FIORI_PROJECT_PRE_PUSH_SETTINGS = {
+		notifyBeforePush: false,
+		notifyBeforePushLevel: "Error",
+		blockPush: false,
+		blockPushLevel: "Error"
+	};
+
+	return {
+		onFioriProjectGenerated: function (oEvent) {
+			var aProjectTypes;
+			if (oEvent && oEvent.params && oEvent.params.selectedTemplate) {
+				aProjectTypes = oEvent.params.selectedTemplate.getTargetProjectTypes();
+				if (Array.isArray(aProjectTypes) && aProjectTypes.length) {
+					if (aProjectTypes.indexOf(FIORI_PROJECT_TYPE) !== -1) {
+						this._setFioriDefaultGitPrePushSettings(oEvent.params.targetDocument);
+					}
+				}
+			} else {
+				this._writeToLog(NO_TEMPLATE_SUPPLIED_MESSAGE);
+			}
+		},
+
+		_setFioriDefaultGitPrePushSettings: function (oProjectDocument) {
+			var that = this;
+			if (oProjectDocument) {
+				return this._activateGitValidationProjectSettings(oProjectDocument)
+					.fail(function (err) {
+						that._writeToLog(err.message);
+					}).done();
+			} else {
+				this._writeToLog(NO_PROJECT_SUPPLIED_MESSAGE);
+			}
+		},
+
+		_writeToLog: function (message) {
+			this.context.service.log.warn("fioriProjectSettings", message, ["user"]).done();
+		},
+
+		_activateGitValidationProjectSettings: function(oProjectDoc){
+			return this.context.service.gitValidationsProjectSettings.updateProjectSettings(DEFAULT_FIORI_PROJECT_PRE_PUSH_SETTINGS, oProjectDoc);
+		}
+
+
+	};
+});

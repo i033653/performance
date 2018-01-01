@@ -1,0 +1,10 @@
+define(function() {
+	"use strict";
+	return {
+		onAfterLogin : function() {
+			// Keep IDE alive 
+			this.context.service.keepAlive.isAlive().done();
+			return this.context.service.layout.show();
+		}
+	};
+});

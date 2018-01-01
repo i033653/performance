@@ -1,0 +1,431 @@
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\VuGen.exe
+		10.0.14393.206 (rs1_release.160915-0644)C:\WINDOWS\SYSTEM32\ntdll.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\MSCOREE.DLL
+		10.0.14393.206 (rs1_release.160915-0644)C:\WINDOWS\System32\KERNEL32.dll
+		10.0.14393.206 (rs1_release.160915-0644)C:\WINDOWS\System32\KERNELBASE.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\ADVAPI32.dll
+		7.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\msvcrt.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\sechost.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\RPCRT4.dll
+		10.0.14393.576 (rs1_release_inmarket.161208-2252)C:\WINDOWS\System32\SspiCli.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\CRYPTBASE.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\bcryptPrimitives.dll
+		4.6.1586.0 built by: NETFXREL2C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscoreei.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\SHLWAPI.dll
+		10.0.14393.1198 (rs1_release_sec.170427-1353)C:\WINDOWS\System32\combase.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\ucrtbase.dll
+		10.0.14393.206 (rs1_release.160915-0644)C:\WINDOWS\System32\GDI32.dll
+		10.0.14393.1358 (rs1_release.170602-2252)C:\WINDOWS\System32\gdi32full.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\USER32.dll
+		10.0.14393.51 (rs1_release_inmarket.160801-1836)C:\WINDOWS\System32\win32u.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\IMM32.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\kernel.appcore.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\VERSION.dll
+		4.6.1648.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\clr.dll
+		12.00.52512.0 built by: VSWINSERVICINGC:\WINDOWS\SYSTEM32\MSVCR120_CLR0400.dll
+		4.6.1648.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\mscorlib\a8ad9c1eb84ee05773b04b298573fa35\mscorlib.ni.dll
+		10.0.14393.1198 (rs1_release_sec.170427-1353)C:\WINDOWS\System32\ole32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\uxtheme.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Program Files (x86)\Common Files\Microsoft Shared\Ink\tiptsf.dll
+		10.0.14393.1198 (rs1_release_sec.170427-1353)C:\WINDOWS\System32\OLEAUT32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\msvcp_win.dll
+		4.6.1648.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\clrjit.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System\603a3bab60d64169412e83e06d7bac68\System.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Drawing\d697906ab1398f3c359eb8102bc55a43\System.Drawing.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Windows.Forms\e10224bb702b28e3fd0f55e2009d7448\System.Windows.Forms.ni.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Core\ef8d0d1ee6432515fff7f11d91eaf368\System.Core.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\CRYPTSP.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\rsaenh.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\bcrypt.dll
+		10.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\WinSxS\x86_microsoft.windows.gdiplus_6595b64144ccf1df_1.1.14393.953_none_baad48403594ab3f\gdiplus.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\MSCTF.dll
+		10.0.14393.1198 (rs1_release_sec.170427-1353)C:\WINDOWS\SYSTEM32\WindowsCodecs.dll
+		5.82 (rs1_release_inmarket.161102-0100)C:\WINDOWS\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_5.82.14393.447_none_5507ded2cb4f7f4c\comctl32.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\WindowsBase\36069be44eb7526107e37f7fc804944a\WindowsBase.ni.dll
+		6.10 (rs1_release_inmarket.170303-1614)C:\WINDOWS\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.14393.953_none_89c2555adb023171\comctl32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\dwmapi.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\PresentationCore\7184b37a17bf31f510441a35a8660256\PresentationCore.ni.dll
+		4.6.1647.0                    C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Presentatio5ae0f00f#\2c487bdc9aee7121eebda8257af0a43f\PresentationFramework.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\DWrite.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Xaml\77aefe1ed671a033b6fb4cf36cd502d8\System.Xaml.ni.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\wpfgfx_v0400.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PresentationNative_v0400.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Xml\a771d2428d6b5c8ca9ab6c393e26ee3c\System.Xml.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\shell32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\cfgmgr32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\windows.storage.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\powrprof.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\shcore.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\profapi.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Configuration\3d80ae4a3a0aa7f6933fbe8c5922a473\System.Configuration.ni.dll
+		2001.12.10941.16384 (rs1_release.160715-1616)C:\WINDOWS\System32\clbcatq.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\RegistryUtil.dll
+		14.0.23026.0 built by: WCSETUPC:\WINDOWS\SYSTEM32\mfc140.dll
+		14.00.23026.0 built by: WCSETUPC:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\lr_vug32.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\mosifs32.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\inifile.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\runlogic.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\vusercfg.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\thrdutil.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\parameng.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\dtable32.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\config.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\MultiVuser.dll
+		14.00.23026.0 built by: WCSETUPC:\WINDOWS\SYSTEM32\MSVCP140.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\msg_handler.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\comm_util.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\mlib_ds.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\run_time_context.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\libxdrutil.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\USERENV.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\IPHLPAPI.DLL
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\xdr.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\rtc_protocol.dll
+		7.2.14393.0 (rs1_release.160715-1616)C:\Windows\System32\uiautomationcore.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\sxs.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Accessibility\0a962f337b3651706d595ee4c1d56bef\Accessibility.ni.dll
+		7.2.14393.1198 (rs1_release_sec.170427-1353)C:\Windows\System32\OLEACC.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\twinapi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\twinapi.appcore.dll
+		11.00.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\urlmon.dll
+		11.00.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\iertutil.dll
+		4.6.1647.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Security\9df4e2b15ccdd1180fbd9d30b17e5dd0\System.Security.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\WindowsForm0b574481#\3f49264af9eb8849793d93673f707fb7\WindowsFormsIntegration.ni.dll
+		10.0.14393.447 (rs1_release_inmarket.161102-0100)C:\WINDOWS\SYSTEM32\d3d9.dll
+		10.0.14393.576 (rs1_release_inmarket.161208-2252)C:\WINDOWS\SYSTEM32\d3d10warp.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Presentatioaec034ca#\0f791bee299cef28bac078a56f7a3b93\PresentationFramework.Aero2.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\rasapi32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\rasman.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\rtutils.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\ws2_32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\mswsock.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\winhttp.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\ondemandconnroutehelper.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\NSI.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\dhcpcsvc6.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\dhcpcsvc.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\DNSAPI.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WINNSI.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\rasadhlp.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\fwpuclnt.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\UIAutomationTypes\ab28591a1fa2b5af7eec64fff813f51b\UIAutomationTypes.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\mscms.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WindowsCodecsExt.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Data.Entity\acb68685ab099dd0a1abd59433abed9e\System.Data.Entity.ni.dll
+		10.0.14393.206 (rs1_release.160915-0644)C:\WINDOWS\system32\dataexchange.dll
+		10.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\system32\d3d11.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\dcomp.dll
+		10.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\system32\dxgi.dll
+		12.53.197.0                   C:\Program Files (x86)\HP\LoadRunner\bin\RecentScripts.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\PSAPI.DLL
+		4.6.1637.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Web\5be014817eaa365eca5b6453968abeb5\System.Web.ni.dll
+		4.6.1637.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\webengine4.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\SnapshotLoaderWrap.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\ViewerGen.dll
+		11.0.60610.1 built by: Q11REL C:\WINDOWS\SYSTEM32\atl110.DLL
+		11.00.51106.1 built by: Q11RELC:\WINDOWS\SYSTEM32\MSVCP110.dll
+		11.00.51106.1 built by: Q11RELC:\WINDOWS\SYSTEM32\MSVCR110.dll
+		11.00.14393.1198 (rs1_release_sec.170427-1353)C:\Windows\System32\ieframe.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\NETAPI32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\NETUTILS.DLL
+		10.0.14393.206 (rs1_release.160915-0644)C:\Windows\System32\DSREG.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\WKSCLI.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\msvcp110_win.dll
+		7.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\PROPSYS.dll
+		11.00.14393.447 (rs1_release_inmarket.161102-0100)C:\Windows\System32\mshtml.dll
+		11.00.14393.447 (rs1_release_inmarket.161102-0100)C:\Windows\System32\WININET.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\srpapi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\CRYPT32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\MSASN1.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\mlang.dll
+		11.00.14393.1198              C:\Windows\System32\ieapfltr.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\ielpview.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\AsmHook.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\LINKINFO.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\VirFileSystemMng.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\Bcp47Langs.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\VirPrivateProfiles.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\ntshrui.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\srvcli.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\cscapi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\msimtf.dll
+		3.10.349.0                    C:\Windows\System32\msls31.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\d2d1.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\Secur32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\ntmarta.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Presentatio1c9175f8#\9b05742b86770ed6e1bc9d71fb82f9e6\PresentationFramework.Aero.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\UIAutomationProvider\9df18ed6ab4a3fd43ba4d606513d6657\UIAutomationProvider.ni.dll
+		5.31.23.1231                  C:\WINDOWS\SYSTEM32\RichEd20.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\USP10.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WtsApi32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WINSTA.dll
+		4.6.1638.0 built by: NETFXREL3STAGEC:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF\PenIMC.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\wisp.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\atlthunk.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Program Files (x86)\Common Files\Microsoft Shared\Ink\tpcps.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\msctfui.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\explorerframe.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\schannel.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\avrt.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WINMM.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\mskeyprotect.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\ncrypt.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\NTASN1.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\ncryptsslp.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Microsoft.Build\fafb9c37bc8451b7cbcb680d485b789b\Microsoft.Build.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Microsoft.B3325a29b#\2e7e3376ad5eaa37eb97cb4e8ad3481c\Microsoft.Build.Framework.ni.dll
+		4.6.1637.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.ServiceModel\c585218f9bf85fb5bde703a491efd291\System.ServiceModel.ni.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\coparamui.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\PathResolver.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramui.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\is32.dll
+		24, 3, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\BCGCBPRO2430140.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\MPR.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\COMDLG32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WINSPOOL.DRV
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\ODBC32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\DPAPI.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\msimg32.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramlr.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramtbl.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\mmdtable.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\libmemmap.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\mmdbigtable.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramcst.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramunq.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramfnc.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramss.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramdte.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramvar.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\paramrnd.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Xml.Linq\60e047b813a4603cf5c02652c88a17a0\System.Xml.Linq.ni.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\ArchiveManager.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\runlogicview.ocx
+		4.6.1636.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Data\c93c27a2837219668b8a45fb74f0ad34\System.Data.ni.dll
+		4.6.1636.0 built by: NETFXREL3STAGEC:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Data\v4.0_4.0.0.0__b77a5c561934e089\System.Data.dll
+		10.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\System32\WINTRUST.dll
+		4.6.1586.0 built by: NETFXREL2C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscorsecimpl.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\imagehlp.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\gpapi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\cryptnet.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\ParamUINotification.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Transactions\4f6048167ceefcdb21db301bde120260\System.Transactions.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Transactions\v4.0_4.0.0.0__b77a5c561934e089\System.Transactions.dll
+		4.0.8854.1                    C:\Program Files (x86)\HP\LoadRunner\bin\sqlceme40.dll
+		9.00.30729.9247               C:\WINDOWS\WinSxS\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.9247_none_5090cb78bcba4a35\MSVCR90.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Ente96d83b35#\82678864ae6f1cece5ed56f74ebdb456\System.EnterpriseServices.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Ente96d83b35#\82678864ae6f1cece5ed56f74ebdb456\System.EnterpriseServices.Wrapper.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.EnterpriseServices\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.EnterpriseServices.Wrapper.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Numerics\c8e6333b12f5ea1252b6d7800e7931de\System.Numerics.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Data86569bbf#\c2420178ceda50cae5b1b784a4f3cdad\System.Data.OracleClient.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\Microsoft.Net\assembly\GAC_32\System.Data.OracleClient\v4.0_4.0.0.0__b77a5c561934e089\System.Data.OracleClient.dll
+		4.6.1637.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Runteb92aa12#\687dc34f436f621648d97bcec377f33c\System.Runtime.Serialization.ni.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\HP.LR.VuGen.ScriptHandlerComWrapper.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\lrscripthandler.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\webscripthandler.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebStepClsDesign.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebStepClsShared.dll
+		3, 6, 0, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\icuuc36.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\DynWininet.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\mshtmtr.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\wraplwcrypto.dll
+		3, 6, 0, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\icudt36.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrXmlScriptHandler.DLL
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\ReplayBinaryUtils32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\WSOCK32.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\websteps_scripthandler.DLL
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\base_scripthandler.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\RICHED32.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebUIRes.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\webservice_scripthandler.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WSDLSDK.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\ServiceManagementLight.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\SoapRecordFilter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebServicesSDK.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\XmlParserInterface.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrJni.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WSDLParser.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WsCommonLogger.dll
+		3, 1, 2, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\xerces-c_3_1.dll
+		1, 11, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\Xalan-C_1_11.dll
+		55, 1, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\icuuc55.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\mic_regex.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\MicXMLDiffTool.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WSDLToolkits.dll
+		55, 1, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\icuin55.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\XalanMessages_1_11.dll
+		55, 1, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\icudt55.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\ConfigurationUtil.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\HttpUtils.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\soap_scripthandler.DLL
+		4.6.1586.0                    C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\Microsoft.CSharp\97075863c4004de9c1cd8c4d690e1e14\Microsoft.CSharp.ni.dll
+		4.6.1586.0                    C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Dynamic\757d21f3949f8d2d82eb40b64d67509d\System.Dynamic.ni.dll
+		0.22.0                        C:\Program Files (x86)\HP\LoadRunner\bin\NativeBinaries\x86\git2-a56db99.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebObjects4Vugen.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\ExtInfra.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwScriptApi.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\faserver.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\trans.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwLogicMgr.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwCs.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwiWebInfra.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwObjMgr.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwSrvNet.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwUtil.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\lrun50.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\vm.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\lr_exp.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\trans_server.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\libdatatypes.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\data_types_ifs.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\ipng_utils.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\VnpUtils.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\DataFormatsEngine.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwSnapshotsWriter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\DomFactory.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwJsw.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwJsForTransport.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\duktape.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\http_auth.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrXml.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\pcre-8.10.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrJson.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\JScriptEngine.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwiHtmlParser.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\wrapzlib.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwiStreamingParser.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwReport.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LrwWebSocketEngine.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\boost_regex-vc140-mt-1_60.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\boost_filesystem-vc140-mt-1_60.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\boost_system-vc140-mt-1_60.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\merc_uuid.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\wrapicu.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\jsext.dll
+		1.0.2d                        C:\Program Files (x86)\HP\LoadRunner\bin\libeay32_lt.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\timediff_ext.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\jrequestor_srv.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\dc_requests.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebSnapshotsCommon.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\JSHostedEnvironment.dll
+		1, 10, 0, 0                   C:\Program Files (x86)\HP\LoadRunner\bin\Xalan-C_1_10Mic.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\VnpReport.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\JsonParser.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\v8.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\mozjs.dll
+		2, 0, 0, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\icuuc20.dll
+		2, 7, 0                       C:\Program Files (x86)\HP\LoadRunner\bin\xerces-c_2_7.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\XalanMessages_1_10.DLL
+		3, 6, 0, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\icuin36.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\icuuc.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\icui18n.dll
+		2, 0, 0, 0                    C:\Program Files (x86)\HP\LoadRunner\bin\icudt20.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\boost_thread-vc140-mt-1_60.dll
+		4.8.9                         C:\Program Files (x86)\HP\LoadRunner\bin\nspr4.dll
+		                              C:\Program Files (x86)\HP\LoadRunner\bin\boost_chrono-vc140-mt-1_60.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\HP.LR.VuGen.LrVugHelper.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\TextContainer.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\coml2.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\thumbcache.dll
+		10.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\SYSTEM32\policymanager.dll
+		10.0.14393.1066 (rs1_release_sec.170327-1835)C:\Windows\System32\ActXPrxy.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\apphelp.dll
+		17.3.6917.0607                C:\Users\nwperf.PERFLAB\AppData\Local\Microsoft\OneDrive\17.3.6917.0607\FileSyncShell.dll
+		17.3.6917.0607                C:\Users\nwperf.PERFLAB\AppData\Local\Microsoft\OneDrive\17.3.6917.0607\Telemetry.dll
+		5.00 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\Cabinet.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\HP.LR.VuGen.VugenIconOverlayHandler.dll
+		7.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\mssprxy.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\ntlanman.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\drprov.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\davclnt.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\DAVHLPR.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\dlnashext.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\DevDispItemProvider.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\MMDevApi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\DEVOBJ.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\rdpendp.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\MSACM32.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\wpdshext.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\PortableDeviceApi.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\SETUPAPI.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\audiodev.dll
+		12.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\WMVCore.DLL
+		12.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\WMASF.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\mfperfhelper.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\MFPlat.DLL
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\RTWorkQ.DLL
+		11.00.14393.0 (rs1_release.160715-1616)C:\Windows\System32\jscript9.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\vaultcli.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\wintypes.dll
+		                              C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Comp46f2b404#\0caeb2892b65f6afb18acb2e86b2d90c\System.ComponentModel.DataAnnotations.ni.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\windows.globalization.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\System32\UIAnimation.dll
+		12.52.6851.0                  C:\WINDOWS\System32\ShellHook.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\edputil.dll
+		4.6.1637.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\SMDiagnostics\16cd2ff23ddf98547712a6b4377be348\SMDiagnostics.ni.dll
+		4.6.1637.0 built by: NETFXREL3STAGEC:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Servd1dec626#\f55810f7b1c169f9592179bc84bf635b\System.ServiceModel.Internals.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Runt0d283adf#\c3919d3cc7deb04165526762c1adac37\System.Runtime.WindowsRuntime.ni.dll
+		4.6.1586.0 built by: NETFXREL2C:\WINDOWS\assembly\NativeImages_v4.0.30319_32\System.Net.Http\4e42dcb4d336b510e64bfb32d15b1466\System.Net.Http.ni.dll
+		14.6.1586.0 built by: NETFXREL2C:\Windows\Microsoft.NET\Framework\v4.0.30319\diasymreader.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\globinputhost.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\ThreadSafeFileOperator.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\TulipAppInfo.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\SSFMgrWrapper.dll
+		12.0.135.0                    C:\Program Files (x86)\HP\LoadRunner\bin\RealFileSystem.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\DUI70.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\DUser.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\NetworkExplorer.dll
+		7.0.14393.953 (rs1_release_inmarket.170303-1614)C:\WINDOWS\System32\StructuredQuery.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\IconCodecService.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\system32\zipfldr.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\profext.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\XmlLite.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\T2EMBED.DLL
+		11.00.14393.1358 (rs1_release.170602-2252)C:\Windows\System32\ieproxy.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\WINDOWS\SYSTEM32\icm32.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\vugen_record_api.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\insp_gen.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\inspdll.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\pefile.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\unknown_only_helper.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\type_info_pool.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\CodeGenerationAPI.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\InternalSDKUtils.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\LRSDKUtilities.dll
+		8.0.0.3828                    C:\Program Files (x86)\McAfee\Host Intrusion Prevention\HcApi.dll
+		8.0.0.3828                    C:\Program Files (x86)\McAfee\Host Intrusion Prevention\HcThe.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\VuGenCallback.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\HTTPSnapshotsWrapper.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\JsonParserWrapper.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\rtsxdlg.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\comrec_tab.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\api_scrinfo.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\script_language_helper.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\tlb_query.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\XMLStorage.dll
+		8.110.14393.953               C:\WINDOWS\System32\msxml3.dll
+		12.53.392.0                   C:\Program Files (x86)\HP\LoadRunner\bin\MercListEntry.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\api_inspector.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\trpfnc32.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\Api_Filter_Helper.dll
+		10.0.14393.0 (rs1_release.160715-1616)C:\Windows\System32\cryptui.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\lrc_basic_filters.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\api_event_parser.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\traffic_filter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\api_sock_filter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebDataFormatsCodeGen.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebSocketFilter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\VnpLog.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebHTMLCodeGen.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebRecorder.dll
+		1.0.2d                        C:\Program Files (x86)\HP\LoadRunner\bin\ssleay32_lt.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebCorrelation.dll
+		12.53.845.0                   C:\Program Files (x86)\HP\LoadRunner\bin\jconv_str.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebConvertFromFormattedFilter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebConvertFromFormattedPostFilter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebExtractServerNameFilter.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\lrc_com_filters.dll
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\WebRemoveLongBodyFilter.DLL
+		12.53.1203.0                  C:\Program Files (x86)\HP\LoadRunner\bin\lrc_code_gen_filter.dll

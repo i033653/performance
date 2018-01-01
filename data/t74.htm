@@ -1,0 +1,249 @@
+<script>
+  var inPortalScript = false
+  var webpath = "/logon_ui_resources/"
+</script>
+
+<html>
+<head>
+<BASE target="_self">
+<link rel=stylesheet href="/logon_ui_resources/css/ur/ur_nn6.css">
+<title>User Management, SAP AG</title>
+<script language="javascript">
+var originWindowName=window.name;
+window.name="logonAppPage";
+function restoreWindow() {
+try{
+window.name=originWindowName;
+} catch(ex){}
+}
+</script>
+<script language="JavaScript">
+function putFocus(formInst, elementInst) {
+  if (document.forms.length > 0) {
+    document.forms[formInst].elements[elementInst].focus();
+  }
+}
+
+function setValuesAutoCreation() {
+var form = document.getElementById('logonForm');
+form.j_username.value="";
+form.j_password.value="";
+form.automaticAccountCreation.value="true";
+}
+function submitForm() {
+var form = document.getElementById('logonForm');
+form.submit();
+}
+function clearEntries() {
+  document.logonForm.longUid.value="";
+  document.logonForm.password.value="";
+}
+function setFocusToFirstField() {
+ myform = document.logonForm;
+ try{
+   for (i=0; i<myform.length; i++) {
+    elem = myform.elements[i];
+    if (!elem.disabled) {
+      elemType = elem.type;
+      if (elemType=="text" || elemType=="password") {
+       if (!elem.readOnly) {
+          elem.focus();
+          break;
+       }
+      }
+      if (elemType=="select-one" || elemType=="select-multiple" || elemType=="checkbox" || elemType=="radio") {
+        elem.focus();
+        break;
+      }
+    }
+   }
+ } catch(ex){
+ }
+}
+function addTenantPrefix() {
+  return true;
+}
+</script>
+</head>
+<body class="urBdyStd" bgcolor="#F7F9FB" onLoad="setFocusToFirstField()" onUnload="restoreWindow()">
+
+
+
+
+
+
+
+<script language="JavaScript">
+var blockPage = false;
+</script>
+
+
+
+<script language="JavaScript">
+function writeMessage() {
+	document.write("<h2>An unexpected problem has occured. Please contact your system administrator and show them this message.</h2>");
+}
+
+if (blockPage) {
+	var browserName = navigator.appName;
+	// According to the tests IE works with document.execCommand(), but Firefox and Chrome do not
+	if (browserName.indexOf("Explorer") > -1) {
+		writeMessage();
+		document.execCommand("Stop");
+	} else {
+		writeMessage();
+		window.stop();
+	}
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+<table id="tblFrmUI" width="790px" valign="middle" dir="ltr" align="center" cellPadding="0" cellSpacing="0" style="background-color:#ffffff;margin-top:50px;">
+  
+	<tr>
+		<td><img src="/logon_ui_resources/layout/lf_tl.png" width="29" height="32"></td>
+		<td background="/logon_ui_resources/layout/lf_st.png"></td>
+		<td><img src="/logon_ui_resources/layout/lf_tr.png" width="27" height="32"></td>
+	</tr>
+	
+	<tr>
+	  
+		<td background="/logon_ui_resources/layout/lf_sl.png"></td>
+		
+		<td width="100%">		
+		
+      <table id="tblInnerCnt" dir="ltr" cellpadding="0" cellspacing="0">
+    
+				<tr>					
+					<td valign="top"><div class="urBrandImage"><img src="/logon_ui_resources/layout/branding-image.jpg" alt="Branding Image" border="0"></div></td>
+					<td width="100%"></td>
+					<td>					
+					 <table height="360px" cellPadding="0" cellSpacing="0">					
+							<tr>								
+								<td valign="top"><div class="urProductName"><img src="/logon_ui_resources/layout/branding-text.gif" alt="" border="0"></div></td>
+							</tr>							
+							<tr>
+								<td valign="top" align="left">							
+										<div class="urLogonData">										
+											<!-- data table starts after this line -->
+											<FORM  AUTOCOMPLETE="off"  id="logonForm" name="logonForm" target="logonAppPage" method="post" action="" >
+<input name="no_cert_storing" type="hidden" value="on"><input type="hidden" name="j_salt" value="HHAD6a2cum2qnbiUiSGtwksZ2Pg=" />
+<input type="hidden" name="sap.com/initial_post_parameters" value="U0FNTFJlcXVlc3Q9UEVGMWRHaHVVbVZ4ZFdWemRDQjRiV3h1Y3owaWRYSnVPbTloYzJsek9tNWhiV1Z6T25Sak9sTkJUVXc2TWk0d09uQnliM1J2WTI5c0lpQjRiV3h1Y3pwdWN6STlJblZ5YmpwdllYTnBjenB1WVcxbGN6cDBZenBUUVUxTU9qSXVNRHBoYzNObGNuUnBiMjRpSUhodGJHNXpPbTV6TXowaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzh3T1M5NGJXeGtjMmxuSXlJZ2VHMXNibk02Ym5NMFBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF4THpBMEwzaHRiR1Z1WXlNaUlFRnpjMlZ5ZEdsdmJrTnZibk4xYldWeVUyVnlkbWxqWlZWU1REMGlhSFIwY0hNNkx5OWthWEJsY21ZdGQyWXhaalV5TWpFMExtUnBjM0JoZEdOb1pYSXVhVzUwTG5OaGNDNW9ZVzVoTG05dVpHVnRZVzVrTG1OdmJTOGlJRVJsYzNScGJtRjBhVzl1UFNKb2RIUndPaTh2TVRBdU1qWXVNVFUyTGpFeU5UbzFNREF3TUM5ellXMXNNaTlwWkhBdmMzTnZJaUJHYjNKalpVRjFkR2h1UFNKMGNuVmxJaUJKUkQwaVUyWTFPVE0xT1dKa0xXSmlNRGN0TkdGbFlpMDVaRFl5TFRGa05qY3lNRFUzT1Rrek9TMTVVRmxMYWt4WWFsUkxaWE40YWs5WFUyWlRObFJMY0d4NVVFRTRVWEphY0dGcE5qUjZhbDlvUVVoeklpQkpjM04xWlVsdWMzUmhiblE5SWpJd01UY3RNRGt0TWpaVU1URTZNVGs2TkRFdU56UTBXaUlnVm1WeWMybHZiajBpTWk0d0lqNDhibk15T2tsemMzVmxjajVvZEhSd2N6b3ZMMjVsYnk1dmJtUmxiV0Z1WkM1amIyMHZiMlJ3WlhKbUwyVndQQzl1Y3pJNlNYTnpkV1Z5UGp4a2N6cFRhV2R1WVhSMWNtVWdlRzFzYm5NNlpITTlJbWgwZEhBNkx5OTNkM2N1ZHpNdWIzSm5Mekl3TURBdk1Ea3ZlRzFzWkhOcFp5TWlQanhrY3pwVGFXZHVaV1JKYm1adlBqeGtjenBEWVc1dmJtbGpZV3hwZW1GMGFXOXVUV1YwYUc5a0lFRnNaMjl5YVhSb2JUMGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TVM4eE1DOTRiV3d0WlhoakxXTXhORzRqSWk4JTJCUEdSek9sTnBaMjVoZEhWeVpVMWxkR2h2WkNCQmJHZHZjbWwwYUcwOUltaDBkSEE2THk5M2QzY3Vkek11YjNKbkx6SXdNREF2TURrdmVHMXNaSE5wWnlOeWMyRXRjMmhoTVNJdlBqeGtjenBTWldabGNtVnVZMlVnVlZKSlBTSWpVMlkxT1RNMU9XSmtMV0ppTURjdE5HRmxZaTA1WkRZeUxURmtOamN5TURVM09Ua3pPUzE1VUZsTGFreFlhbFJMWlhONGFrOVhVMlpUTmxSTGNHeDVVRUU0VVhKYWNHRnBOalI2YWw5b1FVaHpJajQ4WkhNNlZISmhibk5tYjNKdGN6NDhaSE02VkhKaGJuTm1iM0p0SUVGc1oyOXlhWFJvYlQwaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzh3T1M5NGJXeGtjMmxuSTJWdWRtVnNiM0JsWkMxemFXZHVZWFIxY21VaUx6NDhaSE02VkhKaGJuTm1iM0p0SUVGc1oyOXlhWFJvYlQwaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNUzh4TUM5NGJXd3RaWGhqTFdNeE5HNGpJaTglMkJQQzlrY3pwVWNtRnVjMlp2Y20xelBqeGtjenBFYVdkbGMzUk5aWFJvYjJRZ1FXeG5iM0pwZEdodFBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3THpBNUwzaHRiR1J6YVdjamMyaGhNU0l2UGp4a2N6cEVhV2RsYzNSV1lXeDFaVDV1VTFsUU9UWlRNR3RGVDFSV2R6Sm5WVzkxVlZBdlZTdG5XbGs5UEM5a2N6cEVhV2RsYzNSV1lXeDFaVDQ4TDJSek9sSmxabVZ5Wlc1alpUNDhMMlJ6T2xOcFoyNWxaRWx1Wm04JTJCUEdSek9sTnBaMjVoZEhWeVpWWmhiSFZsUGxCT2JYcG5URzFwVTNod1MwRnFTV0UwVG5OM09GTlVRbmRMYkhJcmVHY3hkMjVZWnpKSEx5OXVUR3RMUVVwTU9FRmlWbGh6V2t0eFR6RnVkRkpDVm14a2QzSnpabEpUYkZsNlZYVlliR3hGVW1SMmRsWXhNVWRTUWtwYWFsUmtlazlNTTB4d1IwTlZhVWd4VDJKWU0zRjNNM1J4VTFveE1VcGFaV05hYlhGWVFXZHJkMFJTUWt4MFNEQTJOSEJWZEZGMEwwRTNkeXQwVHpNdk9HMU5kMk1yZWtJeWVVUmpTV05aWnl0dk16Sm5jRFp3YW1GWFkwbzVTa1ppT0VsV04yOWtMelJQVEM5TVdqZFlPVUZYUnk5blIxVndZVTFXWjFWWGFGa3ZabE54YW5GS1RVNHlhMWc1UTNaSlVFTXhiekpNV1ZOUlExaFdLMVkyT1U5aU0wSjVNRWhIWTJKeFJFOVNiQzk0VVdoQlN5dE5iVGMxVGxoWVJYRTRiM1psZEhOSGNqSnZjVGxUY25RcmFtOVdiMmRrUkVKNGQxUlphbVZsUWtJeFpqQnpUamRMWW5CTldIaG9WVEZXTmpaUVFsZ3dSRFpQZHowOVBDOWtjenBUYVdkdVlYUjFjbVZXWVd4MVpUNDhMMlJ6T2xOcFoyNWhkSFZ5WlQ0OEwwRjFkR2h1VW1WeGRXVnpkRDQlM0QmUmVsYXlTdGF0ZT1vdWNyc2lxd3h6anFqcXR6b2Rld3RpdHJ1" />
+<input type="hidden" name="SAMLRequest" value="PEF1dGhuUmVxdWVzdCB4bWxucz0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczpuczI9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphc3NlcnRpb24iIHhtbG5zOm5zMz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyIgeG1sbnM6bnM0PSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGVuYyMiIEFzc2VydGlvbkNvbnN1bWVyU2VydmljZVVSTD0iaHR0cHM6Ly9kaXBlcmYtd2YxZjUyMjE0LmRpc3BhdGNoZXIuaW50LnNhcC5oYW5hLm9uZGVtYW5kLmNvbS8iIERlc3RpbmF0aW9uPSJodHRwOi8vMTAuMjYuMTU2LjEyNTo1MDAwMC9zYW1sMi9pZHAvc3NvIiBGb3JjZUF1dGhuPSJ0cnVlIiBJRD0iU2Y1OTM1OWJkLWJiMDctNGFlYi05ZDYyLTFkNjcyMDU3OTkzOS15UFlLakxYalRLZXN4ak9XU2ZTNlRLcGx5UEE4UXJacGFpNjR6al9oQUhzIiBJc3N1ZUluc3RhbnQ9IjIwMTctMDktMjZUMTE6MTk6NDEuNzQ0WiIgVmVyc2lvbj0iMi4wIj48bnMyOklzc3Vlcj5odHRwczovL25lby5vbmRlbWFuZC5jb20vb2RwZXJmL2VwPC9uczI6SXNzdWVyPjxkczpTaWduYXR1cmUgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPjxkczpTaWduZWRJbmZvPjxkczpDYW5vbmljYWxpemF0aW9uTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8+PGRzOlNpZ25hdHVyZU1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNyc2Etc2hhMSIvPjxkczpSZWZlcmVuY2UgVVJJPSIjU2Y1OTM1OWJkLWJiMDctNGFlYi05ZDYyLTFkNjcyMDU3OTkzOS15UFlLakxYalRLZXN4ak9XU2ZTNlRLcGx5UEE4UXJacGFpNjR6al9oQUhzIj48ZHM6VHJhbnNmb3Jtcz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI2VudmVsb3BlZC1zaWduYXR1cmUiLz48ZHM6VHJhbnNmb3JtIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS8xMC94bWwtZXhjLWMxNG4jIi8+PC9kczpUcmFuc2Zvcm1zPjxkczpEaWdlc3RNZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjc2hhMSIvPjxkczpEaWdlc3RWYWx1ZT5uU1lQOTZTMGtFT1RWdzJnVW91VVAvVStnWlk9PC9kczpEaWdlc3RWYWx1ZT48L2RzOlJlZmVyZW5jZT48L2RzOlNpZ25lZEluZm8+PGRzOlNpZ25hdHVyZVZhbHVlPlBObXpnTG1pU3hwS0FqSWE0TnN3OFNUQndLbHIreGcxd25YZzJHLy9uTGtLQUpMOEFiVlhzWktxTzFudFJCVmxkd3JzZlJTbFl6VXVYbGxFUmR2dlYxMUdSQkpaalRkek9MM0xwR0NVaUgxT2JYM3F3M3RxU1oxMUpaZWNabXFYQWdrd0RSQkx0SDA2NHBVdFF0L0E3dyt0TzMvOG1Nd2MrekIyeURjSWNZZytvMzJncDZwamFXY0o5SkZiOElWN29kLzRPTC9MWjdYOUFXRy9nR1VwYU1WZ1VXaFkvZlNxanFKTU4ya1g5Q3ZJUEMxbzJMWVNRQ1hWK1Y2OU9iM0J5MEhHY2JxRE9SbC94UWhBSytNbTc1TlhYRXE4b3ZldHNHcjJvcTlTcnQram9Wb2dkREJ4d1RZamVlQkIxZjBzTjdLYnBNWHhoVTFWNjZQQlgwRDZPdz09PC9kczpTaWduYXR1cmVWYWx1ZT48L2RzOlNpZ25hdHVyZT48L0F1dGhuUmVxdWVzdD4=" />
+<input type="hidden" name="RelayState" value="oucrsiqwxzjqjqtzodewtitru" />
+
+											
+											<table class="urLogonTable" cellSpacing="3px" cellPadding="0" valign="top">																									
+												<tr><td colspan="3">
+													<div class="urMessageArea">
+														<!--	Federation Error Message				-->
+																												
+																												
+													</div>
+												</td></tr>												
+																
+												<!-- userid -->
+												<tr><td>
+													<label class="urLblStdNew"><nobr>User<span class=urLblReq>&nbsp;*</span></nobr></label>
+
+												</td>
+												<td>
+													<input type="text" id="logonuidfield"  name="j_username" value="" title="User *" class="urEdfTxtEnbl" style="width:170px">
+												</td>
+												<td width="100%">&nbsp;</td></tr>
+												<!-- password -->
+												<tr><td>
+													<label class="urLblStdNew" for="logonpassfield"><nobr>Password<span class=urLblReq>&nbsp;*</span></nobr></label>
+
+												</td>
+												<td>
+													<input type="password" id="logonpassfield"  name="j_password" class="urEdfTxtEnbl" style="width:170px">
+												</td>
+												<td>&nbsp;</td></tr>
+												<!-- create certificate -->
+												
+												<!-- Federate User checkbox -->
+												
+												<tr><td width="100%" colspan="3">&nbsp;</td></tr>
+												<tr><td>&nbsp;																											
+												</td><td align="right">	
+													<!-- logon button -->
+													<input class="urBtnStdNew" type="submit" name="uidPasswordLogon" value="Log On" >
+
+													
+														<!-- display cancel button incase of SP initiated SSO -->
+														<input class="urBtnStdNew" type="submit" name="cancelIdPLogon" value="Cancel" onClick="onClickCancel();" >
+																
+													
+												</td>
+												<td>&nbsp;</td></tr>												
+												<!-- link to certificate logon -->
+												
+												<!-- logon help -->
+												
+											</table>
+											</form>
+
+										<!-- data table ends before this line -->
+										</div>																	
+								</td>
+							</tr>
+							<tr>
+								<td valign="bottom">									
+									<div class="urCopyrightFrame">									 
+										<div class="urCopyrightText">Copyright &copy; SAP AG. All Rights Reserved.</div>					
+										<div class="urCopyrightImage"><img src="/logon_ui_resources/layout/sap_logo.png" alt="SAP AG" title="SAP AG" width="55" height="27"></div>
+									</div>				
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>			
+		</td>		
+		
+		<td background="/logon_ui_resources/layout/lf_sr.png"></td>
+		
+	</tr>
+	
+	<tr>
+		<td><img src="/logon_ui_resources/layout/lf_bl.png" width="29" height="32"></td>
+		<td align="center" background="/logon_ui_resources/layout/lf_sb.png"><span class="clip"><img src="/logon_ui_resources/layout/lf_clip.png" width="298" height="32"></span></td>
+		<td><img src="/logon_ui_resources/layout/lf_br.png" width="27" height="32"></td>
+	</tr>
+	
+</table>
+ 
+
+<script type="text/javascript">
+<!--		
+  var docDir = document.dir;    
+  if(docDir=="rtl" || docDir=="RTL"){   
+     var elTableCnt = document.getElementById("tblInnerCnt");
+     if(elTableCnt!=undefined){
+       elTableCnt.style.direction="rtl";        
+     }     
+  }  
+  var isFormSubmitted = false;
+  if( document.forms ) {		
+    document.forms[0].onsubmit=function(){
+      if( isFormSubmitted ) {
+        return false;
+      } else {
+        isFormSubmitted = true;
+        return true;
+      }
+    }
+  }      
+-->
+</script>
+</body>
+</html>

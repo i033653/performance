@@ -1,0 +1,816 @@
+   function OpenCBS(url) {
+	           open("/global/scripts/jump_frame.asp?content=" + url,"CBS","width=575,height=515,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+	}
+	
+    function OpenDemo(url) {
+	           open("/global/scripts/jump_frame.asp?content=" + url,"demo","width=610,height=410,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+	}
+	
+    function OpenOnlineDemo(url) {
+	           open("/global/scripts/jump_frame.asp?content=" + url,"onlinedemo","width=810,height=625,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+	}
+	  
+	function OpenPDF(url,closelabel) {
+		if(!closelabel) closelabel="";
+	           open("/global/scripts/jump_frame.asp?content=" + url + "&CloseLabel=" + closelabel,"pdf","width=610,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+	}
+	
+	function OpenVideo(url) {
+	           open("/global/scripts/jump_frame.asp?content=" + url,"video","width=545,height=420,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+	}
+	
+	function OpenMediaPlayer(url,closelabel,country) {
+	           open("/global/scripts/jump_frame.asp?CloseLabel=" + closelabel + "&country=" + country + "&content=" + url,"video","width=545,height=420,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+	}
+	
+	function OpenSite(url,width,height,closelabel) {
+		if(!closelabel) closelabel="";
+	           open("/global/scripts/jump_frame.asp?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width="+width+",height="+height+",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+
+	function OpenSite640(url,closelabel) {
+		if(!closelabel) closelabel="";
+	           open("/global/scripts/jump_frame.asp?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=640,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+	
+	function OpenSitePrebooking(url,closelabel,title,country) {
+		if(!closelabel) closelabel="";
+	           open("/global/scripts/jump_frame.asp?pagetitle=" + title + "&country=" + country + "&content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=640,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+
+
+		   function nameParent(newName,url) {
+		   window.name = newName;
+	           OpenSite800(url)
+	}
+
+	function OpenSite800(url,closelabel) {
+		if(!closelabel) closelabel="";
+	           open("/global/scripts/jump_frame.asp?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=800,height=520,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+
+	function OpenCSP() {
+	           open('/partners/software/directory/directory.asp','csp','width=650,height=450,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes');
+	}
+
+	function OpenCalc(url,title,width,height) {
+	           open("/global/scripts/jump_frame.asp?CalcDisplay=1&content=" + escape(url) +"&title=" + escape(title),"site","width="+width+",height="+height+",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+	
+	function OpenCalc_(url) {
+	           open( url,'calc','width=900,height=600,menubar=yes,toolbar=yes,locationbar=yes,resizable=yes,status=no,dependent=no,scrollbars=yes');
+	}
+	
+ 	function OpenWebcast (url, title) {
+    		 open(url, title, 'width=762,height=700,left=0,top=0,menubar=no,toolbar=no,locationbar=no,directories=no,resizable=yes,status=no,dependent=no');
+    }  
+	function openBrWindow(theURL,winName,features){
+  		window.open(theURL,winName,features);
+	}
+
+function Search_SpecChar(){
+   if(document.SAPcom_search.ct.value=="poland"){
+	var search_query;
+	var query_len;
+	search_query=document.SAPcom_search.q1.value;
+	query_len=search_query.length;
+	var ucode;
+	ucode="";
+
+	for(i=0;i<query_len;i++){
+		if(i==query_len-1){
+			ucode=ucode + search_query.charCodeAt(i);
+		}else{
+			ucode=ucode + search_query.charCodeAt(i) + "-";
+		}
+	}
+	document.SAPcom_search.q2.name="q1";
+	document.SAPcom_search.q2.value=ucode;
+	document.SAPcom_search.q1.name="q2";
+    }
+}
+
+//---For ProfitCalculator.vb -------
+var bFault = false;
+var bTemp = /[.]/gi;
+var alertMsg = "";
+
+function validatePriceCalculator(val,args) 
+{
+	if (typeof(ProfitCalculatorControls)!= "undefined")
+	{
+		var objDate = document.getElementById(ProfitCalculatorControls[0]);
+		var objNumberOfShares = document.getElementById(ProfitCalculatorControls[1]);
+		var objPrice = document.getElementById(ProfitCalculatorControls[2]);
+		var strDateFormatError = ProfitCalculatorControls[3];
+		var strDateInFutureError = ProfitCalculatorControls[4];
+		var strShareNumberFormatError = ProfitCalculatorControls[5];
+		var strPriceFormatError = ProfitCalculatorControls[6];
+		
+		if (typeof(objDate)!= "undefined" && typeof(objNumberOfShares)!= "undefined" && typeof(objPrice)!= "undefined")
+		{
+			var strDate = objDate.value;
+			var strNumberOfShares = objNumberOfShares.value;
+			var strPrice = objPrice.value;
+			var bFault = false;
+			var alertMsg = "";
+			if(strDate != "")
+			{
+					var datum_expression1 = new RegExp(/(0?[1-9]|[12][0-9]|3[01])[.](0?[1-9]|1[012])[.](19|20)\d\d/);
+					var check_date = String(strDate);	
+					if ( (! datum_expression1.test(check_date) ))
+					{								
+								alertMsg += strDateFormatError + "\n";
+								bFault = true;
+								objDate.select();
+					}
+					else
+					{
+							check_date = check_date.split(".");
+							var tempDateObj = new Date(check_date[2], (check_date[1]-1), check_date[0]);
+							var todayDateObj = new Date();
+							if(tempDateObj > todayDateObj)
+							{
+								alertMsg += strDateInFutureError + "\n";
+								bFault = true;
+								objDate.select();
+
+							}
+					}
+					
+			}
+			
+			// Checking Depot Volume Input
+			var strNumberOfShares = String(strNumberOfShares);
+			
+			strNumberOfShares = strNumberOfShares.replace(bTemp, ",");
+  			strNumberOfShares = strNumberOfShares.split(",");
+			strNumberOfShares = strNumberOfShares[0];
+			if(isNaN(strNumberOfShares)){
+						alertMsg += strShareNumberFormatError + "\n";
+						bFault = true;
+						objNumberOfShares.select();
+			}
+			else{
+				objNumberOfShares.value = strNumberOfShares;
+			}
+			
+			// Checking Depot Price Input
+			var strPrice = String(strPrice);
+			if (strPrice != "") {
+					strPrice = strPrice.replace(bTemp, ",");
+		  			strPrice = strPrice.split(",");
+					if (strPrice.length>=2)
+					{
+						strPrice = strPrice[0]+","+strPrice[1];
+					}
+					else
+					{
+						strPrice = strPrice[0]
+					}
+					if(isNaN(parseFloat(strPrice)))
+					{
+								alertMsg += strPriceFormatError ;
+								bFault = true;
+								objPrice.value = strNumberOfShares;
+					}
+			}
+				
+			if (bFault)
+			{
+				alert(alertMsg);
+				args.IsValid = false;
+				return false;
+			}
+		}
+	}
+}
+//----For SharePriceChart.vb ---
+function validateSharePriceChart(val,args)
+
+ {
+		var objExchange = document.getElementById(SharePriceChartControls[0]);
+		var objTime = document.getElementById(SharePriceChartControls[1]);
+		var objTrend = document.getElementById(SharePriceChartControls[2]);
+		var objComparison = document.getElementById(SharePriceChartControls[3]);
+		var strTimeTrendError = SharePriceChartControls[4];
+		var strTimeComparisonError = SharePriceChartControls[5];
+		var strComparisonTrendError = SharePriceChartControls[6];
+		var strComparisonTimeError = SharePriceChartControls[7];
+		var strTrendTimeError = SharePriceChartControls[8];
+		var strTrendComparisonError = SharePriceChartControls[9];
+		
+		if (typeof(objExchange)!= "undefined" && typeof(objTime)!= "undefined" && typeof(objTrend)!= "undefined" && typeof(objComparison)!= "undefined")
+		{
+			var strExchange = objExchange.value;
+			var strTime = objTime.value;
+			var strTrend = objTrend.value;
+			var strComparison = objComparison.value;
+			
+			if (strTime == "1T")
+			{
+				if (strTrend != "ohne") {
+					alert (strTimeTrendError);
+					objTrend.value = "ohne";
+					args.IsValid = false;
+					return false;
+
+				}
+				if (strComparison != "ohne") {
+					alert (strTimeComparisonError);
+					objComparison.value = "ohne";
+					args.IsValid = false;
+					return false;
+				}
+			}
+
+			if (strComparison != "ohne")
+			{
+				if (strTrend != "ohne") {
+					alert (strComparisonTimeError);
+					objTrend.value = "ohne";
+					args.IsValid = false;
+					return false;
+				}
+				if (strTime == "1T") {
+					alert (strComparisonTimeError);
+					objTime.value = "12M";
+					args.IsValid = false;
+					return false;
+				}
+			}
+
+			if (strTrend != "ohne")
+			{
+				if (strTime == "1T") {
+					alert (strTrendTimeError);
+					objTime.value = "12M";
+					args.IsValid = false;
+					return false;
+				}
+				if (strComparison != "ohne") {
+					alert (strTrendComparisonError);
+					objComparison.value = "ohne"
+					args.IsValid = false;
+					return false;
+				}
+			}
+		}
+}
+
+//----For TellAFriend.vb ---
+ function validateTellAFriend(val,args)
+ {
+		var objFriendEmail = document.getElementById(TellAFriendControls[0]);
+		var objName = document.getElementById(TellAFriendControls[1]);
+		var objSelfEmail = document.getElementById(TellAFriendControls[2]);
+		var strFriendEmailError = TellAFriendControls[3];
+		var strFriendAddressError1 = TellAFriendControls[4];
+		var strFriendAddressError2 = TellAFriendControls[5];
+		var strNameError = TellAFriendControls[6];
+		var strSelfEmailError = TellAFriendControls[7];
+		var strSelfAddressError = TellAFriendControls[8];
+		if (typeof(objFriendEmail)!= "undefined" && typeof(objName)!= "undefined" && typeof(objSelfEmail)!= "undefined")
+		{
+			strFriendEmail = Trim(objFriendEmail.value);
+			strName = Trim(objName.value);
+			strSelfEmail = Trim(objSelfEmail.value);
+			var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+			
+			if(strFriendEmail == "")
+			{
+				alert(strFriendEmailError);
+				objFriendEmail.focus();
+				args.IsValid = false;
+				return false;
+			}
+			else
+			{
+				if(! emailRegex.test(strFriendEmail))
+				{
+					alert(strFriendAddressError1 + "\n" + strFriendAddressError2);
+					objFriendEmail.select();
+					args.IsValid = false;
+					return false;
+				}
+			}
+			if(strName == "")
+			{
+				alert(strNameError);
+				objName.focus();
+				args.IsValid = false;
+				return false;
+			}
+			if(strSelfEmail == "")
+			{
+				alert(strSelfEmailError);
+				objSelfEmail.focus();
+				args.IsValid = false;
+				return false;
+			}
+			else
+			{
+				if(! emailRegex.test(strSelfEmail))
+				{
+					alert(strSelfAddressError);
+					objSelfEmail.select();
+					args.IsValid = false;
+					return false;
+				}
+			}						
+		}
+}
+
+
+//----For AnnualReportOrder.vb ---
+
+
+function validateAnnualReportOrder(val,args)
+{
+    
+	var objQuantity = document.getElementById(AnnualReportOrderControls[0]);
+	var objLanguage = document.getElementById(AnnualReportOrderControls[1]);
+	var objSalutation = document.getElementById(AnnualReportOrderControls[2]);
+	var objFirstName = document.getElementById(AnnualReportOrderControls[3]);
+	var objLastName = document.getElementById(AnnualReportOrderControls[4]);
+	var objAddress = document.getElementById(AnnualReportOrderControls[5]);
+	var objCity = document.getElementById(AnnualReportOrderControls[6]);
+	var objState = document.getElementById(AnnualReportOrderControls[7]);
+	var objZipCode = document.getElementById(AnnualReportOrderControls[8]);
+	var objCountry = document.getElementById(AnnualReportOrderControls[9]);
+	var objEmail = document.getElementById(AnnualReportOrderControls[10]);
+	var objRelationshipToSAP = document.getElementById(AnnualReportOrderControls[11]);
+	var thealert = AnnualReportOrderControls[12];
+	var objFirstNameAlert = AnnualReportOrderControls[13];
+	var objLastNameAlert = AnnualReportOrderControls[14];
+	var objAddressAlert = AnnualReportOrderControls[15];
+	var objCityAlert = AnnualReportOrderControls[16];
+	var objStateAlert = AnnualReportOrderControls[17];
+	var objZipCodeAlert = AnnualReportOrderControls[18];
+	var objCountryAlert = AnnualReportOrderControls[19];
+	var objEmailAlert = AnnualReportOrderControls[20];
+	var objRelationshipToSAPAlert = AnnualReportOrderControls[21];
+
+	var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+	
+	if (typeof(objQuantity)!= "undefined" && typeof(objLanguage)!= "undefined" && typeof(objSalutation)!= "undefined" && typeof(objFirstName)!= "undefined" && typeof(objLastName)!= "undefined" && typeof(objAddress)!= "undefined" && typeof(objCity)!= "undefined" && typeof(objState)!= "undefined" && typeof(objZipCode)!= "undefined" && typeof(objCountry)!= "undefined" && typeof(objEmail)!= "undefined" && typeof(objRelationshipToSAP)!= "undefined")
+	{
+		var doalert = "no";
+		if(Trim(objFirstName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objFirstNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objLastName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objLastNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objAddress.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objAddressAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objCity.value).length <= '0')
+		{
+			thealert = thealert  + '\n' + objCityAlert;
+			doalert = 'yes';
+		}
+		
+		if(objState.value == "" && (objCountry.value == "US" || objCountry.value == "CA" || objCountry.value == ""))
+		{
+			thealert = thealert  + '\n'  + objStateAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objZipCode.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objZipCodeAlert;
+			doalert = 'yes';
+		}
+		
+		if(objCountry.value == "")
+		{
+			thealert = thealert  + '\n'  + objCountryAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objEmail.value).length <= '0' || ! emailRegex.test(Trim(objEmail.value)))
+		{
+			thealert = thealert  + '\n'  + objEmailAlert;
+			doalert = 'yes';
+		}		
+		
+		if(objRelationshipToSAP.value == "")
+		{
+			thealert = thealert  + '\n'  + objRelationshipToSAPAlert;
+			doalert = 'yes';
+		}
+		if (doalert=='yes')
+		{
+			alert(thealert);
+			args.IsValid = false;
+			return false;
+		}
+	}
+} 
+
+
+function validateInvestorPackageOrder(val,args)
+{
+    
+	var objSalutation = document.getElementById(InvestorPackageOrderControls[0]);
+	var objFirstName = document.getElementById(InvestorPackageOrderControls[1]);
+	var objLastName = document.getElementById(InvestorPackageOrderControls[2]);
+	var objAddress = document.getElementById(InvestorPackageOrderControls[3]);
+	var objCity = document.getElementById(InvestorPackageOrderControls[4]);
+	var objState = document.getElementById(InvestorPackageOrderControls[5]);
+	var objZipCode = document.getElementById(InvestorPackageOrderControls[6]);
+	var objCountry = document.getElementById(InvestorPackageOrderControls[7]);
+	var objEmail = document.getElementById(InvestorPackageOrderControls[8]);
+	var objRelationshipToSAP = document.getElementById(InvestorPackageOrderControls[9]);
+	var thealert = InvestorPackageOrderControls[10];
+	var objFirstNameAlert = InvestorPackageOrderControls[11];
+	var objLastNameAlert = InvestorPackageOrderControls[12];
+	var objAddressAlert = InvestorPackageOrderControls[13];
+	var objCityAlert = InvestorPackageOrderControls[14];
+	var objStateAlert = InvestorPackageOrderControls[15];
+	var objZipCodeAlert = InvestorPackageOrderControls[16];
+	var objCountryAlert = InvestorPackageOrderControls[17];
+	var objEmailAlert = InvestorPackageOrderControls[18];
+	var objRelationshipToSAPAlert = InvestorPackageOrderControls[19];
+	
+	
+	var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+	
+	if (typeof(objSalutation)!= "undefined" && typeof(objFirstName)!= "undefined" && typeof(objLastName)!= "undefined" && typeof(objAddress)!= "undefined" && typeof(objCity)!= "undefined" && typeof(objState)!= "undefined" && typeof(objZipCode)!= "undefined" && typeof(objCountry)!= "undefined" && typeof(objEmail)!= "undefined" && typeof(objRelationshipToSAP)!= "undefined")
+	{
+		var doalert = "no";
+		if(Trim(objFirstName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objFirstNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objLastName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objLastNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objAddress.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objAddressAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objCity.value).length <= '0')
+		{
+			thealert = thealert  + '\n' + objCityAlert;
+			doalert = 'yes';
+		}
+		
+		if(objState.value == "" && (objCountry.value == "US" || objCountry.value == "CA" || objCountry.value == ""))
+		{
+			thealert = thealert  + '\n'  + objStateAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objZipCode.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objZipCodeAlert;
+			doalert = 'yes';
+		}
+		
+		if(objCountry.value == "")
+		{
+			thealert = thealert  + '\n'  + objCountryAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objEmail.value).length <= '0' || ! emailRegex.test(Trim(objEmail.value)))
+		{
+			thealert = thealert  + '\n'  + objEmailAlert;
+			doalert = 'yes';
+		}		
+		
+		if(objRelationshipToSAP.value == "")
+		{
+			thealert = thealert  + '\n'  + objRelationshipToSAPAlert;
+			doalert = 'yes';
+		}
+		if (doalert=='yes')
+		{
+			alert(thealert);
+			args.IsValid = false;
+			return false;
+		}
+	}
+}
+
+
+//----For SMSStockRegistration.vb ---
+
+function validateSMSStockRegistration(val,args)
+{
+    
+	var objSalutation = document.getElementById(SMSStockRegistrationControls[0]);
+	var objFirstName = document.getElementById(SMSStockRegistrationControls[1]);
+	var objLastName = document.getElementById(SMSStockRegistrationControls[2]);
+	var objEmail = document.getElementById(SMSStockRegistrationControls[3]);
+	var objMobileCountry = document.getElementById(SMSStockRegistrationControls[4]);
+	var objMobileProvider = document.getElementById(SMSStockRegistrationControls[5]);
+	var objMobileNumber = document.getElementById(SMSStockRegistrationControls[6]);
+	var thealert = SMSStockRegistrationControls[7];
+	var objFirstNameAlert = SMSStockRegistrationControls[8];
+	var objLastNameAlert = SMSStockRegistrationControls[9];
+	var objEmailAlert = SMSStockRegistrationControls[10];
+	var objCountryCodeAlert = SMSStockRegistrationControls[11];
+	var objProviderCodeAlert = SMSStockRegistrationControls[12];
+	var objMobileNumberAlert = SMSStockRegistrationControls[13];
+
+	var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+	
+	if (typeof(objSalutation)!= "undefined" && typeof(objFirstName)!= "undefined" && typeof(objLastName)!= "undefined" && typeof(objEmail)!= "undefined" && typeof(objMobileCountry)!= "undefined" && typeof(objMobileProvider)!= "undefined" && typeof(objMobileNumber)!= "undefined")
+	{
+		var doalert = "no";
+		if(Trim(objFirstName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objFirstNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objLastName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objLastNameAlert;
+			doalert = 'yes';
+		}
+
+		
+		if(Trim(objEmail.value).length <= '0' || ! emailRegex.test(Trim(objEmail.value)))
+		{
+			thealert = thealert  + '\n'  + objEmailAlert;
+			doalert = 'yes';
+		}		
+		
+		if(Trim(objMobileCountry.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objCountryCodeAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objMobileProvider.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objProviderCodeAlert;
+			doalert = 'yes';
+		}
+		if(Trim(objMobileNumber.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objMobileNumberAlert;
+			doalert = 'yes';
+		}
+		if (doalert=='yes')
+		{
+			alert(thealert);
+			args.IsValid = false;
+			return false;
+		}
+	}
+}
+
+
+//----For InnovationReportOrder.vb ---
+
+
+function validateInnovationReportOrder(val,args)
+{
+    
+	var objQuantity = document.getElementById(InnovationReportOrderControls[0]);
+	var objSalutation = document.getElementById(InnovationReportOrderControls[1]);
+	var objFirstName = document.getElementById(InnovationReportOrderControls[2]);
+	var objLastName = document.getElementById(InnovationReportOrderControls[3]);
+	var objAddress = document.getElementById(InnovationReportOrderControls[4]);
+	var objCity = document.getElementById(InnovationReportOrderControls[5]);
+	var objState = document.getElementById(InnovationReportOrderControls[6]);
+	var objZipCode = document.getElementById(InnovationReportOrderControls[7]);
+	var objCountry = document.getElementById(InnovationReportOrderControls[8]);
+	var objEmail = document.getElementById(InnovationReportOrderControls[9]);
+	var objRelationshipToSAP = document.getElementById(InnovationReportOrderControls[10]);
+	var thealert = InnovationReportOrderControls[11];
+	var objFirstNameAlert = InnovationReportOrderControls[12];
+	var objLastNameAlert = InnovationReportOrderControls[13];
+	var objAddressAlert = InnovationReportOrderControls[14];
+	var objCityAlert = InnovationReportOrderControls[15];
+	var objStateAlert = InnovationReportOrderControls[16];
+	var objZipCodeAlert = InnovationReportOrderControls[17];
+	var objCountryAlert = InnovationReportOrderControls[18];
+	var objEmailAlert = InnovationReportOrderControls[19];
+	var objRelationshipToSAPAlert = InnovationReportOrderControls[20];
+
+	var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+	
+	if (typeof(objQuantity)!= "undefined" && typeof(objSalutation)!= "undefined" && typeof(objFirstName)!= "undefined" && typeof(objLastName)!= "undefined" && typeof(objAddress)!= "undefined" && typeof(objCity)!= "undefined" && typeof(objState)!= "undefined" && typeof(objZipCode)!= "undefined" && typeof(objCountry)!= "undefined" && typeof(objEmail)!= "undefined" && typeof(objRelationshipToSAP)!= "undefined")
+	{
+		var doalert = "no";
+		if(Trim(objFirstName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objFirstNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objLastName.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objLastNameAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objAddress.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objAddressAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objCity.value).length <= '0')
+		{
+			thealert = thealert  + '\n' + objCityAlert;
+			doalert = 'yes';
+		}
+		
+		if(objState.value == "" && (objCountry.value == "US" || objCountry.value == "CA" || objCountry.value == ""))
+		{
+			thealert = thealert  + '\n'  + objStateAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objZipCode.value).length <= '0')
+		{
+			thealert = thealert  + '\n'  + objZipCodeAlert;
+			doalert = 'yes';
+		}
+		
+		if(objCountry.value == "")
+		{
+			thealert = thealert  + '\n'  + objCountryAlert;
+			doalert = 'yes';
+		}
+		
+		if(Trim(objEmail.value).length <= '0' || ! emailRegex.test(Trim(objEmail.value)))
+		{
+			thealert = thealert  + '\n'  + objEmailAlert;
+			doalert = 'yes';
+		}		
+		
+		if(objRelationshipToSAP.value == "")
+		{
+			thealert = thealert  + '\n'  + objRelationshipToSAPAlert;
+			doalert = 'yes';
+		}
+		if (doalert=='yes')
+		{
+			alert(thealert);
+			args.IsValid = false;
+			return false;
+		}
+	}
+} 
+
+//----For MiniSAP.vb ---
+function validateMiniSAP(val,args)
+{
+	var objSalutation = document.getElementById(MiniSAPControls[0]);
+	var objFirstName = document.getElementById(MiniSAPControls[1]);
+	var objLastName = document.getElementById(MiniSAPControls[2]);
+	var objEmail = document.getElementById(MiniSAPControls[3]);
+	var objProfession = document.getElementById(MiniSAPControls[4]);
+	var objAgree = document.getElementById(MiniSAPControls[5]);
+	var objSystem = document.getElementById(MiniSAPControls[6]);
+	var objHarwareKey = document.getElementById(MiniSAPControls[7]);
+	var strErrorMsg = MiniSAPControls[8];
+	var strEmailErrorMsg = MiniSAPControls[9];
+	var strShortHWKeyErrorMsg = MiniSAPControls[10];
+	var strInvalidHWKeyErrorMsg = MiniSAPControls[11];
+	var strDetailHWKeyErrorMsg = MiniSAPControls[12];
+	var emailRegex = new RegExp(/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/);
+	if (typeof(objSalutation)!= "undefined" && typeof(objFirstName)!= "undefined" && typeof(objLastName)!= "undefined" && typeof(objEmail)!= "undefined" && typeof(objAgree)!= "undefined" && typeof(objSystem)!= "undefined" && typeof(objHarwareKey)!= "undefined")
+	{
+		//---Check Empty Fields ----
+			if ((!objAgree.checked) || Trim(objFirstName.value).length <='0' || Trim(objLastName.value).length <='0' || Trim(objEmail.value).length <='0' || Trim(objProfession.value).length <='0' || Trim(objSystem.value).length <='0' || Trim(objHarwareKey.value).length <='0')
+			{
+				alert(strErrorMsg);
+				args.IsValid = false;
+				return false;
+			}
+		//---Check Harware Key ---
+			var cc = 0;
+			var i = 0;
+			var str = Trim(objHarwareKey.value);
+			if ( 11 > str.length )
+			{
+				alert(strShortHWKeyErrorMsg + strDetailHWKeyErrorMsg);
+				args.IsValid = false;
+				return false;
+			}
+			cc = str.charCodeAt( 0 );
+			// first is an uppercase character...
+			if ( ( 65 > cc ) || ( 90 < cc ) )
+			{
+				alert(strInvalidHWKeyErrorMsg + strDetailHWKeyErrorMsg);
+				args.IsValid = false;
+				return false;
+			}
+			// ...followed by 10 digits
+			var boolNotNumeric = isNaN(str.substr(1, str.length))
+			if (boolNotNumeric)
+			{
+				alert(strInvalidHWKeyErrorMsg + strDetailHWKeyErrorMsg);
+				args.IsValid = false;
+				return false;
+			}
+		
+		//---Check Email ---
+			if (!emailRegex.test(Trim(objEmail.value)))
+			{
+				alert(strEmailErrorMsg);
+				args.IsValid = false;
+				return false;
+			}
+	}	
+}
+
+
+function setRecipient(objList)
+{
+	document.EVAL.MINIR3_ERQ_SID.value=document.EVAL.MINIR3_ERQ_SYSTEM.options[document.EVAL.MINIR3_ERQ_SYSTEM.options.selectedIndex].value
+}
+
+//----For SAPZone.vb ---
+function validateSAPZone(val,args)
+{
+	var objRegion = document.getElementById(SAPZoneControls[0]);
+	var objPostalCode = document.getElementById(SAPZoneControls[1]);
+	var strErrorMsg = SAPZoneControls[2];
+	if (typeof(objRegion)!= "undefined" && typeof(objPostalCode)!= "undefined")
+	{
+		if (objRegion.value == "0")
+		{
+			alert(strErrorMsg);
+			args.IsValid = false;
+			return false;
+		}
+	}	
+}
+
+//----For Agreement.vb ---
+function AcceptAgreement()
+{
+	var strControlID = AgreementControls[0];
+	if (strControlID != "" && window.opener && !window.opener.closed)
+	{
+		window.opener.document.getElementById(strControlID).checked = true;
+	}
+	window.close();
+}
+
+//----For PressSearch.vb ---
+function validatePressSearch(val,args)
+{
+	var objSearch = document.getElementById(PressSearchControls[0]);
+	var strErrorMsg = PressSearchControls[1];
+	if (typeof(objSearch)!= "undefined")
+	{
+		if (Trim(objSearch.value).length <='0')
+		{
+			alert(strErrorMsg);
+			objSearch.focus();
+			args.IsValid = false;
+			return false;
+		}
+	}	
+}
+
+function RejectAgreement()
+{
+	var strControlID = AgreementControls[0];
+	if (strControlID != "" && window.opener && !window.opener.closed)
+	{
+		window.opener.document.getElementById(strControlID).checked = false;
+	}
+	window.close();
+}
+function Trim(source)
+{
+	var scratch=source;
+	while(scratch.charAt(0)==" ")
+		scratch = scratch.substr(1);
+	while(scratch.charAt(scratch.length-1)==" ")
+		scratch = scratch.substr(0, scratch.length-1);
+	return scratch;
+}
+function ClearForm()
+{
+	document.forms[0].reset();
+	return false;
+}

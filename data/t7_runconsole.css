@@ -1,0 +1,218 @@
+#RunConsole {
+  height: 100%;
+}
+
+.runconsoleheight {
+  height: 100%;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.runconsoleheader {
+  background-color: #d3d8de;
+  height: 28px;
+}
+
+.runconsoletoolbar {
+  background-color: #f0f4f9;
+  padding-right: 8px;
+  padding-top: 0.2rem;
+}
+
+.runconsoletoolbar .sapMLabel {
+  color: #333;
+  font-size: 12px;
+}
+
+.runconsolemessage {
+  white-space: normal;
+  line-height: 1.3;
+}
+
+#RunConsole .sapMList {
+  border: 0;
+  background-color: transparent;
+}
+
+#RunConsole .sapMListNoData {
+  background-color: transparent;
+  color: transparent;
+}
+
+#RunConsole .sapMLIB {
+  border-bottom: 0;
+}
+
+#RunConsole .sapMLIB .sapUiIcon {
+  font-size: 1.2rem;
+  color: #6bb647;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
+#RunConsole .sapMList .sapMLIB.sapMGHLI {
+  font-weight: bold;
+  color: #333;
+  background: transparent;
+  height: 28px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d3d8de;
+  border-top: 1px solid #d3d8de;
+}
+
+#RunConsole .sapMBtn:hover > .sapMBtnTransparent.sapMBtnHoverable {
+  background-color: rgba(65, 107, 142, 0.25);
+}
+
+#RunConsole .sapMTBSeparator {
+  height: 18px;
+  background: #d3d8de;
+}
+
+#RunConsole .sapMSLINoDescIcon > .sapMLIBContent {
+  padding-left: 2.6rem;
+}
+
+#RunConsole .sapMList .sapMSLI {
+  line-height: 2rem;
+  height: 2rem;
+  overflow: hidden;
+}
+
+#RunConsole .sapMSLI:hover {
+  background-color: rgba(65, 107, 142, 0.25);
+}
+
+#RunConsole .sapMSLI:active {
+  background-color: #427cac;
+  color: #fff;
+}
+
+#RunConsole .sapMLIB.sapMLIBSelected {
+  background: #427cac;
+  color: #fff;
+}
+
+#RunConsole .runconsoleconfigList {
+  height: 100%;
+  background-color: #f0f4f9;
+  color: #3f5161;
+  overflow: auto;
+}
+
+#RunConsole .sapMLIBSelected .sapMSLITitleOnly {
+  color: #ffffff;
+}
+
+#RunConsole .sapMGHLIUpperCase {
+  text-transform: none;
+}
+
+#RunConsole--logToolbarSplitter .sapUiLoSplitterBar {
+  height: 2px;
+}
+
+#RunConsole--runconfigSplitter .sapUiLoSplitterBar[aria-orientation='vertical'] {
+  width: 4px;
+  color: #427cac;
+}
+
+#RunConsole--runconfigSplitter {
+  background-color: #e0e3e7;
+}
+
+#RunConsole .runConsoleShutDownButton .sapMBtnIcon, #RunConsole--logToolbar-popover .runConsoleShutDownButton .sapMBtnIcon {
+  color: #f06c6f;
+}
+
+#RunConsole .runConsoleRunButton .sapMBtnIcon, #RunConsole--logToolbar-popover .runConsoleRunButton .sapMBtnIcon {
+  color: #6bb647;
+}
+
+#RunConsole .sapMTBSpacer {
+  width: 4px !important;
+}
+
+#RunConsole .sapMBtnInner > span.sapMBtnIcon {
+  line-height: 28px;
+  height: 28px;
+}
+
+#RunConsole .sapMBtn {
+  height: 28px;
+  padding: 0;
+}
+
+#RunConsole .sapMBtnInner {
+  height: auto;
+  border: 0;
+}
+
+#RunConsole .sapMBtnIcon {
+  width: 28px;
+}
+
+.runConsoleClearButton .sapMBtnDsbl .sapMBtnIcon {
+  color: #716969;
+}
+
+.runConsoleClearButton .sapMBtnIcon {
+  color: #333;
+}
+
+.runConsoleTitle {
+  color: #333;
+  margin-top: 2px;
+  margin-left: 8px;
+  font-size: 0.86rem;
+}
+
+.newRunConsoleLink {
+  margin-left: 4px;
+  font-size: 0.875rem;
+  color: #007cc0;
+}
+
+.newRunConsoleLink:hover {
+  color: #416b8e;
+  text-decoration: none;
+}
+
+.newRunConsoleLink.sapMLnk:visited {
+  color: #3f5161;
+}
+
+.newRunConsoleLink.sapMLnk:hover {
+  color: #007cc0;
+  text-decoration: underline;
+}
+
+#RunConsole li[data-status='sap-icon://watt/runConsoleFailure'] .sapUiIcon {
+  color: #f06c6f;
+}
+
+#RunConsole li[data-status='sap-icon://watt/runConsoleIdle'] .sapUiIcon {
+  color: #f7ce5e;
+}
+
+#RunConsole li[data-status='sap-icon://watt/runConsoleProgress'] .sapUiIcon {
+  animation: rotate 4s linear infinite;
+  -moz-animation: rotate 4s linear infinite;
+  -webkit-animation: rotate 4s linear infinite;
+}
+
+#RunConsole .sapUiLoSplitter > .sapUiLoSplitterOverlay > .sapUiLoSplitterOverlayBar {
+  background-color: #c2c1c1;
+}
+
+#RunConsole .sap-tablet .sapUiLoSplitterH.sapUiLoSplitter > .sapUiLoSplitterBar,
+.sap-tablet .sapUiLoSplitterH > .sapUiLoSplitterOverlay > .sapUiLoSplitterOverlayBar,
+.sap-tablet .sapUiLoSplitterH .sapUiLoSplitterBarIcon {
+  width: 4px;
+}
+
+#RunConsole .sapUiLoSplitter > .sapUiLoSplitterBar:focus {
+  outline: 1px dotted #c2c1c1;
+}
+

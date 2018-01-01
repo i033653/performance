@@ -1,0 +1,11 @@
+[t10]
+FileName1=t10.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/profile/prefs
+Total=1
+RequestHeaderFile=t10_RequestHeader.txt
+RequestBodyFile=t10_RequestBody.txt
+ResponseHeaderFile=t10_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_10.xml
+[ProtocolInfo]
+ProtocolId=QTWeb

@@ -1,0 +1,75 @@
+[General]
+Type=Multi
+DefaultCfg=default.cfg
+ParameterFile=LSP.prm
+GlobalParameterFile=
+NewFunctionHeader=1
+RunType=cci
+ActionLogicExt=action_logic
+MajorVersion=12
+MinorVersion=53
+LastActiveAction=Action
+ActiveTypes=QTWeb
+GenerateTypes=QTWeb
+AdditionalTypes=QTWeb
+DevelopTool=Vugen
+LastModifyVer=12.53.0.1203
+ParamLeftBrace={
+ParamRightBrace=}
+ScriptLanguage=C
+DisableRegenerate=0
+Description=
+LastCodeGenerationVer=12.53.0.1203
+ScriptLocale=he-IL
+[Actions]
+vuser_init=vuser_init.c
+LSP_Start=LSP_Start.c
+Authenticate_Di=Authenticate_Di.c
+LSP_delete=LSP_delete.c
+vuser_end=vuser_end.c
+[RunLogicFiles]
+Default Profile=default.usp
+[VuserProfiles]
+Profiles=Default Profile
+[CfgFiles]
+Default Profile=default.cfg
+[ExtraFiles]
+globals.h=
+[Modified Actions]
+vuser_init=1
+LSP_Start=1
+Authenticate_Di=1
+LSP_delete=1
+vuser_end=0
+[Recorded Actions]
+vuser_init=0
+LSP_Start=0
+Authenticate_Di=0
+LSP_delete=0
+vuser_end=0
+[Replayed Actions]
+vuser_init=1
+LSP_Start=1
+Authenticate_Di=1
+LSP_delete=1
+vuser_end=1
+[Interpreters]
+vuser_init=cci
+LSP_Start=cci
+Authenticate_Di=cci
+LSP_delete=cci
+vuser_end=cci
+[TransactionsOrder]
+Order="Authentication_MTA__*delimiter*__LSP_Start__*delimiter*__LSP_POLL_Task__*delimiter*__001_SAML__*delimiter*__002_Logon_SDN__*delimiter*__LSP_delete__*delimiter*__LSP_POLL_Task"
+[Transactions]
+Authentication_MTA=
+LSP_Start=
+LSP_POLL_Task=
+001_SAML=
+002_Logon_SDN=
+LSP_delete=
+[StateManagement]
+LastReplayStatus=1
+[ActiveReplay]
+LastReplayedRunName=result1
+ActiveRunName=result1

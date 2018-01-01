@@ -1,0 +1,23 @@
+define([], function() {
+
+	"use strict";
+
+	function _getView() {
+		return this.context.service.tipsandtricksviewsfactory.buildSimpleTipView(
+			"sap.watt.ideplatform.gitclient.SimpleTipView.InitGitRepository",
+			"sap.watt.ideplatform.gitclient/image/gitInit.gif",
+			this.context.i18n.getText("gitTip_InitRepoTitle"),
+			this.context.i18n.getText("gitTip_InitRepoText")
+		);
+	}
+
+	function _isAvailable() {
+		//Git init operation is not supported in HANA Web IDE
+		return sap.watt.getEnv("server_type") !== "xs2";
+	}
+
+	return {
+		getView: _getView,
+		isAvailable: _isAvailable
+	};
+});

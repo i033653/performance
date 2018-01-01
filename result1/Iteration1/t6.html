@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<!-- Copyright (c) 2013 SAP SE, All Rights Reserved -->
+<html style="width: 100%; height: 100%; overflow: hidden">
+<head>
+
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta charset="utf-8"/>
+
+	<title>Loading...</title>
+
+	<link rel="icon" type="image/png" href="favicon.png">
+	
+	<script id="idebootstrap" type="text/javascript" src="resources/sap/watt/bootstrap.js"></script>
+</head>
+
+<body id="body" class="sapUiBody sapWebIDEDI sapUiSizeCompact" style="width: 100%; height: 100%; display:none;">
+
+	<div id="loading" style="width: 100%; height: 100%;text-align:center">
+		<div id="sapWattLoading" class="labelsDiv">
+			<div id="topIcon" class="topIconDiv">
+				<img src="big_cloud.png" border="0">
+			</div>
+			<div class="toplbl fontFamily">
+				<div id="textAboveProgressBar" css="visibility:hidden"></div>
+			</div>
+			<progress id="sapWattProgressLoading" max="100" value="5"></progress>
+			<div class="lbl fontFamily">
+				<div class="txt1">Loading</div>
+			</div>
+			<div id="bottomIcon" class="bottomIconDiv">
+				<img src="small_cloud.png" border="0">
+			</div>
+			<div class="latencyDiv" id="latencyMainDiv">
+				<span class="latencyImg" id="latencyIcon">
+					<img src="high_latency.svg" border="0"/>
+				</span>
+				<span class="latencyMsg fontFamily" id="latencyMessage">We have detected a slow connection to SAP Cloud Platform.<br/>You may experience some performance issues.</span>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="content" style="width: 100%; height: 100%; display:none;">
+
+		<header id="header" class="header">
+		</header>
+
+		<section id="toolbar" class="toolbar">
+		</section>
+		
+		<section id="leftsidebar" class="leftsidebar">
+		</section>
+
+		<section id="center" class="center">
+		</section>
+		
+		<section id="rightsidebar" class="rightsidebar">
+		</section>
+
+		<section id="rightpane" class="rightpane">
+		</section>
+
+		<footer id="footer" class="footer">
+		</footer>
+
+	</div>
+	<div id="failure" style="width: 100%; height: 100%; display:none;"></div>
+</body>
+</html>

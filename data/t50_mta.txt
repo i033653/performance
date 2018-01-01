@@ -1,0 +1,14 @@
+ID: MTA
+_schema-version: '2.0'
+version: 0.0.1
+
+modules:
+ - name: Java
+   type: java
+   path: Java
+   parameters:
+      memory: 512M
+   provides:
+    - name: Java_api
+      properties:
+         url: ${default-url}

@@ -1,0 +1,13 @@
+[t52]
+FileName1=t52.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/MTA/Java
+Total=2
+RequestHeaderFile=t52_RequestHeader.txt
+RequestBodyFile=t52_RequestBody.txt
+ResponseHeaderFile=t52_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_52.xml
+FileName2=t52_.html
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/tree/MTA/Java/.che?depth=1000&includeFiles=true
+[ProtocolInfo]
+ProtocolId=QTWeb

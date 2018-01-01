@@ -1,0 +1,10 @@
+.toolbarItemSeparator:before {
+  content: "";
+  border-left: 1px solid #BFBFBF;
+  height: 2rem;
+  vertical-align: middle;
+  margin: 0 5px 0 5px;
+  width: 1px;
+  display: inline-block;
+}
+

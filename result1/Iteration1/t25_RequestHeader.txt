@@ -1,0 +1,10 @@
+DELETE /di/lsp/delete?workspaceId=workspacen7ahdx1lm7we8g3a HTTP/1.1
+Referer: https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+X-CSRF-Token: D8F4F7C5063C0794F3391D6A340518EF
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
+Accept-Encoding: peerdist
+Accept: */*
+Host: diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com
+Cookie: BIGipServerdispatcher.int.sap.hana.ondemand.com=!Kps9QzqFKkVSaOZI5fiFW0nYGSfXLq9SFR4rSae8ZjWMRXqAxFRkIiK2QvjePB3CTxDLWFBq6/qYPes=; JSESSIONID=D8CC4714C9D899F97692D960555D473BEE882B79B4090A4FAD9BBF87267357AD; JTENANTSESSIONID_wf1f52214=6GrZv%2Bf3VwlRYPxmQSg4QEjFevrYhEWo8AgXR%2BS%2BsVA%3D
+Content-Length: 0
+

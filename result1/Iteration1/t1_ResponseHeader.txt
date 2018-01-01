@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: BlueCoat-Security-Appliance
+Content-Type: application/x-ns-proxy-autoconfig
+X-Content-Type-Options: nosniff
+Date: Sun, 24 Dec 2017 07:47:20 GMT
+Cache-Control: public
+Expires: Sat, 24 Mar 2018 07:47:20 GMT
+Connection: close
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Frame-Options: sameorigin
+Content-Length: 34260
+

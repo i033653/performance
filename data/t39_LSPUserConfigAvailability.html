@@ -1,0 +1,9 @@
+define(["../util/LSPUtil"], function(LSPUtil) {
+	"use strict";
+
+	return {
+		isAvailable: function() {
+			return sap.watt.getURLParameter("lsp-enabled") && sap.watt.getEnv("internal") && LSPUtil.isLspEnabled();
+		}
+	};
+});

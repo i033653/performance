@@ -1,0 +1,116 @@
+define(["./RpcBuilder"], function(_rpcBuilder) {
+
+	function JsonRpcProxy() {
+
+	}
+	
+	JsonRpcProxy.prototype.configure = function(mConfig) {
+		this.servicePoint = mConfig.servicePoint;
+		this.options = mConfig.options;
+	};
+	
+	JsonRpcProxy.prototype.open = function() {
+		var that = this;
+		this._builder = _rpcBuilder;
+		this._id = 0;
+		this._expectedResponse = {};
+
+		// currently only for testing with webworker, in the future we might allow in-browser lsp
+		if (this.servicePoint.charAt(0) === '/') {
+			var q = Q.defer();
+			try {
+				this._worker = new Worker(this.servicePoint);
+			} catch (ex) {
+				q.reject(ex.toString());
+				return q.promise;
+			}
+			this._worker.onmessage = function(messageEvent) {
+				if (messageEvent.data === "ready") {
+					q.resolve();
+				} else {
+					that._handleMessage({params: messageEvent});
+				}
+			};
+			return q.promise;
+		}
+
+		return this.context.service.websocketfactory.create({}, {
+			servicePoint: this.servicePoint,
+			options: this.options
+		}).then(function (connection) {
+			that._connection = connection;
+			that._connection.attachEvent("onmessage", that._handleMessage, that);
+			that._connection.attachEvent("onclosed", function (closeEvent) {
+				that.context.event.fireOnclosed(closeEvent.params);
+			});
+			return that._connection.open();
+		});
+	};
+
+	JsonRpcProxy.prototype.close = function() {
+		var that = this;
+		return this._connection.close().then(function () {
+			delete that._connection;
+		});
+	};
+
+	JsonRpcProxy.prototype.request = function(method, params) {
+		var data = this._builder.buildRequest(this._id, method, params);
+		var header = "Content-Length: " + data.length + "\r\n\r\n";
+		var qRequest = Q.defer();
+		this._postMessage(header + data);
+		this._expectedResponse[this._id++] = qRequest;
+		return qRequest.promise;
+	};
+
+	JsonRpcProxy.prototype.notification = function(method, params) {
+		var data = this._builder.buildNotification(method, params);
+		var header = "Content-Length: " + data.length + "\r\n\r\n";
+		this._postMessage(header + data);
+	};
+
+	JsonRpcProxy.prototype._handleMessage = function(messageEvent) {
+		var aHeaders = [],
+			oRpc = _rpcBuilder.getRpc(messageEvent.params.data, aHeaders);
+
+		switch (_rpcBuilder.getType(oRpc)) {
+			case "notification":
+				this.context.event.fireOnnotification(oRpc).done();
+				break;
+			case "request":
+				this.context.event.fireOnrequest(oRpc.params).then(function(aResult) {
+					var data = this._builder.buildResponse(oRpc.id, aResult[0], null);
+					var header = "Content-Length: " + data.length + "\r\n\r\n";
+					this._postMessage(header + data);
+				}).fail(function(oError) {
+					var data = this._builder.buildResponse(oRpc.id, null, oError);
+					var header = "Content-Length: " + data.length + "\r\n\r\n";
+					this._postMessage(header + data);
+				});
+				break;
+			case "response":
+				var respId = Number.isInteger(oRpc.id) ? oRpc.id : Number.parseInt(oRpc.id);
+				var qExpected = this._expectedResponse[respId];
+				if (qExpected /* && not resolved yet */ ) {
+					if (oRpc.result) {
+						qExpected.resolve(oRpc.result);
+					} else if (oRpc.error) {
+						qExpected.reject(oRpc.error);
+					} else {
+						qExpected.reject("Protocol error");
+					}
+				}
+		}
+	};
+
+
+	JsonRpcProxy.prototype._postMessage = function(sMessage) {
+		if (this._connection) {
+			this._connection.postMessage(sMessage);
+		} else if (this._worker) {
+			this._worker.postMessage(sMessage);
+		}
+	};
+
+	return JsonRpcProxy;
+});

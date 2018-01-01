@@ -1,0 +1,13 @@
+[t37]
+FileName1=t37.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/MTA
+Total=2
+RequestHeaderFile=t37_RequestHeader.txt
+RequestBodyFile=t37_RequestBody.txt
+ResponseHeaderFile=t37_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_37.xml
+FileName2=t37_.html
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/tree/MTA/.che?depth=1000&includeFiles=true
+[ProtocolInfo]
+ProtocolId=QTWeb

@@ -1,0 +1,413 @@
+define(["sap/watt/lib/lodash/lodash", "../dao/Project", "sap/watt/ideplatform/plugin/projectType/service/ProjectTypeMetadata"], function(_,
+	oProjectDao, oProjectTypeMetadata) {
+
+	"use strict";
+
+	return {
+		_mProjectTypes: {},
+		_aClientBuiltInTypeIds: [],
+		_aClientDefaultTypeIds: [],
+		_aServerProjectTypes: {},
+
+		initProjectType: function(mConfig) {
+			var that = this;
+
+			// set client built in project types
+			this._aClientBuiltInTypeIds = mConfig.builtInTypes || this._aClientBuiltInTypeIds;
+
+			// set client default project types
+			this._aClientDefaultTypeIds = mConfig.defaultTypes || this._aClientDefaultTypeIds;
+
+			// set client project types
+			if (mConfig.types) {
+				// Add configured project types to the map.
+				// Note: circular includes are not checked here, instead they are handled in getIncludedTypes by being ignored.
+				mConfig.types.forEach(function(oProjectType) {
+					oProjectType = that._cloneProjectType(oProjectType);
+					if (!oProjectType || !oProjectType.id) {
+						// Error to the log
+						if (!oProjectType) {
+							that.context.service.log.error("project type",
+								that.context.i18n.getText("i18n", "project_type_bad_project_type_configuration_ignored", [JSON.stringify(oProjectType)]), [
+									"system"
+								]).done();
+						} else if (!oProjectType.id) {
+							that.context.service.log.error("project type",
+								that.context.i18n.getText("i18n", "project_type_bad_project_type_configuration_missing_id", [JSON.stringify(oProjectType)]), [
+									"system"
+								]).done();
+						}
+						return; // Continue to the next configured project type
+					}
+
+					var projectTypeId = oProjectType.id;
+
+					// Add the project type to the map if it doesn't exist
+					if (!that._mProjectTypes.hasOwnProperty(projectTypeId)) {
+						// Set defaults for optional parameters
+						oProjectType.displayName = oProjectType.displayName || oProjectType.id;
+						oProjectType.description = oProjectType.description || "";
+						oProjectType.includes = oProjectType.includes || [];
+						oProjectType.decoratorIconStyleClass = oProjectType.decoratorIconStyleClass || "";
+						oProjectType.bMixable = true;
+						if (that._aClientBuiltInTypeIds.indexOf(projectTypeId) !== -1) {
+							oProjectType.bMixable = false;
+						}
+						that._mProjectTypes[projectTypeId] = oProjectType;
+					} else {
+						// Error to the log
+						that.context.service.log.error("project type",
+							that.context.i18n.getText("i18n", "project_type_project_configured_multiple_definition", [projectTypeId, that._mProjectTypes[
+								projectTypeId].displayName]), ["system"]).done();
+					}
+				});
+			}
+
+			// set server project types
+			return oProjectDao.getProjectTypes().then(function(aProjectTypes) {
+				if (aProjectTypes) {
+					_.forEach(aProjectTypes, function(oProjectType) {
+						var oMetadata = new oProjectTypeMetadata(oProjectType.id, oProjectType.displayName,
+							false, oProjectType.primaryable, oProjectType.attributeDescriptors, oProjectType.runnerCategories);
+						that._mProjectTypes[oProjectType.id] = oMetadata;
+						that._aServerProjectTypes[oProjectType.id] = oMetadata;
+					});
+				}
+			});
+		},
+
+		/* to be adjusted when we support multiple configuration calls */
+		_cloneProjectType: function(oProjectType) {
+			var oCloned = {};
+			// Clone the object. It's a shallow clone except for array properties, since the rest of the properties
+			// are primitives (strings).
+			for (var sPropName in oProjectType) {
+				var propValue = oProjectType[sPropName];
+				if (propValue instanceof Array) {
+					// Shallow-clone the array (the only property with array value - includes - contains only strings)
+					propValue = propValue.map(function(s) {
+						return s;
+					});
+				}
+				oCloned[sPropName] = propValue;
+			}
+			return oCloned;
+		},
+
+		_additionalTypesSupported: function(oProjectMetadata) {
+			// additional types are supported only for Fiori applications or HTML5 mta modules
+			return oProjectMetadata && ((oProjectMetadata.type === oProjectDao.SAP_WEB_PROJECT_TYPE_ID) || (oProjectMetadata.type === oProjectDao
+				.HTML5_MTA_MODULE_PROJECT_TYPE_ID));
+		},
+
+		getAllTypes: function(oTargetDocument) {
+
+			var aAllProjectTypes = this._cloneProjectTypes(this._mProjectTypes);
+			if (!oTargetDocument) {
+				return Q(aAllProjectTypes);
+			}
+
+			var that = this;
+			return this._getProjectMetadata(oTargetDocument).then(function(oProjectMetadata) {
+				if (!that._additionalTypesSupported(oProjectMetadata)) {
+					return that._cloneProjectTypes(that._aServerProjectTypes);
+				} else {
+					return aAllProjectTypes;
+				}
+			});
+		},
+
+		_cloneProjectTypes: function(aProjectTypes) {
+			var that = this;
+
+			var aClonedProjectTypes = [];
+			_.forEach(aProjectTypes, function(oProjectType) {
+				aClonedProjectTypes.push(that._cloneProjectType(oProjectType));
+			});
+
+			return aClonedProjectTypes;
+		},
+
+		getProjectTypes: function(oTargetDocument) {
+			var aAllProjectTypes = this._cloneProjectTypes(this._mProjectTypes);
+
+			var that = this;
+			return this._getProjectMetadata(oTargetDocument).then(function(oProjectMetadata) {
+				if (!oProjectMetadata) {
+					return [];
+				}
+				return that._getProjectTypesIDs(oTargetDocument).then(function(aProjectTypeIds) {
+					// create map of {proj_type_id: proj_type}
+					var aAllProjectTypesMap = {};
+					for (var i = 0; i < aAllProjectTypes.length; i++) {
+						aAllProjectTypesMap[aAllProjectTypes[i].id] = aAllProjectTypes[i];
+					}
+
+					// only server project primary type is built-in
+					if (aAllProjectTypesMap[oProjectMetadata.type]) {
+						aAllProjectTypesMap[oProjectMetadata.type].isBuiltIn = true;
+					}
+
+					// collect relevant project types
+					var aProjectTypes = [];
+					_.forEach(aProjectTypeIds, function(sProjectTypeId) {
+						if (aAllProjectTypesMap[sProjectTypeId]) {
+							aProjectTypes.push(aAllProjectTypesMap[sProjectTypeId]);
+						}
+					});
+
+					return aProjectTypes;
+				});
+			});
+		},
+
+		_getProjectMetadata: function(oDocument) {
+
+			if (!oDocument) {
+				return Q();
+			}
+
+			return oDocument.getProject().then(function(oProjectDocument) {
+				if (oProjectDocument && oProjectDocument.getEntity().isProject()) {
+					return oProjectDocument.getProjectMetadata();
+				} else {
+					return Q();
+				}
+			});
+		},
+
+		_getServerProjectTypes: function(oProjectMetadata) {
+			var aProjectTypes = [];
+
+			if (oProjectMetadata.mixins) {
+				var aMixinsProjectTypes = oProjectMetadata.mixins.slice(0);
+				aProjectTypes.concat(aMixinsProjectTypes);
+			}
+
+			aProjectTypes.push(oProjectMetadata.type);
+
+			return aProjectTypes;
+		},
+
+		_getProjectTypesIDs: function(oDocument, bAddDefaultTypes) {
+			if (bAddDefaultTypes === undefined) {
+				bAddDefaultTypes = true;
+			}
+
+			var that = this;
+			return this.context.service.setting.project.get(this.context.service.projectType, oDocument).then(function(aExistingProjectTypeIds) {
+				var aProjectTypeIds = aExistingProjectTypeIds || [];
+				return that._getProjectMetadata(oDocument).then(function(oProjectMetadata) {
+					if ($.isArray(aProjectTypeIds)) {
+						aProjectTypeIds = aProjectTypeIds.concat(that._getClientBuiltInTypesIds(oProjectMetadata));
+						if (bAddDefaultTypes) {
+							aProjectTypeIds = aProjectTypeIds.concat(that._getClientDefaultTypesIds(oProjectMetadata));
+						}
+						aProjectTypeIds = _.intersection(_.keys(that._mProjectTypes), aProjectTypeIds);
+					}
+
+					if (oProjectMetadata) {
+						var aServerProjectTypes = that._getServerProjectTypes(oProjectMetadata);
+						aProjectTypeIds = aProjectTypeIds.concat(aServerProjectTypes);
+					}
+
+					return _.uniq(aProjectTypeIds);
+				});
+			});
+		},
+
+		_getClientDefaultTypesIds: function(oProjectMetadata) {
+			return this._additionalTypesSupported(oProjectMetadata) ? this._aClientDefaultTypeIds : [];
+		},
+
+		_getClientBuiltInTypesIds: function(oProjectMetadata) {
+			return this._additionalTypesSupported(oProjectMetadata) ? this._aClientBuiltInTypeIds : [];
+		},
+
+		/**
+		 * Return a copy of the array with unique values. The array values should be of the same primitive type.
+		 * @param aValues - array of values
+		 * @return array with the same values, without duplicates
+		 */
+		_getUniqueValues: function(aValues) {
+			var mExistingValues = {};
+			return aValues.filter(function(value) {
+				// Put the existing values in a map and filter out the existing values
+				if (mExistingValues.hasOwnProperty(value)) {
+					return false;
+				}
+
+				mExistingValues[value] = true;
+				return true;
+			});
+		},
+
+		getIncludedTypes: function(sProjectTypeID) {
+			// Keep uniqueness and ignore circular references
+			var mTypeIDs = {};
+			var that = this;
+
+			// Validate a project type. Returns true if it can be added to the list.
+			function isValidAndUnique(sProjectTypeID) {
+				return that._mProjectTypes.hasOwnProperty(sProjectTypeID) && !mTypeIDs.hasOwnProperty(sProjectTypeID);
+			}
+
+			var aIncludedTypes = [];
+			if (isValidAndUnique(sProjectTypeID)) {
+				aIncludedTypes.push(sProjectTypeID);
+				mTypeIDs[sProjectTypeID] = true;
+			}
+
+			// Note: values get added to aIncludedTypes during the loop, so the length changes.
+			for (var i = 0; i < aIncludedTypes.length; ++i) {
+				// Add the current type's included types at the end (if they're valid and unique)
+				var sTypeID = aIncludedTypes[i];
+				var aIncludes = this._mProjectTypes[sTypeID].includes || [];
+				aIncludes.forEach(function(sCurrIncluded) {
+					// Note: circular includes are not unique in thr array so they are not added here.
+					if (isValidAndUnique(sCurrIncluded)) {
+						aIncludedTypes.push(sCurrIncluded);
+						mTypeIDs[sCurrIncluded] = true;
+					}
+				});
+			}
+
+			return aIncludedTypes;
+		},
+
+		getProjectTypesPerCategories: function(oTargetDocument) {
+			var oProjectTypesPerCategories = {
+				builtInProjectTypes: [],
+				defaultProjecTypes: [],
+				projectTypes: []
+			};
+			var aBuiltInProjectTypes = this._getClientBuiltInTypesIds();
+			var aDefaultProjectTypes = this._getClientDefaultTypesIds();
+			return this._getProjectTypesIDs(oTargetDocument).then(function(aProjectTypes) {
+				oProjectTypesPerCategories.builtInProjectTypes = _.intersection(aProjectTypes, aBuiltInProjectTypes);
+				oProjectTypesPerCategories.defaultProjecTypes = _.intersection(aProjectTypes, aDefaultProjectTypes);
+				oProjectTypesPerCategories.projectTypes = _.difference(aProjectTypes, oProjectTypesPerCategories.builtInProjectTypes.concat(
+					oProjectTypesPerCategories.defaultProjecTypes));
+				return oProjectTypesPerCategories;
+			});
+		},
+
+		getType: function(sProjectTypeID) {
+			return this._mProjectTypes[sProjectTypeID] ? Object.create(this._mProjectTypes[sProjectTypeID]) : null;
+		},
+
+		/**
+		 * Return an array which only contains the values in aValues without the values in aValuesToRemove.
+		 * The values can be of any types, equality is checked with Array.indexOf method.
+		 * @param aValues
+		 * @param aValuesToRemove
+		 * @return array
+		 */
+		_arrayDifference: function(aValues, aValuesToRemove) {
+			// Filter out the values in aValuesToRemove
+			return aValues.filter(function(value) {
+				return aValuesToRemove.indexOf(value) < 0;
+			});
+		},
+
+		removeProjectTypes: function(oTargetDocument, aProjectTypeIDs) {
+			var oProject = this.context.service.setting.project;
+			var oProjectType = this.context.service.projectType;
+			var that = this;
+			return this._getProjectTypesIDs(oTargetDocument).then(
+				function(aExistingProjectTypes) {
+					// Filter from the existing project types the type IDs in aProjectTypeIDs
+					aExistingProjectTypes = that._filterOutBuiltInTypes(aExistingProjectTypes);
+					var aTypesToSet = that._arrayDifference(aExistingProjectTypes, aProjectTypeIDs);
+					return oProject.set(oProjectType, aTypesToSet, oTargetDocument).then(function() {
+						// The removed types are those which existed before and were not set
+						var aRemovedTypes = that._arrayDifference(aExistingProjectTypes, aTypesToSet);
+						return {
+							"oTargetDocument": oTargetDocument,
+							"aAddedTypes": [],
+							"aRemovedTypes": aRemovedTypes
+						};
+					});
+				});
+		},
+
+		addProjectTypes: function(oTargetDocument, aProjectTypeIDs) {
+			if (!aProjectTypeIDs) {
+				return Q();
+			}
+
+			var oProject = this.context.service.setting.project;
+			var oProjectType = this.context.service.projectType;
+			var that = this;
+			return this._getProjectTypesIDs(oTargetDocument, false).then(function(aExistingProjectTypes) {
+				var aTypesToSet = [];
+				// Add the project type and its included project types
+				aProjectTypeIDs.forEach(function(sProjectTypeID) {
+					//we do not add "sapui5clientbuild" project type in our case (consolidation) to prevent from client build to be executed during deployment.
+					if (sProjectTypeID !== "com.watt.common.builder.sapui5clientbuild") {
+						aTypesToSet.push.apply(aTypesToSet, that.getIncludedTypes(sProjectTypeID));
+					}
+				});
+
+				// Types which were sent and already existed are removed here in the uniqueness check.
+				// Their included types are still added.
+				aTypesToSet = that._getUniqueValues(aExistingProjectTypes.concat(aTypesToSet));
+				// never write the built in libraries to settings
+				aTypesToSet = that._filterOutBuiltInTypes(aTypesToSet);
+
+				return oProject.set(oProjectType, aTypesToSet, oTargetDocument).then(function() {
+					// The newly added types are those which were set and did not exist before
+					var aAddedTypes = that._arrayDifference(aTypesToSet, aExistingProjectTypes);
+					// Fire the event (it is fired in projectType service)
+					return {
+						"oTargetDocument": oTargetDocument,
+						"aAddedTypes": aAddedTypes,
+						"aRemovedTypes": []
+					};
+				});
+			});
+		},
+
+		setProjectTypes: function(oTargetDocument, aProjectTypeIDs) {
+			var that = this;
+			return this._getProjectTypesIDs(oTargetDocument).then(function(aExistingProjectTypes) {
+				var aTypesToSet = that._getUniqueValues(aProjectTypeIDs || []);
+				// aTypesToSet = that._filterOutBuiltInTypes(aTypesToSet);
+				return that.context.service.setting.project.set(
+					that.context.service.projectType, aTypesToSet, oTargetDocument).then(function() {
+					// Calculate the diff
+					// The added project types are those which did not exist and were set
+					aExistingProjectTypes = that._filterOutBuiltInTypes(aExistingProjectTypes);
+					var aAddedTypes = that._arrayDifference(aTypesToSet, aExistingProjectTypes);
+					// The removed project types are those which existed and were not set
+					var aRemovedTypes = that._arrayDifference(aExistingProjectTypes, aTypesToSet);
+					// If no types were added or removed, but the order changed, we want to force firing the event
+					var bForce = false;
+					if (aAddedTypes.length === 0 && aRemovedTypes.length === 0 && aExistingProjectTypes.length === aTypesToSet.length) {
+						for (var i = 0; i < aExistingProjectTypes.length; ++i) {
+							if (aExistingProjectTypes[i] !== aTypesToSet[i]) {
+								bForce = true;
+								break;
+							}
+						}
+					}
+
+					// Fire the event (it is fired in projectType service)
+					return {
+						"oTargetDocument": oTargetDocument,
+						"aAddedTypes": aAddedTypes,
+						"aRemovedTypes": aRemovedTypes,
+						"bForce": bForce
+					};
+				});
+			});
+		},
+
+		_filterOutBuiltInTypes: function(aTypesIds) {
+			var that = this;
+			return aTypesIds.filter(function(typeId) {
+				return that._mProjectTypes[typeId] ? (!that._mProjectTypes[typeId].isBuiltIn && !that._aServerProjectTypes[typeId]) : false;
+			});
+		}
+	};
+});

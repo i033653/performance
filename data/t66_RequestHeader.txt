@@ -1,0 +1,15 @@
+POST /di/profile/prefs HTTP/1.1
+Host: diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com
+Connection: keep-alive
+Content-Length: 2627
+Accept: */*
+Origin: https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com
+X-Csrf-Token: BA1FCA9B0042E9E08A2AE8B52DCA91F0
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
+Content-Type: application/json
+Referer: https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,he-IL;q=0.8,he;q=0.6,en;q=0.4
+Cookie: BIGipServerdispatcher.int.sap.hana.ondemand.com=!Joqdnr7tx7lv2i8jw9vljiSuxidjMu1W8g1P6FaHM6FHpXdby7r1I5sZQOxk1/czEpAfxZcljqyoGw==; JSESSIONID=941CFA55A90F19875A9208E1ABE18AEB3CDB0596C97D359132515CA7B6305C23; JTENANTSESSIONID_wf1f52214=sAqVqOgrjo08HeHcaGfHqTK5%2B7q6XvwZZ0pGOsIItMQ%3D; _swa_ref.7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5.0079=%5B%22%22%2C%22%22%2C1506423901%2C%22http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso%22%5D; _pk_id.7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5.0079=5d87438b5753477c.1506423900.0.1506423974..; _swa_id.7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5.0079=7cd32b5af1ea91a2.1506423901.1.1506424157.1506423901.; _swa_ses.7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5.0079=*
+

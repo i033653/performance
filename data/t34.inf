@@ -1,0 +1,17 @@
+[t34]
+FileName1=t34.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project-neo/workspace6h1f4sgx038wh2wf/import/MTA
+Total=4
+RequestHeaderFile=t34_RequestHeader.txt
+RequestBodyFile=t34_RequestBody.txt
+ResponseHeaderFile=t34_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_34.xml
+FileName2=t34_MTA.html
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/metadata/MTA
+FileName3=t34_MTA.html
+URL3=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/MTA
+FileName4=t34_MTA.html
+URL4=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace6h1f4sgx038wh2wf/tree/MTA?depth=1000&includeFiles=true
+[ProtocolInfo]
+ProtocolId=QTWeb

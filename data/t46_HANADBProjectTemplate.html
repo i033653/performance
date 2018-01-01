@@ -1,0 +1,120 @@
+define({
+
+
+	_HANA_INFO_STORAGE_SERVICE_NAME: "HANAInfoStorageService",
+	_HDI_PLUGIN_VERSION_HANA_2_SPS02: "2.0.20.0",
+	_HDI_PLUGIN_VERSION_HANA_2_SPS01: "2.0.10.0",
+	_HDI_PLUGIN_VERSION_HANA_2_SPS00: "2.0.0.0",
+	_HDI_PLUGIN_VERSION_HANA_1_SPS12: "12.1.0",
+
+	configWizardSteps: function(oTemplateCustomizationStep) {
+		return [oTemplateCustomizationStep];
+	},
+
+	_addTargetProjectTypes: function(sProjectName, oSelectedTemplate) {
+		oSelectedTemplate.addSupportedProjectTypes(sProjectName);
+	},
+
+	onBeforeTemplateGenerate: function(templateZip, model) {
+		if (model.SAPHanaDBProject.parameters.db_version.value.plugin_value === "12.1.0") {
+			var oSP12HDIConfigFile = templateZip.files["src/.hdiconfig_sp12.tmpl"];
+			templateZip.remove("src/.hdiconfig.tmpl");
+			oSP12HDIConfigFile.name = "src/.hdiconfig.tmpl";
+		} else {
+			templateZip.remove("src/.hdiconfig_sp12.tmpl");
+		}
+
+		if (!model.SAPHanaDBProject.parameters.namespace.value) {
+			templateZip.remove("src/.hdinamespace.tmpl");
+		}
+		return [templateZip, model];
+	},
+
+	onBeforeTemplateCustomizationLoaded: function(wizModel, tmplModel) {
+		var sModuleName = wizModel.oData.projectName;
+
+		var oSelectedDocument = wizModel.oData.selectedDocument;
+
+		if (oSelectedDocument) {
+			tmplModel.oData.SAPHanaDBProject.parameters.namespace.defaultValue = this._getDefaultNamespace(oSelectedDocument, sModuleName);
+		}
+
+		return this._updateDataWarehouseAndHANAVersion(this, tmplModel).then(function() {
+			return [wizModel, tmplModel];
+		});
+
+	},
+
+	_updateDataWarehouseAndHANAVersion: function(oContext, tmplModel) {
+		return oContext.context.service.analyticsService.isDataStoreAvailable().then(function(bIsDataStoreAvailable) {
+			if (!bIsDataStoreAvailable) {
+				var sParamToRemove = "SAPHanaDBProject.parameters.dataWarehouse"; // leading "@" needs to be removed!
+				// to remove parameters from groups, access them here; when groups in model.json are re-arranged, update this selection of the group!
+				var aGroups = tmplModel.oData.SAPHanaDBProject.forms[0].groups;
+				var aFirstGroupParameters = aGroups[0].parameters; // this is the first group of parameters, titled "Application Settings"
+				var paramIndex = aFirstGroupParameters.indexOf(aFirstGroupParameters.resolve(sParamToRemove));
+				if (paramIndex > -1) {
+					aFirstGroupParameters.splice(paramIndex, 1);
+				}
+			}
+
+			var sServerType = sap.watt.getEnv("server_type");
+			if (sServerType === "xs2") {
+				return oContext.context.service.chebackend.HANAInfoStorageService.getHDIPluginVersionByTheInstalledHANAVersion().then(function(
+					sHDIPluginVersion) {
+					if (sHDIPluginVersion >= oContext._HDI_PLUGIN_VERSION_HANA_2_SPS02) {
+						tmplModel.oData.SAPHanaDBProject.parameters.db_version.binding[0].plugin_value = sHDIPluginVersion;
+					}else if (sHDIPluginVersion === oContext._HDI_PLUGIN_VERSION_HANA_2_SPS01) {
+						tmplModel.oData.SAPHanaDBProject.parameters.db_version.binding.splice(0, 1);
+					}
+					else if (sHDIPluginVersion === oContext._HDI_PLUGIN_VERSION_HANA_2_SPS00) {
+						tmplModel.oData.SAPHanaDBProject.parameters.db_version.binding.splice(0, 2);
+					} else if (sHDIPluginVersion === oContext._HDI_PLUGIN_VERSION_HANA_1_SPS12) {
+						tmplModel.oData.SAPHanaDBProject.parameters.db_version.binding.splice(0, 3);
+					}
+				}).fail(function(oError) {
+					oContext.context.service.log.error(oContext._HANA_INFO_STORAGE_SERVICE_NAME, oError.message, ["user"]).done();
+				});
+			}else{
+				tmplModel.oData.SAPHanaDBProject.parameters.db_version.value = tmplModel.oData.SAPHanaDBProject.parameters.db_version.binding[3];
+			}
+		});
+	},
+
+	_getDefaultNamespace: function(oSelectedDocument, sModuleName) {
+		var oSelectedDocEntity = oSelectedDocument.getEntity();
+		var sSelectedDocParentPath = oSelectedDocEntity.getFullPath();
+		var sNamespace = "";
+		var aParts = sSelectedDocParentPath.split("/");
+		if (aParts.length > 1) {
+			sNamespace = aParts[1] + ".";
+		}
+		sNamespace = sNamespace + sModuleName;
+
+		return sNamespace;
+	},
+
+	onAfterGenerate: function(projectZip, model) {
+		var that = this;
+		var oSettings = {};
+		var oSelectedDocument = model.selectedDocument;
+		if (oSelectedDocument) {
+			return oSelectedDocument.getChild(model.projectName).then(function(oNewProjectDoc) {
+				if (oNewProjectDoc) {
+					// TODO :add the following line when the analytics is available on model
+					//oSettings.analytics = model.SAPHanaDBProject.parameters.analytics.value;
+					oSettings.dataWarehouse = model.SAPHanaDBProject.parameters.dataWarehouse.value;
+					if (!oSettings.dataWarehouse) {
+						projectZip.remove("src/DataStore/");
+					}
+					return that.context.service.analyticsService.setAnalyticValues(oSettings, oNewProjectDoc).then(function() {
+						return [projectZip, model];
+					});
+				}
+			});
+		}
+		return [projectZip, model];
+
+	}
+});
+

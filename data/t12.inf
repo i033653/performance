@@ -1,0 +1,11 @@
+[t12]
+FileName1=t12_pom.xml
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/project/workspace8e0eap0s1q9nmgo4/file/MTA_PERF_ALL/Java/pom.xml
+Total=1
+ContentType=text/xml
+SnapshotXmlFile=snapshot_12.xml
+RequestHeaderFile=t12_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t12_ResponseHeader.txt
+[ProtocolInfo]
+ProtocolId=QTWeb

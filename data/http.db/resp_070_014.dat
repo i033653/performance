@@ -1,0 +1,22 @@
+define([], function() {
+	
+	"use strict";
+
+	function _getView() {
+		return this.context.service.tipsandtricksviewsfactory.buildSimpleTipView(
+			"sap.watt.ideplatform.keyboardShortcutsSetting.SimpleTipView.DefineKeyboardShortcuts",
+			"sap.watt.ideplatform.keyboardShortcutsSetting/img/DefineKeyboardShortcuts.gif",
+			this.context.i18n.getText("define_keyboard_shortcuts_tip_title"),
+			this.context.i18n.getText("define_keyboard_shortcuts_tip_text")
+		);
+	}
+
+	function _isAvailable() {
+		return true;
+	}
+
+	return {
+		getView: _getView,
+		isAvailable: _isAvailable
+	};
+});

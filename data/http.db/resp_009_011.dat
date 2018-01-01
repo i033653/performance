@@ -1,0 +1,19 @@
+{
+	"context_root": "/",
+	"server_type": "hcproxy",
+	"ui5_root": "https://sapui5.hana.ondemand.com/1.46.7/",
+	"ws_server": "di",
+	"ui5_from_cdn" : true,
+	"orion_path": "/",
+	"orion_server": "/di/",
+	"orion_preview": "https://webidetesting{{uniqueToken}}-{{account}}.{{dispatcher}}/",
+	"orion_needs_login": false,
+	"che_server": "/di/",
+	"hrtt_service_server":"/",
+	"che_needs_login": false,
+	"internal" : true,
+	"help_url":"https://help.sap.com",
+	"beta_features":true,
+	"showcase":true,
+	"flp_provider_account": ["sapflp3","odp","nwcp","odperf","flpperf","flpperf1","flpa04","newdb"]
+}

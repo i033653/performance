@@ -1,0 +1,64 @@
+define(["sap/watt/lib/lodash/lodash"], function(_) {
+	"use strict";
+
+	return function() {
+
+		return {
+
+			onBeforeTemplateGenerate: function(templateZip, model) {
+				return [templateZip, model];
+			},
+
+			onAfterGenerate: function(projectZip, model) {
+				var that = this;
+				if (!sap.watt.getEnv("internal")) {
+					// remove files which are only relevant for SAP-internal usage
+					projectZip.remove("pom.xml");
+				}
+				this.addNeoDestinations(model);
+				
+				return this.context.service.repositorybrowser.getSelection().then(function(oSelection) {
+					
+					var _docPath; 
+					var _mtaTypes = _.filter(model.selectedTemplate.getSupportedProjectTypes(), function(oTemplType) { 
+						if (oTemplType === "mta") {
+							return true;
+						}
+					});
+					
+					if (model.selectedTemplate.getType() === "module" && _mtaTypes.length) {
+						// model typed template
+						_docPath = oSelection[0].document.getEntity().getFullPath() + "/" + model.projectName;
+					}
+					else {
+						// project typed template
+						_docPath = "/" + model.projectName;
+					}
+					
+					return that.context.service.filesystem.documentProvider.getDocument(_docPath).then(function(oProjectDocument) { 
+						var aProjectSettings = [
+							"sap.watt.saptoolsets.fiori.project.uiadaptation"
+						];
+						that.context.service.projectType.addProjectTypes(oProjectDocument, aProjectSettings).done();
+						return [projectZip, model];
+					});
+				});
+			},
+
+			addNeoDestinations: function(model) {
+				if (model.connectionData.destination) {
+					var lrep = {
+						"path": "/sap/bc/lrep",
+						"target": {
+							"type": "destination",
+							"name": model.connectionData.destination.name,
+							"entryPath": "/sap/bc/lrep"
+						},
+						"description": model.connectionData.destination.name
+					};
+					model.neoapp.destinations.push(lrep);
+				}
+			}
+		};
+	};
+});

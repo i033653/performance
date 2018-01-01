@@ -1,0 +1,718 @@
+sap.ui.define(['sap/ui/core/mvc/Controller'],
+	function(Controller) {
+		"use strict";
+
+		var SplitterController = Controller.extend("sap.watt.ideplatform.plugin.runconsole.view.RunConsole", {
+
+			// Sign for not existing url
+			NOT_EXISTING_URL: "",
+			// Sign for not existing process id
+			NOT_EXISTING_PROCESSID: "",
+			// The max line count allow in the console
+			_iMaxLineCount: null,
+			// Service context
+			_oContext: null,
+			// Run Console service
+			_oRunConsoleService: null,
+			// Enum represent the possible status for an application
+			_eStatus: { 
+				"NOT_STARTED":  { text : "Not Started", icon : "sap-icon://watt/runConsoleIdle"},
+				"NEW": { text : "Starting", icon : "sap-icon://watt/runConsoleProgress"},
+				"RUNNING": { text : "Running", icon : "sap-icon://watt/runConsoleSuccess"},
+				"FAILED": { text : "Failed", icon : "sap-icon://watt/runConsoleFailure"},
+				"STOPPING": { text : "Stopping", icon : "sap-icon://watt/runConsoleProgress"},
+				"STOPPED": { text : "Stopped", icon : "sap-icon://watt/runConsoleIdle"},
+				"CANCELLED": { text : "Canceled", icon : "sap-icon://watt/runConsoleIdle"}
+			},
+			//ui element - list which holds configurations
+			_oListRunners: null,
+			//ui element - splitter which holds toolbar and log display
+			_oLogToolbarSplitter: null,
+			//ui element - toolbar which holds project name
+			_oHeader: null,
+			//ui element - for stop button
+			_oStopBtn: null,
+
+			onInit: function() {
+				var oView = this.getView();
+				this._oContext = oView.getViewData().context;
+				this._oRunConsoleService = this._oContext.service.runconsole;
+				//set model
+				var oRunConsoleModel = new sap.ui.model.json.JSONModel();
+				var model = {};
+				oRunConsoleModel.setData(model);
+				oView.setModel(oRunConsoleModel);
+				//initiate ui elements 
+				this._oLogToolbarSplitter = this.byId("logToolbarSplitter");
+				this._oListRunners = this.byId("configurationsList");
+				this._oHeader = this.byId("projectheader");
+				this._oStopBtn = this.byId("stopApplicationBtn");
+			},
+
+			/**
+			 * Handling the stop button press event.
+			 * @param oEvent
+			 */
+			onStopBtnPress: function(oEvent) {
+				var that = this;
+				var oSource = oEvent.getSource();
+				// Get project name
+				var bindedElement = oSource.getBindingContext();
+				var sProjectId =  bindedElement.getProperty("sModulePath");
+				if (sProjectId) {
+					//disable stop button
+					oSource.setEnabled(false);
+					// Get process id of running process from Model
+					var sProcessId = bindedElement.getProperty("sRunningProcessId");
+					if (sProcessId) {
+						// Call for stop method from run console
+						this._oRunConsoleService.stopRun(sProcessId, sProjectId)
+							.then(function (bResult) {
+								if(bResult){
+									// update run configuration data in the model - remove url
+									that.updateRunnerConfigurationProperty(sProjectId, that.NOT_EXISTING_URL, "url");
+									// update run configuration data in the model - remove process id
+									that.updateRunnerConfigurationProperty(sProjectId, that.NOT_EXISTING_PROCESSID, "processId");
+									// // update run configuration data in the model - remove log URL
+									that.updateRunnerConfigurationProperty(sProjectId, that.NOT_EXISTING_URL, "logUrl");
+								}else{
+									//failed to stop on server. Display user the appropriate messagesap.
+									if(sap.watt.getEnv("server_type") === "xs2"){
+										//hana
+										that._oRunConsoleService.writeToLog(sProjectId, that._oContext.i18n.getText("i18n", "run_console_app_failed_to_stop")).done();	
+									}else{
+										//multi cloud
+										that._oRunConsoleService.writeToLog(sProjectId, that._oContext.i18n.getText("i18n", "run_console_app_failed_to_stop_di")).done();
+									}
+									that.updateRunnerConfigurationProperty(sProjectId, "STOPPED", "status");
+								}
+							})
+							.done();
+					}
+					else{
+						return this._oRunConsoleService.writeToLog(sProjectId, this._oContext.i18n.getText("i18n", "run_console_app_failed_to_stop"));
+					}
+				}
+			},
+
+			/**
+			 * Handling the clean button press event.
+			 * @param oEvent
+			 */
+			onCleanPress: function(oEvent) {
+				var oSource = oEvent.getSource();
+				var bindedElement = oSource.getBindingContext();
+				if(bindedElement){
+					var sPath = bindedElement.getPath();
+					var oModel = this.getView().getModel();
+					oModel.setProperty(sPath + "/sLogs","");
+					this.clearConsole();
+				}
+			},
+
+			/**
+			 * Handling the run button press event.
+			 * @param oEvent
+			 */
+			onRunBtnPress: function(oEvent) {
+				var oSource = oEvent.getSource();
+				var bindedElement = oSource.getBindingContext();
+				var sProjectId =  bindedElement.getProperty("sModulePath");
+				var bOpenNewWindow = bindedElement.getProperty("bOpenNewWindow");
+				var sRunnerId = bindedElement.getProperty("sRunnerTypeName");
+				return this._oRunConsoleService.startRun(bOpenNewWindow, sProjectId, sRunnerId);
+			},
+
+			/**
+			 * Update model and its binding after switching selected MTA project.
+			 * @param sSelectedModulePath - the path of the selected module
+			 * @param sProjectPath - the path of the parent mta document
+			 */
+			contextSwitch: function(sProjectPath, sSelectedModulePath) {
+				var that = this;
+				var sDocumentPathModel = this._convertPath(sProjectPath);
+				var oModel = this.getView().getModel();
+				var oElement = oModel.getProperty("/" + sDocumentPathModel);
+				if (!oElement) {
+					//create initial model element
+					return this._createInitialProjectElement(sProjectPath)
+						.then(function(oProjElement) {
+							//add new mta element to the model
+							that._addEntityToModel(sDocumentPathModel, oProjElement);
+							that._updateBindings(sDocumentPathModel, sSelectedModulePath);
+							return;
+						});
+				}
+				this._updateBindings(sDocumentPathModel, sSelectedModulePath);
+				return Q();
+			},
+
+			/**
+			 * Update model after deleting.
+			 * @param sDeletedFolderPath - the path of the selected folder to be deleted
+			 * @param sMTAPath - the path of the parent mta document
+			 */
+			deleteModelEntity: function(sDeletedFolderPath, sMTAPath) {
+				var oModel = this.getView().getModel();
+				var oElement = oModel.getProperty(sMTAPath);
+				if (oElement) {
+					//mta project deleted
+					if (sDeletedFolderPath === sMTAPath) {
+						var sDocumentPath = this._convertPath(sDeletedFolderPath);
+						var oData = oModel.getData();
+						oData[sDocumentPath] = null;
+						oModel.setData(oData);
+					} else {
+						//folder or module deleted
+						var aConfigs = oElement.ProjectRunners;
+						
+						_.remove(aConfigs, function(oConfig) {
+							return oConfig.sModulePath.indexOf(sDeletedFolderPath) > -1;
+						});
+						//update display according to selected in list item
+						this._configurationContextSwitch();
+						//update list
+						oModel.setProperty(sMTAPath + "/ProjectRunners", aConfigs);
+					}
+				}
+			},
+
+			/**
+			 * Update model after configuration execution.
+			 * @param sModulePath - the module path of the executed configuration
+			 * @param sMTAPath - the path of the parent mta document
+			 * @param oConfig - runconfiguration object
+			 */
+			onConfigurationExecuted: function(sMTAPath, sModulePath, oConfig) {
+				var that = this;
+				var oModel = this.getView().getModel();
+				var oElement = oModel.getProperty(sMTAPath);
+				var sDocumentPathModel = this._convertPath(sMTAPath);
+				if (oElement) {
+					var aProjectRunners = oElement.ProjectRunners;
+					//find config in MTA configs. if config already tracked , exit
+					var index = _.findIndex(aProjectRunners, function(oModelConfig) {
+						return oModelConfig.id === oConfig._metadata.id;
+					});
+					if (index > -1) {
+						//select running configuration in list and update display accordingly
+						this._updateConfigurationDisplay(sDocumentPathModel, sModulePath, index);
+						return Q();
+					}
+					
+					//config not in model, check if module and runner type exist=>
+					//remove existing module configs from model
+					 _.remove(aProjectRunners, function(oModelConfig) {
+						// this code will be relevant only when we will support multi runners per module
+						//return oModelConfig.sModulePath === sModulePath && oModelConfig.sRunnerTypeName === oConfig._metadata.runnerId;
+						 return oModelConfig.sModulePath === sModulePath;
+					});
+					
+					//add new configuration to model
+					var oRunConfig = oConfig;
+					oRunConfig.sModulePath = sModulePath;
+
+					return this._createInitialConfigurationElement(sMTAPath, oRunConfig)
+						.then(function (oMtaConfigurationElement) {
+							aProjectRunners.push(oMtaConfigurationElement);
+                            // add the new runner to the model prior to calling a promise (once you call a promise, you release the function to other event i.e. the model will not exist to updates)
+							oModel.setProperty(sMTAPath, oElement);
+
+							//get model index of the executed (last one)
+							index = _.findIndex(aProjectRunners, function(oModelConfig) {
+								return oModelConfig.id === oConfig._metadata.id;
+							});
+
+							//set initial status of application
+							//select running configuration in list and update display accordingly
+							that._updateConfigurationDisplay(sDocumentPathModel, sModulePath, index);
+							//update list
+							oModel.setProperty(sMTAPath, oElement);
+					});
+				}
+				return Q();
+			},
+
+			_updateBindings: function(sDocumentPathModel, sSelectedModulePath) {
+				//update header
+				this._oHeader.bindElement("/" + sDocumentPathModel);
+
+				//update list of configurations
+				this._oListRunners.bindElement("/" + sDocumentPathModel);
+
+				//update configuration display
+				var sIndex = this._getConfigElementToSelectIndex(sDocumentPathModel, sSelectedModulePath);
+				this._updateConfigurationDisplay(sDocumentPathModel, sSelectedModulePath, sIndex);
+			},
+
+			/**
+			 * stop button enable formatter
+			 */
+			stopBtnEnabledFormatter: function(eStatus){
+				return eStatus &&
+					eStatus === this._eStatus.RUNNING.text ||
+					eStatus === this._eStatus.NEW.text ||
+					eStatus === this._eStatus.FAILED.text ||
+					eStatus === this._eStatus.CANCELLED.text;
+			},
+
+			/**
+			 * run button enable formatter
+			 */
+			runBtnEnabledFormatter: function(eStatus){
+				var aListRunners = this.byId("configurationsList").getItems();
+				return aListRunners && aListRunners.length > 0 && eStatus !== this._eStatus.NEW.text; 
+			},
+
+			//display configuration according to the following flow:
+			//if module selected -> select and display configuration of that module
+			//if not module selected -> select and dispaly first existing configuration
+			//if config list is empty -> display nothing
+			_updateConfigurationDisplay: function(sDocumentPathModel, sSelectedModulePath, sConfigModelIndex) {
+				var oModel = this.getView().getModel();
+				var aConfigs = oModel.getProperty("/" + sDocumentPathModel + "/ProjectRunners");
+				if (aConfigs && aConfigs.length > 0) {
+					//get configurtaion to display path 
+					var sConfigModelPath = "/" + sDocumentPathModel + "/ProjectRunners/" + sConfigModelIndex;
+					//get list item relevant for configuration to display
+					var aListItems = this._oListRunners.getItems();
+					var listIndex = _.findIndex(aListItems, function(oItem) {
+						return oItem.getBindingContextPath() === sConfigModelPath;
+					});
+					var selectedItem = this._oListRunners.getItems()[listIndex];
+					//select list item
+					this._oListRunners.setSelectedItem(selectedItem, true);
+				}else{
+					//no configurations in list -> set selected to nothing
+					this._oListRunners.setSelectedContextPaths([]);
+				}
+				//update configuration display according to selected in list item
+				this._configurationContextSwitch();
+			},
+
+			onListItemPress: function(oEvent) {
+				var oSelectedConfig = oEvent.getParameter("listItem");
+				var sConfigModelPath = oSelectedConfig.getBindingContextPath();
+				this.clearConsole();
+				this._oLogToolbarSplitter.bindElement(sConfigModelPath);
+			},
+
+			/**
+			 * Adding a new key-value pair object to the model.
+			 * @param sKey - the formatted path of the current project
+			 * @param oValue - the object to add to the model
+			 * @private
+			 */
+			_addEntityToModel: function(sKey, oValue) {
+				var oModel = this.getView().getModel();
+				var oData = oModel.getData();
+				oData[sKey] = oValue;
+				oModel.setData(oData);
+			},
+
+			//get model index of  configuration to be selected and displayed
+			_getConfigElementToSelectIndex: function(sProjectPath, sSelectedModulePath) {
+				var configIndex = 0;
+				//set first configuration of module as selected, otherwise set first config of MTA project
+				if (sSelectedModulePath) {
+					var oModel = this.getView().getModel();
+					var aConfigs = oModel.getProperty("/" + sProjectPath + "/ProjectRunners");
+					configIndex = _.findIndex(aConfigs, function(oConfig) {
+						return oConfig.sModulePath === sSelectedModulePath;
+					});
+				}
+				return Math.max(configIndex, 0);
+			},
+
+			/**
+			 * Converting the project path (remove leading slesh) to have the form of "parentFolder" (to adjust the MTA)
+			 * @param sPath - the formatted path of the selected document
+			 * @returns {new string}
+			 * @private
+			 */
+			_convertPath: function(sPath) {
+				sPath = (sPath[0] === "/") ? sPath.substring(1) : sPath;
+				return sPath;
+			},
+
+			//create model element for MTA project
+			_createInitialProjectElement: function(sProjectPath) {
+				var that = this;
+				var aPromises = [];
+				var oElement = {
+					ProjectRunners: [],
+					projectName: this._convertPath(sProjectPath)
+				};
+				//get configurations in execution per MTA project
+				return this.getExecutedConfigs(sProjectPath)
+					.then(function(aExecutedConfigurations) {
+						//for each configuration create model element
+						_(aExecutedConfigurations).forEach(function(oConfiguration) {
+							// _createInitialConfigurationElement returns a promise and needs to be pushed into the array
+							aPromises.push(that._createInitialConfigurationElement(sProjectPath, oConfiguration));
+						});
+
+						// First use of Q.all to handle the promises of the configurations
+						return Q.all(aPromises);
+                    })
+					.then(function (oElements) {
+						var aPromises = [];
+						_(oElements).forEach(function(oElement) {
+							// _setConfigElementInitialStatus also returns a promise and needs to be pushed into the array
+							aPromises.push(that._setConfigElementInitialStatus(oElement));
+						});
+						// Second use of Q.all to handle the promises of the elements
+						return Q.all(aPromises);
+                    })
+					.then(function(aConfigElements) {
+						oElement.ProjectRunners = aConfigElements;
+						return oElement;
+					});
+
+
+			},
+
+			//create model element for configuration
+			_createInitialConfigurationElement: function(sProjectPath, oRunConfig) {
+				var bRelevant;
+				var bOpenNewWindow;
+				var that = this;
+
+				return that._oRunConsoleService.getRunner(oRunConfig._metadata.runnerId)
+					.then(function(oRunner){
+						if(oRunner){
+							bOpenNewWindow = oRunner.bOpenNewWindow;
+							return oRunner.oService.isAppUrlRelevant();
+						}
+						else {
+							return false;
+						}
+					})
+					.then(function (bUrlRelevant) {
+						// The only result from isAppUrlRelevant that we take into consideration is false.
+						// Any other result will trigger have no effect on the flow (URL will be displayed)
+						bRelevant = bUrlRelevant !== false;
+						if (bRelevant) {
+							return that._oRunConsoleService.findRunAppFileRelativePath(oRunConfig);
+						}
+						else {
+							return Q("");
+						}
+					})
+					.then(function (sRunAppFile) {
+						var configElement = {
+							sRunnerTypeName 	: oRunConfig._metadata.runnerId,
+							sConfigurationName 	: oRunConfig._metadata.displayName,
+							id 					: oRunConfig._metadata.id,
+							sLogs 				: "",
+							sRunAppFile			: sRunAppFile || "",
+							sUrl				: "",
+							iLineCount 			: 0,
+							sModulePath 		: oRunConfig.sModulePath,
+							sRelativeModulePath : oRunConfig.sModulePath.replace(sProjectPath + "/", ""),
+							bAppUrlRelevant     : bRelevant,
+							bOpenNewWindow		: bOpenNewWindow
+						};
+						return configElement;
+					});
+			},
+
+			_setConfigElementInitialStatus: function(oConfigModelElement) {
+				var that = this;
+				//get initial status of application
+				return this._oRunConsoleService.getInitialStatus(oConfigModelElement.sModulePath)
+					.then(function(oStatus) {
+						oConfigModelElement.eStatus = oStatus && oStatus.status ? that._eStatus[oStatus.status].text : that._eStatus.NOT_STARTED.text;
+						oConfigModelElement.eStatusIcon = oStatus && oStatus.status ? that._eStatus[oStatus.status].icon : that._eStatus.NOT_STARTED.icon;
+						if (oConfigModelElement.bAppUrlRelevant){
+							oConfigModelElement.sUrl = oStatus && oStatus.url ? oStatus.url + oConfigModelElement.sRunAppFile : that.NOT_EXISTING_URL;
+						}
+						else {
+							oConfigModelElement.sUrl = "";
+						}
+						oConfigModelElement.sLogUrl = oStatus && oStatus.logUrl ? oStatus.logUrl : that.NOT_EXISTING_URL;
+						oConfigModelElement.sRunningProcessId = oStatus && oStatus.sProcessId ? oStatus.sProcessId : null;
+						return oConfigModelElement;
+					}).fail(function() {
+						return oConfigModelElement;
+					});
+			},
+
+			/**
+			 * Get all configs in execution
+			 * @param sMTAPath
+			 * @returns aExecutedConfigs - all executed configs
+			 * @public
+			 */
+			getExecutedConfigs: function(sMTAPath) {
+				var aExecutedConfigs = [];
+				return this._oRunConsoleService.getConfigurationsExecuted(sMTAPath).then(function(oLastConfigurations) {
+					_.forIn(oLastConfigurations, function(aRunConfigs, sModulePath) {
+						var oLastExecutedConfig;
+						if(aRunConfigs.length > 1){
+							//per module, get one configuration with max lastRunTimeStamp - executed last
+							oLastExecutedConfig = _.maxBy(aRunConfigs, function (oConfig) {
+								return oConfig._metadata.lastRunTimeStamp;
+							});
+						}else{
+							oLastExecutedConfig = aRunConfigs.length ===1 ? aRunConfigs[0] : undefined ;   
+						}
+						//add sModulePath property to each configuration
+						if(oLastExecutedConfig){
+							oLastExecutedConfig.sModulePath = sModulePath;
+							aExecutedConfigs.push(oLastExecutedConfig);
+						}
+					});
+					return aExecutedConfigs;
+				}).fail(function() {
+					return aExecutedConfigs;
+				});
+			},
+
+
+			/**
+			 * Adding a new log message into the model.
+			 * If the the current project selected in the repository browser is the
+			 * one that gets the message - it will display the message online.
+			 * @param oMessage - the message object contains: timestamp, tag, message.
+			 * @param sCurrentPath - the path of the latest document selected in the repository browser.
+			 */
+			addMessage: function(oMessage, sMTAPath) {
+				var that = this;
+				var oModel = this.getView().getModel();
+				var oElement = oModel.getProperty(sMTAPath);
+				if (oElement) {
+					//find configurations for module
+					var sModulePath = oMessage.tag;
+					for (var i = 0; i < oElement.ProjectRunners.length; i++) {
+						var oConfigElement = oElement.ProjectRunners[i];
+						if (oConfigElement.sModulePath === sModulePath) {
+							var sReceiverModelPath = sMTAPath + "/ProjectRunners/" + i;
+							that._addMessageToConfigElement(oConfigElement, oMessage, sReceiverModelPath);
+							break;
+						}
+					}
+				}
+			},
+
+
+			/**
+			 * Clearing the content of the console.
+			 * */
+			clearConsole: function() {
+				var oBodyContainers = this._getBodyContainers();
+				if (oBodyContainers) {
+					oBodyContainers.oHtmlWriter.destroy();
+					oBodyContainers.oVerticalLayout.removeAllContent();
+					oBodyContainers.oHtmlWriter = new sap.ui.core.HTML({
+						content: "{sLogs}"
+					});
+					oBodyContainers.oVerticalLayout.addContent(oBodyContainers.oHtmlWriter);
+				}
+			},
+			/**
+			 * Retrieving the control that contains the logs
+			 * @returns {{oVerticalLayout: sap.ui.core.Control, oHtmlWriter: *}}
+			 * @private
+			 */
+			_getBodyContainers: function() {
+				var oVerticalLayout = this.byId("logVerticalLayout");
+				if (oVerticalLayout) {
+					var oHTML = oVerticalLayout.getContent()[0];
+					return {
+						oVerticalLayout: oVerticalLayout,
+						oHtmlWriter: oHTML
+					};
+				}
+				return null;
+			},
+
+			_addMessageToConfigElement: function(oConfigElement, oMessage, sReceiverModelPath) {
+				// Getting the previous logs
+				var sLogs = oConfigElement.sLogs;
+				// If there are more lines than the maximum, cut the first line before adding a new one
+				if (oConfigElement.iLineCount >= this._iMaxLineCount) {
+					sLogs = this._cutLine(sLogs);
+					oConfigElement.iLineCount--;
+				}
+				// Create the requested format
+				var sMessage = this._createRequest(oMessage.timestamp, oMessage.message);
+
+				//encode the message
+				sMessage = jQuery.sap.encodeHTML(sMessage);
+				
+				sMessage = this._addBoldElementsToMessage(sMessage);
+
+				// Create a div containing the log message
+				sLogs += "<div class=\"" + oMessage.level + " " + "runconsolemessage selectable\"" + ">" + sMessage + "</div>";
+				// Increase the line count
+				oConfigElement.iLineCount++;
+				// Set the new content
+				oConfigElement.sLogs = sLogs;
+				// If the selected project is the same as the receiver project - show it immediately in the console
+				var sConfigDisplayedPath = this._oLogToolbarSplitter.getBindingContext() ? this._oLogToolbarSplitter.getBindingContext().getPath() :
+					null;
+				if (sReceiverModelPath === sConfigDisplayedPath) {
+					this.clearConsole();
+					this._oLogToolbarSplitter.bindElement(sReceiverModelPath);
+				}
+				// Scroll to view the newest messages
+				this._scrollToBottom();
+			},
+			
+			_addBoldElementsToMessage: function(sMessage){
+				var boldStart = "<b>";
+        		var boldEnd = "</b>";
+        		boldStart = jQuery.sap.encodeHTML(boldStart);
+        		boldEnd = jQuery.sap.encodeHTML(boldEnd);
+        
+		        //replace bold placeholders with attributes for displaying bold
+				sMessage = sMessage.replace(boldStart, "<b>");
+				sMessage = sMessage.replace(boldEnd, "</b>");
+				return sMessage;
+			},
+
+			/**
+			 * Scrolling the console overflow to the bottom to view the newest messages.
+			 * @private
+			 */
+			_scrollToBottom: function() {
+				setTimeout(function() {
+					var myDiv = $("#RunConsole--logVerticalLayout"); 
+					myDiv = myDiv ? myDiv[0] : null;
+					if (myDiv) {
+						myDiv.scrollTop = myDiv.scrollHeight;
+					}
+				}, 100);
+			},
+
+			/**
+			 * Cutting the first message before adding a new one.
+			 * @param sLogs - the logs of the current project
+			 * @returns {string|*}
+			 * @private
+			 */
+			_cutLine: function(sLogs) {
+				var iIndex = sLogs.indexOf("</div>");
+				if (iIndex >= 0) {
+					return sLogs.substr(iIndex + 6, sLogs.length);
+				}
+			},
+
+			/**
+			 * Creating the format of the log message.
+			 * @param oTimestamp - the time of the message
+			 * @param sLog - the encoded message
+			 * @returns {the formatted message}
+			 * @private
+			 */
+			_createRequest: function(oTimestamp, sLog) {
+				var sMessage = this._sFormat;
+				sMessage = sMessage.replace("$TIME", oTimestamp.toLocaleTimeString());
+				//sMessage = sMessage.replace("$TAG", sProjectPath);
+				sMessage = sMessage.replace("$MESSAGE", sLog);
+				return sMessage;
+			},
+
+
+			_switchProgress: function(sStatus, oRunner) {
+				if ((sStatus === "NEW" || sStatus === "STOPPING") && !oRunner.oProgressId) {
+					this._oContext.service.progress.startTask().then(function(oProgressId) {
+						oRunner.oProgressId = oProgressId;
+					}).done();
+				}
+				else if (sStatus !== "NEW" && sStatus !== "STOPPING" && oRunner.oProgressId) {
+					this._oContext.service.progress.stopTask(oRunner.oProgressId).done();
+					delete oRunner.oProgressId;
+				}
+			},
+
+			/*
+			 * Object that contains methods who change the mode of an application in the model
+			 */
+			_updateApplicationModel: {
+				status: function (oRunner, sStatus) {
+					oRunner.eStatus = this._eStatus[sStatus].text;
+					oRunner.eStatusIcon = this._eStatus[sStatus].icon;
+					this._switchProgress(sStatus, oRunner);
+				},
+				url: function (oRunner, sUrl) {
+					if(sUrl){
+						oRunner.sUrl = sUrl + oRunner.sRunAppFile;
+					}else{
+						oRunner.sUrl = "";
+					}					
+				},
+				logUrl: function (oRunner, sUrl) {
+					oRunner.sLogUrl = sUrl;
+				},
+				processId: function (oRunner, sProcessId) {
+					oRunner.sRunningProcessId = sProcessId;
+				}
+			},
+
+			/**
+			 * Updates all kinds of application modes in the model
+			 * @param sProjectPath - the path of the application in the workspace
+			 * @param sPropertyValue - the new property value
+			 * @param sPropertyName - the property name to be updated
+			 */
+			updateRunnerConfigurationProperty: function (sProjectPath, sPropertyValue, sPropertyName) {
+				var oModel = this.getView().getModel();
+
+				var sMtaPath = "/" + sProjectPath.split(("/"))[1];
+				var oMtaModelData = oModel.getProperty(sMtaPath);
+
+				// get the project model
+				var aFilteredRunners = _.filter(oMtaModelData.ProjectRunners, { 'sModulePath': sProjectPath});
+				if (aFilteredRunners.length > 1) {					
+					throw new Error(this._oContext.i18n.getText("i18n", "two_runner_error"));
+				}
+
+				if (aFilteredRunners.length === 0) {										
+					throw new Error(this._oContext.i18n.getText("i18n", "no_runners_error"));
+				}
+
+				// the runner to update
+				var oRunner = aFilteredRunners[0];
+
+				var fModeToUpdate = this._updateApplicationModel[sPropertyName];
+				if (fModeToUpdate) {
+					fModeToUpdate.apply(this, [oRunner, sPropertyValue]);
+
+					//update the list
+					oModel.setProperty(sMtaPath, oMtaModelData);
+				}
+			},
+			
+			//update display according to selected in list item
+			_configurationContextSwitch: function() {
+				//get selected list item path
+				var aSelectedItemPath = this._oListRunners.getSelectedContextPaths();
+				if (aSelectedItemPath && aSelectedItemPath.length > 0) {
+					//selection in list exist, update config display
+					this._oLogToolbarSplitter.bindElement(aSelectedItemPath[0]);
+				} else {
+					//no item selected in list -> display nothing
+					this._oLogToolbarSplitter.unbindElement();
+				}
+				this.clearConsole();
+			},
+
+			listTooltipFormatter: function(sConfigurationName, sStatus) {
+				if (!!sConfigurationName) {
+					if (!!sStatus) {
+						return sConfigurationName + " is " + sStatus.toLowerCase();
+					}
+					else {
+						return sConfigurationName;
+					}
+				}
+				return "";
+
+			}
+		});
+
+		return SplitterController;
+
+	});

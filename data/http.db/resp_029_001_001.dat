@@ -1,0 +1,14 @@
+define(function() {
+	
+	"use strict";
+	
+	return {
+		onAfterCoreStarted: function() {
+			var oParameters = jQuery.sap.getUriParameters();
+			var sUsername = oParameters.get("username");
+			var sPassword = oParameters.get("password");
+			// Authentication is only evaluated/used if backend requires login (only when running locally)
+			return this.context.service.system.login(sUsername, sPassword);
+		}
+	};
+});

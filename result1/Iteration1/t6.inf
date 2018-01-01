@@ -1,0 +1,22 @@
+[t6]
+FileName2=t6_3_big_cloud.png
+RawStepEndTime=1514107616354
+FileName5=t6_0_bootstrap.UNK
+FileName4=t6_1_small_cloud.png
+RequestBodyFile=t6_RequestBody.txt
+RawStepName=test
+ContentType=text/html
+URL1=https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+URL2=https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/big_cloud.png
+URL3=https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/high_latency.svg
+ResponseHeaderFile=t6_ResponseHeader.txt
+URL4=https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/small_cloud.png
+URL5=https://diperf1-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/sap/watt/bootstrap.js
+SnapshotXmlFile=snapshot_5.xml
+RequestHeaderFile=t6_RequestHeader.txt
+SaveSnapshotResources=1
+RawStepStartTime=1514107615610
+Total=5
+StepName=Submit Form: test
+FileName1=t6.html
+FileName3=t6_2_high_latency.UNK

@@ -1,0 +1,80 @@
+/**
+	 * Clickjacking prevention
+	 */
+	var framebuster = function() {
+		var fnIFrameIsCreatedByTestResourceFromSameServer = function() {
+			return top.location.origin === self.location.origin && top.location.pathname.indexOf("test-resources") !== 0;
+		};
+		if (self === top || fnIFrameIsCreatedByTestResourceFromSameServer()) {
+			//no attack -> show the body
+			var oBody = document.getElementsByTagName('body')[0];
+			oBody.style.display = "block";
+		} else {
+			//potential attack -> bust the iframe
+			top.location = self.location;
+		}
+	};
+
+	// Sometimes it could happen that the body is not there yet
+	if (document.getElementsByTagName('body')[0]) {
+		framebuster();
+	} else {
+		window.addEventListener("load", framebuster);
+	}
+
+	// check for a require/define mechanism beeing available!
+	if (!window.require || !window.define) {
+		throw new Error("Require.js is not loaded yet. Please include either require.js or UI5!");
+	}
+
+	// find the script tags in the head
+	var aScripts = document.querySelectorAll("script[data-sap-ide-basedir][data-sap-ide-main]");
+	var oScript;
+
+	if (aScripts.length === 1) {
+		oScript = aScripts[0];
+	}
+	else{
+		console.warn("More than one instance of WebIde was loaded");
+	}
+	if (!oScript) {
+		throw new Error(
+			"Bootstrap information is missing. No script tag found with attributes \"data-sap-ide-basedir\" and \"data-sap-ide-main\"!");
+	}
+
+	// extract the basedir and the main module
+	var sBaseDir = oScript.getAttribute("data-sap-ide-basedir");
+	var sEnvPath = oScript.getAttribute("data-sap-ide-environment-path");
+	//Ensure that basedir ends with a /
+	sBaseDir = (sBaseDir.lastIndexOf("/") === (sBaseDir.length - 1)) ? sBaseDir : sBaseDir + "/";
+	var sMain = oScript.getAttribute("data-sap-ide-main");
+	var settings = {sBaseDir:sBaseDir,sEnvPath:sEnvPath,sMain:sMain};
+	// configure requirejs
+	require.config({
+		paths: {
+			ui5: "sap/watt/ui5/UI5RequirejsPlugin"
+		},
+		baseUrl : sBaseDir,
+		//Disable load timeout (at least for debugging as this causes unexpected timeout errors)
+		waitSeconds : 0
+	});
+
+	function loadWebIde() {
+		if (window.WEB_IDE_ENV_JSON_OVERRIDE) {
+			settings.envObj = window.WEB_IDE_ENV_JSON_OVERRIDE;
+		}
+		require(["sap/watt/core/IdeLoader","sap/watt/core/Env"], function(ideLoader,env) {
+			env.loadEnv(settings).then(function(oEnvVariabales) {
+				ideLoader.init(oEnvVariabales);
+		});
+	});
+	}
+
+	var debugMode = /[&?](sap-ide-debug[&=]|sap-ide-debug$)+/i.test(window.location.search) ||
+		/[&?]coverage=true+/i.test(window.location.search) ||
+		/[&?](sap-ide-core-debug[&=]|sap-ide-core-debug$)+/i.test(window.location.search);
+		if (!debugMode) {
+			require([sMain + "-preload"], loadWebIde, loadWebIde);
+		} else {
+			loadWebIde();
+		}

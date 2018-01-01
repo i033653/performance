@@ -1,0 +1,458 @@
+.featureManagement {}
+
+.featureReasonColumn {
+  height: 1rem;
+}
+
+.featureToggleBtn {
+  outline: 0px;
+  height: 36px;
+}
+
+.featureManagement .featureDependenciesTitle{
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.2rem;
+  padding-top: 10.5rem;
+  padding-left: 10rem;
+  display: block;	
+}
+
+.featureManagement .featureDependenciesListItemIconDiv{
+  padding-top: 0.3rem;
+  padding-left: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+.featureManagement .featureDependenciesPopoverTitleDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  color: black;
+  height: auto;
+  padding-top: 1rem;
+}
+
+.featureManagement .featureDependencyTileDiv{ 
+  padding-left: 10rem;
+  padding-right: 1rem;
+}
+
+.featureManagement .featureDependencyTileText{
+  height: auto;
+  width: 3rem;
+  top: 10.5rem;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 2.9rem;
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+.featureDependencyPopoverImage{
+  height: 2rem;
+  width: 2rem;
+  margin: 0.5rem;
+}
+
+.featureFlexBox{
+  padding-left: 10rem;
+  padding-top: 0.5rem;
+}
+
+.featureManagement .featureDependencyDiv{
+  height: 3rem;
+  width: 3rem;
+  padding-right: 1rem;
+}
+
+.featureManagement .featureDependencyDivFixSize{
+  height: 3rem;
+  width: 3rem;
+}
+
+.featureManagement .featureDependencyIcon{
+  background-color: transparent;
+  border-width: 0;
+  outline: 0px;
+  cursor: default;
+  height: 2.9rem;
+  width: 2.9rem;
+}
+
+.featureManagement .overviewDependenciesIcon{
+  height: 3rem;
+  width: 3rem;
+}
+
+.featureManagement .featureDependencyIconClick{
+  height: 3rem;
+  background: transparent;
+  width: 24rem;
+  position: absolute;
+  top: 12rem;
+  left: 10rem;
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.featureManagement .featureDependencyPopoverIcon{
+  background-color: transparent;
+  border-width: 0;
+  outline: 0px;
+  cursor: default;
+  height: 2.9rem;
+  width: 2.9rem;
+}
+
+.featureManagement .infoBtnDiv {
+  size: 1.5rem;
+  float: right;
+  padding-right: 1.2rem;
+  padding-top: 1rem;
+}
+
+.AvailableFeaturesDialog {
+  width: 750px;
+}
+
+.FeatureNameColumn {
+  width: 30%;
+}
+
+.FeatureLocationColumn {
+  width: 70%;
+}
+
+.featureManagement .featureGrid {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.featureManagement .searchField {
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.featureTable .sapUiTableVSb {
+  width: 16px;
+}
+
+.buttonWidth {
+  width: 90px;
+}
+
+.linkStyle {
+  line-height: 32px;
+  color: #007CC0;
+}
+
+
+/* css for the feature tiles */
+
+.featureTileDiv {
+  float: left;
+  height: 14rem;
+  margin: 0.5rem 0.8rem 0.5rem 0.5rem;
+  position: relative;
+  text-align: center;
+  width: 35rem;
+  -webkit-box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+  -moz-box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+  box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+}
+
+.featureManagement .featureFirstLineDiv {
+  height: 9rem;
+  position: inherit;
+}
+
+.featureManagement .featureAuthorNameDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  display: block;
+  bottom: 0;
+  position: absolute;
+  left: 1rem;
+  color: black;
+  top: 13.6rem;
+}
+
+.featureManagement .featureAuthorNameNoIconDiv{
+  top: 9rem;
+}
+
+.featureSecondLineDiv {
+  height: 4rem;
+}
+
+.featureManagement .featureSecondColumnDiv {
+  left: 10rem;
+}
+
+.featureManagement .featureThirdColumnDiv {
+  left: 20rem;
+}
+
+.featureTileDiv .featuretileTextDiv {
+  color: inherit;
+}
+
+.wizardBody .sapUiRespGrid.sapUiRespGridHSpace1 {
+  padding: 0rem 0rem 0rem 0rem
+}
+
+.wizardBody .sapUiBorderLayoutTop .sapUiRespGrid.sapUiRespGridHSpace1 {
+  background: #e8edf2;
+  height: 40px;
+}
+
+.wizardBody .sapUiBorderLayoutTop .sapUiRespGrid.sapUiRespGridHSpace1 > div {
+  margin: 0;
+  height: 40px;
+}
+
+.featureImageDiv {
+  height: 8rem;
+  width: 8rem;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+}
+
+.featureImageDivErr {
+  background-color: #EFF4F9;
+  position: absolute
+}
+
+.featureManagement .featureImageColorDiv0 {
+  background-color: #e57bcf;
+}
+
+.featureManagement .featureImageColorDiv1 {
+  background-color: #fabd64;
+}
+
+.featureManagement .featureImageColorDiv2 {
+  background-color: #91c8f6;
+}
+
+.featureManagement .featureImageColorDiv3 {
+  background-color: #ff6e6e;
+}
+
+.featureManagement .featureImageColorDiv4 {
+  background-color: #abe2ab;
+}
+
+.featureManagement .featureImageColorNestedDiv0 {
+  background-color: #f2bae6;
+}
+
+.featureManagement .featureImageColorNestedDiv1 {
+  background-color: #ffdfb2;
+}
+
+.featureManagement .featureImageColorNestedDiv2 {
+  background-color: #bcd9f2;
+}
+
+.featureManagement .featureImageColorNestedDiv3 {
+  background-color: #fcabab;
+}
+
+.featureManagement .featureImageColorNestedDiv4 {
+  background-color: #ddffdd;
+}
+
+.featureCheckedDiv {
+  height: 2rem;
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+}
+
+.featureToggleDiv {
+  height: 25%;
+  width: 10%;
+  float: right;
+}
+
+.featureDetailsDiv {
+  height: 100%;
+  width: 70%;
+  float: right;
+}
+
+.featureDetailsNameDiv {
+  height: 25%;
+  width: 90%;
+  float: left;
+}
+
+.sapUiUx3DSSVItem:hover {
+  background-color: transparent;
+}
+
+.sapUiUx3DSSVSelected {
+  background-color: transparent;
+}
+
+.errorMsg {
+  color: #e22525;
+}
+
+
+/*new implementation*/
+
+.featureManagement .featureMainTileDiv {
+  float: left;
+  height: 16rem;
+  margin: 0.5rem 0.8rem 0.5rem 0.5rem;
+  position: relative;
+  text-align: center;
+  width: 35rem;
+  -webkit-box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+  -moz-box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+  box-shadow: 0px 0px 9px 2px rgba(143, 143, 143, 0.35);
+}
+
+.featureManagement .featureImageMainDiv {
+  height: 8rem;
+  width: 8rem;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+}
+
+.featureManagement .featureImageMainNestedDiv {
+  height: 7rem;
+  width: 7rem;
+  position: absolute;
+  left: 1rem;
+  top: 2rem;
+}
+
+.featureImageSecondNestedDiv {
+  height: 7rem;
+  width: 7rem;
+  position: absolute;
+  left: 2rem;
+  top: 1rem;
+}
+
+.featureManagement .featuretileTextDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 8rem;
+  color: #FFFFFF;
+  text-align: center;
+  overflow: hidden;
+}
+
+.featureManagement .featuretileTextNestedDiv {
+  line-height: 7rem;
+  width: 7rem;
+}
+
+.featureTileVersionDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 0.875rem;
+  color: #FFFFFF;
+  text-align: right;
+  padding: 0 0.5rem;
+  height: 1rem;
+  bottom: 0;
+  display: block;
+  left: 0;
+  position: absolute;
+}
+
+.featureManagement .featureAuthorIconDiv {
+  background-color: #FFFFFF;
+  border-width: 0;
+  outline: 0px;
+  cursor: default;
+  height: 3rem;
+  padding: 0;
+  left: 1rem;
+  width: 8rem;
+  position: absolute;
+  margin-top: 1rem;
+  top: 9rem;
+  text-align: left;
+}
+
+.featureAuthorIcon {
+  display: inline-block;
+}
+
+.featureTileLinkDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5rem;
+  text-align: left;
+  display: block;
+  top: 9rem;
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+}
+
+.featureManagement .featureTileLinkErrorDiv {
+  color  : red;
+}
+
+.featureManagement .featureTileLinkErrorDiv:hover:not(.sapMLnkDsbl){
+  color  : red;
+}
+
+.featureManagement .featureTileTitleDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25rem;
+  color: black;
+  height: 3rem;
+  display: block;
+  position: absolute;
+  left: 10rem;
+  padding-top: 1rem;
+  right: 6.2rem;
+}
+
+.featureManagement .featureTileDescDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.2rem;
+  display: block;
+  position: absolute;
+  top: 4rem;
+  left: 10rem;
+  right: 1rem;
+}
+
+.featureManagement .featureIcon {
+  background-color: transparent;
+  border-width: 0;
+  outline: 0px;
+  cursor: default;
+  height: 5rem;
+  width: 5rem;
+  padding: 1.5rem;
+}
+
+.featureManagement .featureNestedIcon {
+  height: 4rem;
+  width: 4rem;
+  padding: 1.5rem;
+}
+
+.featureManagement .featureSearch  {
+  /*height: 2rem;*/
+  width: 35rem;
+}
+
+#FeatureManagerDialog > .sapUiDlgHdrSep {
+  border-top: 1px solid #e22525;
+}

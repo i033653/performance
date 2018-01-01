@@ -1,0 +1,11 @@
+[t87]
+FileName1=t87.htm
+URL1=https://ieonline.microsoft.com/s/iess/instrument16.cer
+Total=1
+RequestHeaderFile=t87_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t87_ResponseHeader.txt
+ContentType=text/html
+SnapshotXmlFile=snapshot_87.xml
+[ProtocolInfo]
+ProtocolId=QTWeb

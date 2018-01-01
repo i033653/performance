@@ -1,0 +1,244 @@
+.pluginReasonColumn {
+  height: 1rem !important;
+}
+
+.alignControlToTheRight {
+  float: right;
+}
+
+.alignControlToTheLeft {
+  float: left;
+}
+
+.detailsView {
+  height: 4rem !important;
+  margin-bottom: 0px !important;
+  color: #e22525;
+}
+
+.noteView {
+  height: 4rem !important;
+  margin-bottom: 0px !important;
+}
+
+.repositorySearch {
+  height: 3rem;
+  width: 100% !important;
+}
+
+.repostoryToggleBtn {
+  outline: 0px !important;
+  height: 36px !important;
+}
+
+.AvailablePluginsDialog {
+  width: 750px;
+}
+
+.PluginNameColumn {
+  width: 30%;
+}
+
+.PluginLocationColumn {
+  width: 70%;
+}
+
+.repositoryGrid {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-top: 14px !important;
+}
+
+.searchField {
+  margin-bottom: 14px !important;
+  width: 100% !important;
+}
+
+.pluginTable .sapUiTableVSb {
+  width: 16px;
+}
+
+.buttonWidth {
+  width: 90px !important;
+}
+
+.linkStyle {
+  line-height: 32px;
+  color: #007CC0;
+}
+
+
+/* css for the optional plugin tiles */
+
+.optionalTileDiv {
+  float: left;
+  height: 9rem;
+  margin: 0.5rem 0.8rem 0.5rem 0.5rem;
+  position: relative;
+  text-align: center;
+  width: 35rem;
+  -webkit-box-shadow: 0px 0px 9px 2px rgba(143,143,143,0.35);
+  -moz-box-shadow: 0px 0px 9px 2px rgba(143,143,143,0.35);
+  box-shadow: 0px 0px 9px 2px rgba(143,143,143,0.35);
+}
+
+.optionalTileDiv .optionaltileTextDiv {
+  color: inherit;
+}
+
+.wizardBody  .sapUiRespGrid.sapUiRespGridHSpace1 {
+  padding: 0rem 0rem 0rem 0rem !important
+}
+
+.wizardBody .sapUiBorderLayoutTop .sapUiRespGrid.sapUiRespGridHSpace1 {
+  background: #e8edf2;
+  height: 40px;
+}
+
+.wizardBody .sapUiBorderLayoutTop .sapUiRespGrid.sapUiRespGridHSpace1 > div {
+  margin: 0;
+  height: 40px;
+}
+
+.optionalPluginIcon {
+  background-color: transparent  !important;
+  border-width: 0 !important;
+  outline: 0px !important;
+  cursor: default;
+  height: 7.3rem;
+  padding: 0;
+}
+
+.optionalImageDiv {
+  height: 100%;
+  width: 30%;
+  position: absolute
+}
+
+.optionalErrorTextDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1rem;
+  color: #333333 !important;
+  text-align: center;
+  height: 3rem !important;
+  display: block;
+  bottom: 0px;
+  width: 90%;
+  padding-left: 9px;
+}
+
+.optionalImageDivErr {
+  height: 100%;
+  width: 30%;
+  background-color: #EFF4F9 !important;
+  position: absolute
+}
+
+.optionalImageColorDiv0 {
+  background-color: #e57bcf !important;
+}
+
+.optionalImageColorDiv1 {
+  background-color: #fabd64 !important;
+}
+
+.optionalImageColorDiv2 {
+  background-color: #91c8f6 !important;
+}
+
+.optionalImageColorDiv3 {
+  background-color: #ff6e6e !important;
+}
+
+.optionalImageColorDiv4 {
+  background-color: #abe2ab !important;
+}
+
+.optionalCheckedDiv {
+  height: 2rem !important;
+  position: absolute  !important;
+  top: 0px;
+  right: 0px;
+}
+
+.optionalDetailsDiv {
+  height: 100%;
+  width: 70%;
+  float: right;
+}
+
+.optionaltileTextDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 500;
+  line-height: 9rem;
+  color: #FFFFFF !important;
+  text-align: center;
+  height: 7.4rem !important;
+}
+
+.tileTitleDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25rem;
+  color: black !important;
+  text-align: left;
+  padding: 0.8rem 0.8rem;
+  height: 0.3rem;
+  display: block;
+}
+
+.tileDescDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1rem;
+  color: black !important;
+  text-align: left;
+  padding: 1rem 0.8rem;
+  height: 1rem;
+  display: block;
+}
+
+.tileLinkDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.9rem;
+  line-height: 3.25rem;
+  text-align: left;
+  padding: 1.5rem 0.8rem;
+  height: 1rem;
+  display: block;
+}
+
+.tileVersionDiv {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 0.875rem;
+  color: #FFFFFF !important;
+  text-align: right;
+  padding: 0 0.5rem;
+  height: 1rem;
+  display: block;
+}
+
+.sapUiUx3DSSVItem:hover {
+  background-color: transparent !important;
+}
+
+.sapUiUx3DSSVSelected {
+  background-color: transparent !important;
+}
+
+.enableAll {
+  float: right;
+}
+
+.errorMsg {
+  color: #e22525 !important;
+}
+
+#PluginManagerDialog > .sapUiDlgHdrSep {
+  border-top: 1px solid #e22525;
+}
+

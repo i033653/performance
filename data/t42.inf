@@ -1,0 +1,8 @@
+[t42]
+FileName1=t42.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/
+Total=2
+ContentType=text/plain
+SnapshotXmlFile=snapshot_42.xml
+FileName2=t42_sap-ui-cachebuster.txt
+URL2=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/sap-ui-cachebuster

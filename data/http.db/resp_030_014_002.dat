@@ -1,0 +1,49 @@
+.hiddenDialog {
+  display: inline !important;
+  top: -35px !important;
+  right: -15px !important;
+  visibility: hidden !important;
+  bottom: auto;
+  left: inherit !important;
+}
+
+.visibleTable {
+  visibility: visible;
+}
+
+.visibleTable .sapUiTableCell {
+  text-overflow: clip;
+}
+
+.visibleTable tbody tr {
+  background: #3f5161;
+  color: #b7cee4;
+}
+
+.visibleTable .sapUiTableCtrl tr.sapUiTableRowHvr {
+  background: #416b8e;
+}
+
+.notificationIcon {
+  font-size: large;
+}
+
+.notificationText {
+  font-size: 12px;
+  line-height: inherit;
+  white-space: normal;
+  height: inherit;
+  min-height: 16px;
+  padding: 7px;
+}
+
+.actionButton {
+  text-decoration: underline;
+  padding: 0 7px 7px 7px;
+  color: #b7cee4;
+}
+
+.sapUiBtnS.actionButton:hover {
+  background-color: transparent;
+}
+

@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0060)http://www50.sap.com/m1/templates/T508_v07_campaign_Form.htm -->
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>SAP - Network Error - Proxy: raa01-pxy-01-r3-il </TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<META http-equiv=description content="">
+<META http-equiv=keywords content=""><LINK
+href="http://bluecoat-web.wdf.sap.corp:1080/m1/StageHeaderMainFooter.css" type=text/css
+rel=stylesheet><LINK href="http://bluecoat-web.wdf.sap.corp:1080/m1/MainLeftPanel.css"
+type=text/css rel=stylesheet><LINK
+href="http://bluecoat-web.wdf.sap.corp:1080/m1/MainContentPanel.css" type=text/css
+rel=stylesheet><LINK href="http://bluecoat-web.wdf.sap.corp:1080/m1/MainRightPanel.css"
+type=text/css rel=stylesheet><LINK href="http://www.sap.com/m1/SAPFavicon.ico"
+type=image/x-icon rel="Shortcut Icon"><LINK
+href="http://www.sap.com/m1/SAPAnimFavicon.gif" type=image/gif rel=Icon>
+<SCRIPT language=javascript
+src="http://bluecoat-web.wdf.sap.corp:1080/m1/Validations.js"></SCRIPT>
+<SCRIPT language=javascript
+src="http://bluecoat-web.wdf.sap.corp:1080/m1/client_functions.js"></SCRIPT>
+<STYLE type=text/css>.style1 {
+	FONT-WEIGHT: bold; COLOR: #cc6600
+}
+#menu1 {
+	DISPLAY: none; MARGIN-LEFT: 0px
+}
+.style3 {
+	COLOR: #999900
+}
+</STYLE>
+<META content="MSHTML 6.00.2900.3243" name=GENERATOR></HEAD>
+<BODY><!-- STAGE -->
+<TABLE cellSpacing=0 cellPadding=0 width=978 align=center border=0>
+  <TBODY>
+  <TR>
+    <TD style="BACKGROUND-REPEAT: repeat-y" width=2
+    background=http://bluecoat-web.wdf.sap.corp:1080/m1/StageShadowLeftBgRepeat.jpg></TD>
+    <TD class=Stage width=972><!-- GRID -->
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top width=16 rowSpan=10><A
+            href="http://www50.sap.com/m1/templates/textview.htm"><IMG height=1
+            alt="" src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=16
+            border=0></A></TD>
+          <TD colSpan=3 height=16><IMG height=16 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1 border=0></TD>
+          <TD width=16 rowSpan=10><IMG height=1 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=16
+        border=0></TD></TR>
+        <TR>
+          <TD class=HeaderOutline colSpan=3 height=1><IMG height=1 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+border=0></TD></TR>
+        <TR>
+          <TD class=Header vAlign=center align=middle width=940 colSpan=3
+          height=66><!-- BEGIN SITE IDENTIFIER -->
+            <TABLE cellSpacing=0 cellPadding=0 width=916 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left width=89 height=36><A
+                  href="https://portal.wdf.sap.corp/go/it-help"><IMG height=36
+                  alt=SAP src="http://bluecoat-web.wdf.sap.corp:1080/m1/SAPLogo.gif"
+                  width=73 border=0></A><IMG height=1 alt=""
+                  src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=15
+                  border=0><IMG height=36 alt=""
+                  src="http://bluecoat-web.wdf.sap.corp:1080/m1/SpacerFFF.gif" width=1
+                  border=0></TD>
+                <TD vAlign=center align=left><IMG height=1 alt=""
+                  src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=15
+                  border=0><A href="https://portal.wdf.sap.corp/go/it-help"><IMG
+                  alt=Global
+                  src="http://bluecoat-web.wdf.sap.corp:1080/m1/CountryLabelGlobal.gif"
+                  border=0></A></TD>
+                <TD align=right>
+                  <P class=HeaderText>
+              <B><A href="https://portal.wdf.sap.corp/go/it-help">IT Support</A></B></P></TD></TR></TBODY></TABLE><!-- END SITE IDENTIFIER --></TD></TR>
+        <TR>
+          <TD class=HeaderOutline colSpan=3 height=1><IMG height=1 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+border=0></TD></TR>
+        <TR>
+          <TD colSpan=3 height=8><IMG height=8 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+border=0></TD></TR>
+        <TR>
+          <TD class=MCPColor vAlign=top align=left colSpan=3>
+            <DIV class=MainContentPanel>
+            <DIV class=Dove>
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0
+            valign="top">
+              <TBODY>
+              <TR>
+                <TD vAlign=top>
+                  <H1>Network Error - Proxy: raa01-pxy-01-r3-il </H1></TD></TR>
+              <TR>
+                <TD vAlign=top>
+                  <TABLE class=DataTable cellSpacing=1 cellPadding=4
+                  width="100%" align=left>
+                    <TBODY>
+                    <TR class=DataTableTH>
+                      <TH align="left">A communication error occurred: "Operation timed out"</TH></TR>
+                    <TR class=DataTableRow01>
+                      <TD>The Web Server may be down, too busy, or experiencing other problems preventing it from responding to requests. You may wish to try again at a later time.</TD></TR>
+                    <TR class=DataTableRow02>
+                      <TD>Please contact <A href="https://portal.wdf.sap.corp/go/it-help">IT Support</A> for assistance.</TD></TR>
+                    <TR class=DataTableFooter>
+                      <TD colSpan=3></TD></TR></TBODY></TABLE></TD></TR>
+              <TR>
+                <TD height=20><IMG height=20 alt=""
+                  src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+                border=0></TD></TR>
+              <TR>
+                <TD vAlign=top width="100%"></TD></TR></TBODY></TABLE></DIV></DIV></TD></TR>
+        <TR>
+          <TD colSpan=3 height=16><IMG height=16 alt=""
+            src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+        border=0></TD></TR></TBODY></TABLE></TD>
+    <TD style="BACKGROUND-REPEAT: repeat-y" width=4
+    background=http://bluecoat-web.wdf.sap.corp:1080/m1/StageShadowRightBgRepeat.jpg></TD></TR>
+  <TR>
+    <TD width=2 height=4><IMG height=4 alt=""
+      src="http://bluecoat-web.wdf.sap.corp:1080/m1/StageShadowLeftCorner.jpg" width=2
+      border=0></TD>
+    <TD style="BACKGROUND-REPEAT: repeat-x" width=972
+    background=http://bluecoat-web.wdf.sap.corp:1080/m1/StageShadowBottomBgRepeat.jpg
+    height=4></TD>
+    <TD width=4 height=4><IMG height=4 alt=""
+      src="http://bluecoat-web.wdf.sap.corp:1080/m1/StageShadowRightCorner.jpg" width=4
+      border=0></TD></TR>
+  <TR>
+    <TD width=2><IMG height=1 alt=""
+      src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1 border=0></TD>
+    <TD width=972><!-- BEGIN FOOTER -->
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=bottom align=left width="60%" height=45><IMG height=1
+            alt="" src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+            border=0></TD>
+          <TD vAlign=bottom align=right width="40%" height=45>
+            <P class=FooterText><SPAN
+            class=FooterBracket>&nbsp;</SPAN><A
+            href="https://portal.wdf.sap.corp/wcm/ROLES://portal_content/com.sap.sen.employee.employee/com.sap.sen.employee.global/com.sap.sen.employee.roles_0_0/com.sap.sen.employee.rl_employee_global/com.sap.sen.employee_services.ws_ess_new/ws_security/pg_information-security/Infocenters/Cross%20Services%20for%20SAP/Security/Information%20Security/~/Website%20Blocking">IT-Security</A><SPAN
+            class=FooterBracket>&nbsp;</SPAN><A
+            href="https://portal.wdf.sap.corp/irj/go/km/docs/corporate_portal/Cross%20Services%20for%20SAP/Security/Security%20Policy%20and%20Standards/Security%20Standards/All%20Employees/Private_Usage_of_Infrastructure_EN.pdf">Security Standard: Private Usage of Infrastructure</A><SPAN
+            class=FooterBracket>&nbsp;</SPAN><A
+            href="https://portal.wdf.sap.corp/go/it-help">IT Support</A></P></TD></TR></TBODY></TABLE><!-- END FOOTER --></TD>
+    <TD width=4><IMG height=1 alt=""
+      src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=4 border=0></TD></TR>
+  <TR>
+    <TD colSpan=3><IMG height=30 alt=""
+      src="http://bluecoat-web.wdf.sap.corp:1080/m1/Spacer.gif" width=1
+  border=0></TD></TR></TBODY></TABLE></BODY></HTML>

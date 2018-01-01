@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Cache-Control: private
+Expires: Thu, 01 Jan 1970 00:00:00 UTC
+Cache-Control: public, no-cache, no-store, no-transform
+Vary: Accept-Encoding
+Date: Sun, 24 Dec 2017 09:27:18 GMT
+Content-Type: application/json
+Content-Length: 84
+Server: SAP
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+

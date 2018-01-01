@@ -1,0 +1,988 @@
+// Requiring UtilsQSap so we can use Q.sap.ajax
+define(["sap/watt/lib/lodash/lodash", "./Config", "./ConfigPreload", "sap/watt/core/UtilsQSap", "sap/watt/core/UtilsCore"], function(_,
+	Config, oPreload) {
+	"use strict";
+
+	var OPTIONAL_FEATURES_LOAD_MODES = {
+		"USER_PREFERENCE" : "user",
+		"ALL" : "all",
+		"NONE" : "none",
+		"DEFAULT" : "default"
+	};
+	var _oDevModeFeaturesInfo = {};
+	var ROOT_FEATURE_CONFIG_FROM_BACKEND = "dynamic";
+	var CLIENT_FEATURES = "client/features";
+	var _oRootFeatureConfig;
+	var _oUserEnabledFeaturesConfig;
+	var sOptionalFeaturesLoadMode;
+
+	function getAsJson(sURI) {
+		return Q.sap.ajax(sURI, {
+			dataType: "json"
+		}).spread(function(oData) {
+			return oData;
+		});
+	}
+
+	function getURIPropertyFromEnv(sName, bAllowBackendURI) {
+		var sConfigFileURI = sap.watt.getEnv(sName);
+		if (sConfigFileURI) {
+			if (!bAllowBackendURI || sConfigFileURI !== ROOT_FEATURE_CONFIG_FROM_BACKEND) { //not "dynamic" or not called for featureCofig
+				var sUrl = require.toUrl(sConfigFileURI);
+				sConfigFileURI = sUrl && sap.watt.toAbsoluteURI(sUrl);
+			}
+		}
+		return sConfigFileURI;
+	}
+
+	function getRootFeatureConfigURIFromEnv() {
+		return getURIPropertyFromEnv("idebootstrap-feature-config", true);
+	}
+
+	function getRootConfigURIFromEnv() {
+		return getURIPropertyFromEnv("idebootstrap-config");
+	}
+
+	function getPreferencesValue(sPrefsKey) {
+		var sUri = sap.watt.toAbsoluteURI(sap.watt.getEnv("che_server") + "profile/prefs/", undefined, {
+			"filter": "watt/" + sPrefsKey + "/.*"
+		});
+		return getAsJson(sUri);
+	}
+
+	function getRootFeatureConfigURI(sUriFromDocument) {
+		// The URI defined in the browser can be either an actual URI that points to a package.json
+		// file of the constant "dynamic" which means we should take it from the backend.
+		// Note that this should be removed once all back-ends have support for at least the root feature
+		// config.
+		if (sUriFromDocument === ROOT_FEATURE_CONFIG_FROM_BACKEND) {
+			var diURL = sap.watt.getEnv("che_server");
+			if (diURL) {
+				if (!_.endsWith(diURL, "/")) {
+					diURL += "/";
+				}
+				sUriFromDocument = sap.watt.toAbsoluteURI(diURL + CLIENT_FEATURES);
+			}
+		}
+		// If the feature config is not defined use the default package.json (taken from the same
+		// directory as the html document)
+		return sUriFromDocument || sap.watt.toAbsoluteURI("package.json");
+	}
+
+	function getUserEnabledFeatures() {
+		var noPreferences = {
+			"enabledFeatures": [],
+			"disabledFeatures": []
+		};
+		var oPromise = getPreferencesValue("userEnabledFeatures").then(function(oPreferences) {
+			// Convert return value to expected format
+			var enabledFeaturesValue = oPreferences["watt/userEnabledFeatures/enabledFeatures"] || "[]";
+			var disabledFeaturesValue = oPreferences["watt/userEnabledFeatures/disabledFeatures"] || "[]";
+			return {
+				"enabledFeatures": enabledFeaturesValue && JSON.parse(enabledFeaturesValue),
+				"disabledFeatures": enabledFeaturesValue && JSON.parse(disabledFeaturesValue)
+			};
+		});
+		return oPromise.fail(function(oError) {
+			console.error("Could not load user enabled features.\nReason: " + oError.message);
+			// Do not reject, but resolve with an empty config
+			return noPreferences;
+		});
+	}
+
+	function setUserEnabledFeatures(oUserEnabledFeaturesConfig) {
+		_oUserEnabledFeaturesConfig = oUserEnabledFeaturesConfig;
+	}
+
+	function normalizeURI(sURI, sBaseURI, bAllowRelativePathWithoutFile) {
+		// Handle relative URL
+		if (sURI.indexOf("file:") === 0) {
+			sURI = sURI.substring("file:".length);
+			sURI = sap.watt.toAbsoluteURI(sURI, sBaseURI);
+		} else if (bAllowRelativePathWithoutFile) {
+			sURI = sap.watt.toAbsoluteURI(sURI, sBaseURI);
+		}
+
+		return sURI;
+	}
+
+	function getOptionalFeatureDetails(oOptionalFeature) {
+		return {
+			name: oOptionalFeature.name,
+			title: oOptionalFeature.title
+		};
+	}
+
+	function createPluginConfig(sURI, oOptionalFeature, sPluginID) {
+		return {
+			sURI: sURI,
+			required: (oOptionalFeature === undefined),
+			optionalFeature: (oOptionalFeature ? getOptionalFeatureDetails(oOptionalFeature) : undefined),
+			pluginName: sPluginID
+		};
+	}
+
+	function normalizeAndAddPluginExtensions(mTarget, mSource, oOptionalFeature) {
+		_.forEach(mSource, function(pluginExtension, sPlugin) {
+			var aExtensions = Array.isArray(pluginExtension) ? pluginExtension : [pluginExtension];
+			aExtensions = _.map(aExtensions, function(sExtensionURI) {
+				return createPluginConfig(sExtensionURI, oOptionalFeature);
+			});
+			mTarget[sPlugin] = (mTarget[sPlugin] || []).concat(aExtensions);
+		});
+	}
+
+	function addPluginExtensions(mTarget, mSource) {
+		_.forEach(mSource, function(aExtensions, sPlugin) {
+			mTarget[sPlugin] = aExtensions.concat(mTarget[sPlugin] || []);
+		});
+	}
+
+	function updateFeatureInfoWithDevFeatureInfo(oConfig) {
+		var oDevModeFeatureInfo = _oDevModeFeaturesInfo[oConfig.sFeatureID];
+		// if a feature name already exists in the dev mode features map
+		if (oDevModeFeatureInfo) {
+			// replace an original feature with the one run by user
+			oConfig.oFeature = oDevModeFeatureInfo.config;
+			oConfig.bIsOptional = oDevModeFeatureInfo.optional;
+			oConfig.bDevFeature = true;
+			// remove the dev mode feature info
+			delete _oDevModeFeaturesInfo[oConfig.sFeatureID];
+		}
+		// updated feature config
+		return oConfig;
+	}
+
+	function getFeatureErrorMessage(oFeature) {
+		var message = "";
+		if (!oFeature) {
+			return message;
+		}
+
+		if (oFeature.messages) {
+			_.forEach(oFeature.messages, function(oMessage) {
+				if (oMessage.severity === "error") {
+					if (message !== "") {
+						message += "; ";
+					}
+					message += oMessage.message;
+				}
+			});
+		}
+		return message;
+	}
+
+	function isInvalidFeature(oInvalidPluginInfo, sFeatureID) {
+		return oInvalidPluginInfo && oInvalidPluginInfo.feature && oInvalidPluginInfo.feature === sFeatureID;
+	}
+
+	/**
+	 * @param {object} oConfig
+	 * @param {object} oConfig.mConfig
+	 * @param {string} oConfig.sFeatureID
+	 * @param {string|object} oConfig.oFeature
+	 * @param {object} oConfig.oUserConfig
+	 * @param {object} oConfig.oOptionalFeature
+	 * @param {boolean} oConfig.bIsOptional
+	 * @param {object} oConfig.oInvalidPluginInfo
+	 * @returns {*|orion.Promise|{value}}
+	 */
+	function addBundledFeatureMetadata(oConfig) {
+		// try to replace nested feature info when in dev mode
+		oConfig = updateFeatureInfoWithDevFeatureInfo(oConfig);
+
+		var mConfig = oConfig.mConfig;
+		var sFeatureID = oConfig.sFeatureID;
+		var oFeature = oConfig.oFeature;
+		var oUserConfig = oConfig.oUserConfig;
+		var oOptionalFeature = oConfig.oOptionalFeature;
+		var bIsOptional = oConfig.bIsOptional;
+		var oInvalidPluginInfo = oConfig.oInvalidPluginInfo;
+		var bDevFeature = oConfig.bDevFeature;
+
+		// If the feature is optional, check if it should be loaded. A feature is loaded if all these conditions occur:
+		// 1. It wasn't explicitly disabled by the user
+		// 2. It wasn't flagged as invalid by a previous load of webide
+		// 3. It's either enabled by default or it was explicitly enabled by the user
+		if (bIsOptional &&
+			(isInvalidFeature(oInvalidPluginInfo, sFeatureID) ||
+			!isFeatureEnabled(oUserConfig, oFeature, true))) {
+			return Q();
+		}
+
+		var sFeatureErrorMessage = getFeatureErrorMessage(oFeature);
+		if (sFeatureErrorMessage) {
+			return Q.reject(new Error(sFeatureErrorMessage));
+		}
+
+		if (oFeature.messages) {
+			_.forEach(oFeature.messages, function(oMessage) {
+				// There are only error and info messages, and the error messages were already checked above, so we'll only get info messages
+				console.info(oMessage.message);
+			});
+		}
+
+		if (oFeature.name !== sFeatureID) {
+			var sErrorMessage = "The feature that is referenced as " + sFeatureID + " has a different name " + oFeature.name +
+				" in its \"package.json\" file";
+			return Q.reject(new Error(sErrorMessage));
+		}
+
+		return loadFeature({
+			oFeatureConfig: oFeature,
+			oUserConfig: oUserConfig,
+			oOptionalFeature: bIsOptional ? oFeature : oOptionalFeature,
+			oInvalidPluginInfo: oInvalidPluginInfo
+		}).then(function(oFeatureConfig) {
+			if (bDevFeature) {
+				_.forEach(oFeatureConfig.plugins, function(oPlugin) {
+					oPlugin.dev = true;
+				});
+			}
+			mConfig.plugins = oFeatureConfig.plugins.concat(mConfig.plugins);
+			addPluginExtensions(mConfig.pluginExtensions, oFeatureConfig.pluginExtensions);
+		});
+	}
+
+	/**
+	 * @param {object} oConfig
+	 * @param {object} oConfig.oFeatureConfig
+	 * @param {object} oConfig.oUserConfig
+	 * @param {object?} oConfig.oOptionalFeature
+	 * @param {object?} oConfig.oInvalidPluginInfo
+	 * @returns {*|orion.Promise|{value}}
+	 */
+	function loadFeature(oConfig) {
+		var oFeatureConfig = oConfig.oFeatureConfig;
+		var oUserConfig = oConfig.oUserConfig;
+		var oOptionalFeature = oConfig.oOptionalFeature;
+		var oInvalidPluginInfo = oConfig.oInvalidPluginInfo;
+
+		var mConfig = {
+			plugins: [],
+			pluginExtensions: {}
+		};
+
+		var aFeaturesLoadedPromises = [];
+
+		if (oFeatureConfig.bundledPlugins) {
+			_.forEach(oFeatureConfig.bundledPlugins, function(sPluginURL, sPluginID) {
+				// We don't verify the plugin ID here (at least for SDK V1) since we don't want to load the plugin twice
+				mConfig.plugins.push(createPluginConfig(sPluginURL, oOptionalFeature, sPluginID));
+			});
+		}
+
+		if (oFeatureConfig.deprecatedPluginExtensions) {
+			normalizeAndAddPluginExtensions(mConfig.pluginExtensions, oFeatureConfig.deprecatedPluginExtensions, oOptionalFeature);
+		}
+
+		if (oFeatureConfig.bundledFeatures) {
+			_.forEach(oFeatureConfig.bundledFeatures, function(oFeature, sFeatureID) {
+				aFeaturesLoadedPromises.push(
+					addBundledFeatureMetadata({
+						mConfig: mConfig,
+						sFeatureID: sFeatureID,
+						oFeature: oFeature,
+						oUserConfig: oUserConfig,
+						oOptionalFeature: oOptionalFeature,
+						bIsOptional: false,
+						oInvalidPluginInfo: oInvalidPluginInfo
+					}).fail(function(oError) {
+						throw new Error("Could not load required feature " + sFeatureID + " that was referenced from feature " + oFeatureConfig.name +
+							".\nReason: " + (oError.message || oError));
+					}));
+			});
+		}
+
+		if (oFeatureConfig.optionalBundledFeatures) {
+			_.forEach(oFeatureConfig.optionalBundledFeatures, function(oFeature, sFeatureID) {
+				aFeaturesLoadedPromises.push(
+					addBundledFeatureMetadata({
+						mConfig: mConfig,
+						sFeatureID: sFeatureID,
+						oFeature: oFeature,
+						oUserConfig: oUserConfig,
+						oOptionalFeature: oOptionalFeature,
+						bIsOptional: true,
+						oInvalidPluginInfo: oInvalidPluginInfo
+					}).fail(function(oError) {
+						// It's ok if optional features are not found so we only output an error in the console
+						console.error("Could not load optional feature " + sFeatureID + " that was referenced from feature " + oFeatureConfig.name +
+							".\nReason: " + oError.message);
+					})
+				);
+			});
+		}
+
+		if (oFeatureConfig.deprecatedConfigIncludes) {
+			oFeatureConfig.deprecatedConfigIncludes.forEach(function(configURI) {
+				aFeaturesLoadedPromises.push(Config.load(configURI).then(function(oFeatureConfig) {
+					// If the current feature is optional we should change the included plugins to be optional too
+					if (oOptionalFeature !== undefined) {
+						oFeatureConfig.plugins.forEach(function(oPlugin) {
+							if (oPlugin.required) {
+								console.warn("Required plugin " + oPlugin.sURI +
+									" will be treated as optional because it was found in \"config.json\" file " +
+									configURI + " that was loaded from optional feature " + oOptionalFeature.name);
+							}
+							oPlugin.required = false;
+							oPlugin.optionalFeature = getOptionalFeatureDetails(oOptionalFeature);
+						});
+					}
+					mConfig.plugins = mConfig.plugins.concat(oFeatureConfig.plugins);
+					addPluginExtensions(mConfig.pluginExtensions, oFeatureConfig.pluginExtensions);
+				}));
+			});
+		}
+
+		// Load preload files
+		if (oFeatureConfig.webidePreloads) {
+			// Javascript and i18n files (which are JS with a call to a global function)
+			var aJSPreloads = oFeatureConfig.webidePreloads.js;
+			if (aJSPreloads) {
+				if (typeof(aJSPreloads) === "string") {
+					aJSPreloads = [aJSPreloads];
+				}
+				aJSPreloads.forEach(function(sJSPreload) {
+					aFeaturesLoadedPromises.push(oPreload.loadJSPreload(sJSPreload));
+				});
+			}
+
+			// Configuration file with plugins and interfaces in json format
+			var aConfigPreloads = oFeatureConfig.webidePreloads.config;
+			if (aConfigPreloads) {
+				if (typeof(aConfigPreloads) === "string") {
+					aConfigPreloads = [aConfigPreloads];
+				}
+				aConfigPreloads.forEach(function(sConfigPreload) {
+					aFeaturesLoadedPromises.push(oPreload.loadPreload(sConfigPreload));
+				});
+			}
+		}
+
+		return Q.all(aFeaturesLoadedPromises).then(function() {
+			return mConfig;
+		});
+	}
+
+	function getDevModeFeaturesInfo(oBundledFeatures, oOptionalBundledFeatures) {
+		var aPromises = [];
+
+		function addFeature(sFeatureUri, sFeatureId, bIsOptional) {
+			// set devMode feature id
+			var oDevModeFeatureInfo = {};
+			_oDevModeFeaturesInfo[sFeatureId] = oDevModeFeatureInfo;
+			oDevModeFeatureInfo.uri = sap.watt.toAbsoluteURI(sFeatureUri);
+			oDevModeFeatureInfo.optional = bIsOptional;
+
+			aPromises.push(getAsJson(oDevModeFeatureInfo.uri).then(function(oFeatureConfig) {
+				oDevModeFeatureInfo.config = oFeatureConfig;
+
+				return buildMetadataAsJsonObject(oDevModeFeatureInfo.config, oDevModeFeatureInfo.uri).then(function() {
+					if (bIsOptional) {
+						oDevModeFeatureInfo.config.enabledByDefault = true;
+					}
+				});
+			}));
+		}
+
+		if (oBundledFeatures) {
+			_.forEach(oBundledFeatures, function(sFeatureUri, sFeatureId) {
+				addFeature(sFeatureUri, sFeatureId, false);
+			});
+		}
+		if (oOptionalBundledFeatures) {
+			_.forEach(oOptionalBundledFeatures, function(sFeatureUri, sFeatureId) {
+				addFeature(sFeatureUri, sFeatureId, true);
+			});
+		}
+
+		return Q.all(aPromises);
+	}
+
+	// set features running in devMode
+	function prepareUserDevModeFeature() {
+		_oDevModeFeaturesInfo = {};
+
+		if (sap.watt.getEnv("devMode")) {
+			// get feature that is being run in devMode
+			return getPreferencesValue("package-dev.json").then(function(oPreferencesValue) {
+				if (oPreferencesValue) {
+					var oBundledFeaturesValue = oPreferencesValue["watt/package-dev.json/bundledFeatures"];
+					var oOptionalBundledFeaturesValue = oPreferencesValue["watt/package-dev.json/optionalBundledFeatures"];
+					var oBundledFeatures = oBundledFeaturesValue && JSON.parse(oBundledFeaturesValue);
+					var oOptionalBundledFeatures = oOptionalBundledFeaturesValue && JSON.parse(oOptionalBundledFeaturesValue);
+
+					if (oBundledFeatures || oOptionalBundledFeatures) {
+						return getDevModeFeaturesInfo(oBundledFeatures, oOptionalBundledFeatures);
+					}
+				}
+			}).fail(function() {
+				console.info("package-dev.json key was't found in user preferences");
+				return Q();
+			});
+		}
+
+		return Q();
+	}
+
+	/**
+	 * @param {object} mConfig
+	 * @param {object} oUserConfig
+	 * @param {object} oInvalidPluginInfo
+	 * @returns {*|orion.Promise|{value}}
+	 */
+	function loadDevModeFeatures(mConfig, oUserConfig, oInvalidPluginInfo) {
+		var aPromises = [];
+		// in case some features were still not used --> add them
+		_.forEach(_oDevModeFeaturesInfo, function(oDevModeFeature, sDevModeFeatureId) {
+			aPromises.push(addBundledFeatureMetadata({
+				mConfig: mConfig,
+				sFeatureID: sDevModeFeatureId,
+				oFeature: oDevModeFeature.config,
+				oUserConfig: oUserConfig,
+				bIsOptional: oDevModeFeature.optional,
+				oInvalidPluginInfo: oInvalidPluginInfo,
+				bDevFeature: true
+			}).fail(function(oError) {
+				var message = "Could not load feature " + sDevModeFeatureId + " from workspace.\nReason: " + oError.message;
+				if (oDevModeFeature.optional) {
+					console.log(message, oError);
+				} else {
+					console.log(message, oError);
+					throw new Error(message);
+				}
+			}));
+		});
+
+		return Q.all(aPromises).then(function() {
+			return mConfig;
+		});
+	}
+
+	/**
+	 * Add an array of names of dependencies which aren't found at the first-level optional/required features of
+	 * oRootFeatureConfig to oFeatureDependencyResult (in property aMissingUnavailableDependecies)
+	 */
+	function _addMissingRootOptionalFeaturesDependencies(sFeatureName, oFeatureDependencyResult, oRootFeatureConfig) {
+		oFeatureDependencyResult.aMissingUnavailableDependecies = [];
+		if (oRootFeatureConfig) {
+			// use only root features as dependencies
+			var oRootFeatures = _.extend({}, oRootFeatureConfig.optionalBundledFeatures, oRootFeatureConfig.bundledFeatures);
+			// find all unavailable root dependencies
+			var aRootFeaturesNames = _.keys(oRootFeatures);
+			_.forEach(oFeatureDependencyResult.aWebidePeerDependencies, function(sPeerWebIdeDependencyName) {
+				var index = aRootFeaturesNames.indexOf(sPeerWebIdeDependencyName);
+				if (index === -1) {
+					oFeatureDependencyResult.aMissingUnavailableDependecies.push(sPeerWebIdeDependencyName);
+				}
+			});
+		}
+
+		return oFeatureDependencyResult;
+	}
+
+	/**
+	 * Add sent feature names to enabled features and remove them from the disabled features
+	 */
+	function enableFeaturesIfNeeded(aFeatureNames, oUserConfig) {
+		var aCurrentUserEnabledFeatures = _.clone(oUserConfig.enabledFeatures);
+		oUserConfig.enabledFeatures = _.uniq(oUserConfig.enabledFeatures.concat(aFeatureNames));
+		var aAutomaticallyEnabledFeatures = _.difference(oUserConfig.enabledFeatures, aCurrentUserEnabledFeatures);
+		if (!_.isEmpty(aAutomaticallyEnabledFeatures)) {
+			console.info("The following features were automatically enabled: " + aAutomaticallyEnabledFeatures);
+		}
+		oUserConfig.disabledFeatures = _.difference(oUserConfig.disabledFeatures, oUserConfig.enabledFeatures);
+	}
+
+	/**
+	 * Add transitive dependencies for each feature in the dependencies map
+	 */
+	function _addTransientDependencies(oDependencyMap) {
+		_.forEach(oDependencyMap, function(oDependantFeatureResult, sDependantFeatureName) {
+			_.forEach(oDependencyMap, function(oFeatureResult, sFeatureName) {
+				var index = oFeatureResult.aWebidePeerDependencies.indexOf(sDependantFeatureName);
+				if (index !== -1) {
+					var aFeatureDependencies = oFeatureResult.aWebidePeerDependencies.concat(oDependantFeatureResult.aWebidePeerDependencies);
+					oDependencyMap[sFeatureName].aWebidePeerDependencies = _.uniq(aFeatureDependencies);
+				}
+			});
+		});
+	}
+
+	function _validateWebidePeerDependencies(oFeature, aWebidePeerDependencies) {
+		_.forEach(aWebidePeerDependencies, function(sWebIdePeerDependency) {
+			var sPeerDependencyVersion = oFeature.peerDependencies[sWebIdePeerDependency];
+			if (sPeerDependencyVersion !== "*" && sPeerDependencyVersion !== "x") {
+				oFeature.messages.push({
+					message: "peer dependency '" + sWebIdePeerDependency + "' version '" + sPeerDependencyVersion +
+						"' is invalid. It must be either '*' or 'x'",
+					phase: "feature_loading",
+					severity: "error"
+				});
+			}
+		});
+	}
+
+	/**
+	 * Return map from the name of first-level optional feature that depends on other features to the names of the features
+	 * it depends on (aWebidePeerDependencies) and the feature itself (oFeature)
+	 * @returns Map from name of feature with dependencies to an object that contains an array of the names of the
+	 * dependencies (including transient dependencies) and the feature itself
+	 */
+	function _createRootOptionalFeaturesDependenciesMap(oRootFeature) {
+		var oDependenciesMap = {};
+
+		_.forEach(oRootFeature.optionalBundledFeatures, function(oOptionalBundledFeature) {
+			_addFeatureDependenciesToMap(oOptionalBundledFeature, oDependenciesMap);
+		});
+
+		_addTransientDependencies(oDependenciesMap);
+		return oDependenciesMap;
+	}
+
+	/**
+	 * If the feature has dependencies to webide features, add it to the map with the (non-transient) webide dependencies
+	 * and a reference to the feature
+	 */
+	function _addFeatureDependenciesToMap(oFeature, oDependenciesMap) {
+		var aWebidePeerDependencies = _.intersection(_.keys(oFeature.peerDependencies), oFeature.webideDependencies);
+		// webide peer dependecies only with either '*'' or 'x' versions are valid
+		_validateWebidePeerDependencies(oFeature, aWebidePeerDependencies);
+
+		if (!_.isEmpty(aWebidePeerDependencies)) { // is not a dependant feature
+			oDependenciesMap[oFeature.name] = {
+				aWebidePeerDependencies: aWebidePeerDependencies,
+				oFeature: oFeature
+			};
+		}
+	}
+
+	/**
+	 * Check for missing dependant features and enable dependencies of valid enabled optional features
+	 */
+	function _validateAndEnableOptionalFeatureDependencies(oUserConfig, oRootFeatureConfig) {
+		var oModifiedUserConfig = _.cloneDeep(oUserConfig);
+		if (oUserConfig && oRootFeatureConfig && oRootFeatureConfig.optionalBundledFeatures) {
+			var oFeaturesDependenciesMap = _createRootOptionalFeaturesDependenciesMap(oRootFeatureConfig);
+			_.forEach(oFeaturesDependenciesMap, function(oFeatureDependencyResult, sDependantFeatureName) {
+				oFeatureDependencyResult = _addMissingRootOptionalFeaturesDependencies(sDependantFeatureName, oFeatureDependencyResult,
+					oRootFeatureConfig);
+				if (!_.isEmpty(oFeatureDependencyResult.aMissingUnavailableDependecies)) {
+					addErrorMessageToRootOptionalFeature(oRootFeatureConfig, sDependantFeatureName,
+						"This feature depends on unavailable features: " + oFeatureDependencyResult.aMissingUnavailableDependecies);
+				}
+
+				// We check the enabled features against the original user configuration to prevent unnecessary iterations
+				// of trying to enable the dependencies (it's unnecessary because they're transient)
+				if (isFeatureEnabled(oUserConfig, oFeatureDependencyResult.oFeature, true)) {
+					// Only enable dependencies of features without errors
+					if (!getFeatureErrorMessage(oFeatureDependencyResult.oFeature)) {
+						enableFeaturesIfNeeded(oFeatureDependencyResult.aWebidePeerDependencies, oModifiedUserConfig);
+					}
+				}
+			});
+		}
+
+		return oModifiedUserConfig;
+	}
+
+	function setRootFeatureConfig(oRootFeatureConfig) {
+		_oRootFeatureConfig = oRootFeatureConfig;
+		//TODO: this code should be changed after we submit the dependencies change
+		//return getJsonAndURI(getRootFeatureConfigURI(ROOT_FEATURE_CONFIG_FROM_BACKEND)).then(function(oFeatures) {
+		//	_oRootFeatureConfig.optionalBundledFeatures = oFeatures.json.optionalBundledFeatures;
+		//}).fail(function() {
+		//	return Q();
+		//});
+
+		return Q();
+	}
+
+	function addErrorMessageToRootOptionalFeature(oRootFeatureConfig, sFeatureName, sErrorMessage) {
+		if (oRootFeatureConfig && oRootFeatureConfig.optionalBundledFeatures) {
+			var oFeature = oRootFeatureConfig.optionalBundledFeatures[sFeatureName];
+			if (oFeature && oFeature.messages) {
+				oFeature.messages.push({
+					message: sErrorMessage,
+					phase: "feature_loading",
+					severity: "error"
+				});
+			}
+		}
+	}
+
+	function allPluginsStartedFailedPluginsHandler(oEvent) {
+		_.forEach(oEvent.aFailedPlugins, function(oFailedPlugin) {
+			if (oFailedPlugin.optionalFeature) {
+				addErrorMessageToRootOptionalFeature(_oRootFeatureConfig, oFailedPlugin.optionalFeature.name, oFailedPlugin.message);
+			}
+		});
+	}
+
+	function invalidPluginErrorHandler(oEvent) {
+		addErrorMessageToRootOptionalFeature(_oRootFeatureConfig, oEvent.optionalFeatureName, oEvent.message);
+	}
+
+	function listenToInvalidPluginsEvents() {
+		// catches invalid plugin event thrown by PluginRegistry and add an error message to the feature
+		window.addEventListener("invalid_plugin_error", invalidPluginErrorHandler);
+		window.addEventListener("AllPluginsStarted_FailedPlugins", allPluginsStartedFailedPluginsHandler);
+	}
+
+	listenToInvalidPluginsEvents();
+
+	function getPluginsAndLoadFeature(oFeatureJson, oInvalidPluginInfo) {
+		// If oInvalidPluginInfo is sent, we ignore all plugins in the optional feature this plugin belongs to.
+		return prepareUserDevModeFeature().then(function() {
+			return Q.spread([oFeatureJson, getUserEnabledFeatures()],
+				function(oRootFeatureConfig, oUserConfig) {
+					normalizeRootTechnicalFeatures(oRootFeatureConfig);
+					addWebideTitlesAndIcons(oRootFeatureConfig);
+					setUserEnabledFeatures(oUserConfig);
+					// Setting the root feature config before the call to loadFeature so we can handled errors during loading
+					return setRootFeatureConfig(oRootFeatureConfig).then(function() {
+						oUserConfig = _validateAndEnableOptionalFeatureDependencies(oUserConfig, oRootFeatureConfig);
+
+						return loadFeature({
+							oFeatureConfig: oRootFeatureConfig,
+							oUserConfig: oUserConfig,
+							oInvalidPluginInfo: oInvalidPluginInfo
+						}).then(function(mConfig) {
+							return loadDevModeFeatures(mConfig, oUserConfig, oInvalidPluginInfo);
+						});
+					});
+				}).fail(function(oError) {
+					// Unexpected error occurred
+					var oErr = oError;
+					if (oError.status === 403) {
+						oErr =
+							"You do not have permission and cannot proceed.\nAsk your account administrator to assign you to the SAP Web IDE DiDeveloper role as described in the topic: “Assigning Users Permission for SAP Web IDE” section in the SAP Cloud Platform Web IDE documentation.";
+					}
+					console.error("Could not load configuration", oErr);
+					throw new Error("Could not load configuration.\nReason: " + oErr);
+				});
+		});
+	}
+
+	function getJsonAndURI(sURI) {
+		return getAsJson(sURI).then(function(oFeature) {
+			return {
+				json: oFeature,
+				uri: sURI
+			};
+		});
+	}
+
+	function buildMetadataAsJsonObject(oJsonObject, sBaseURI, sParentKey) {
+		var aPromises = [];
+		if (sParentKey === undefined) {
+			// Make sure that messages array exists in the root feature
+			oJsonObject.messages = (oJsonObject.messages || []);
+		}
+
+		_.forEach(oJsonObject, function(oValue, sKey) {
+			if (sParentKey === "webidePreloads") {
+				if (sKey === "js" || sKey === "config") {
+					if (typeof(oValue) === "string") {
+						oJsonObject[sKey] = [normalizeURI(oValue, sBaseURI, true)];
+					} else {
+						_.forEach(oJsonObject[sKey], function(oPreloadValue, sPreloadKey) {
+							oJsonObject[sKey][sPreloadKey] = normalizeURI(oPreloadValue, sBaseURI, true);
+						});
+					}
+				}
+			} else if (typeof oValue === "object") {
+				var oBuildObjectMetadataPromise = buildMetadataAsJsonObject(oValue, sBaseURI, sKey);
+				aPromises.push(oBuildObjectMetadataPromise);
+				return oBuildObjectMetadataPromise.then(function(oJsonObj) {
+					if (sParentKey === "bundledFeatures" || sParentKey === "optionalBundledFeatures") {
+						// Make sure that messages array exists in all features
+						oJsonObj.messages = (oJsonObj.messages || []);
+					}
+					oJsonObject[sKey] = oJsonObj;
+				});
+
+				// Features can be relative (file:) or absolute (http:/https:).
+				// Absolute URLs are used in local webide on approuter scenario.
+			} else if (typeof oValue === "string" && oValue.match(/^(file|https?):/i)) {
+				var sNormalizedURI = normalizeURI(oValue, sBaseURI);
+				if (sParentKey === "bundledFeatures" || sParentKey === "optionalBundledFeatures") {
+					var oBuildFeatureMetadata = getAsJson(sNormalizedURI).then(function(oResult) {
+						// Make sure that messages array exists in all features
+						oResult.messages = (oResult.messages || []);
+						return buildMetadataAsJsonObject(oResult, sNormalizedURI, sKey);
+					}).fail(function(oError) {
+						if (sParentKey === "optionalBundledFeatures") {
+							// It's ok if optional features are not found so we only output an error in the console
+							console.error("Could not load optional feature " + sKey + " that was referenced from feature " + sParentKey + ".\nReason: " +
+								(oError.message || oError));
+							return sNormalizedURI;
+						}
+						oError.message = "Could not load required feature " + sKey + " that was referenced from feature " + sParentKey + ".\nReason: " +
+							(oError.message || oError);
+						return Q.reject(oError);
+					});
+					aPromises.push(oBuildFeatureMetadata);
+					return oBuildFeatureMetadata.then(function(oJsonObj) {
+						oJsonObject[sKey] = oJsonObj;
+					});
+				} else if (sParentKey === "bundledPlugins" || sParentKey === "deprecatedPluginExtensions" || sParentKey ===
+					"deprecatedConfigIncludes") {
+					oJsonObject[sKey] = sNormalizedURI;
+				}
+			} else {
+				oJsonObject[sKey] = oValue;
+			}
+		});
+
+		return Q.all(aPromises).then(function() {
+			return oJsonObject;
+		});
+	}
+
+	function createRootFeatureWithConfigInclude(sConfigUri) {
+		return {
+			name: "rootFeature",
+			deprecatedConfigIncludes: [
+				sConfigUri
+			]
+		};
+	}
+
+	function createRootFeatureWithBundledFeature(oFeatureConfig) {
+		// Add root feature to create a dynamic loading-like result for similar processing of properties
+		var rootFeature = {
+			name: "rootFeature",
+			bundledFeatures: {}
+		};
+		if (oFeatureConfig && oFeatureConfig.name) {
+			rootFeature.bundledFeatures[oFeatureConfig.name] = oFeatureConfig;
+		}
+		return rootFeature;
+	}
+
+	function normalizeRootTechnicalFeatures(oFeatureConfig) {
+		function getNonTechnicalFeature(oFeature) {
+			// Technical feature with single bundled feature be skipped.
+			// Only their name and data added not from the package.json (like messages and enabledByDefault) should remain.
+			if (oFeature.technical && _.size(oFeature.bundledFeatures) === 1 && _.size(oFeature.optionalBundledFeatures) === 0 && _.size(oFeature.bundledPlugins) ===
+				0) {
+				var originalFeature = oFeature;
+				oFeature = originalFeature.bundledFeatures[Object.keys(originalFeature.bundledFeatures)[0]];
+				oFeature.name = originalFeature.name;
+				oFeature.enabledByDefault = originalFeature.enabledByDefault;
+				oFeature.messages = _.concat(originalFeature.messages, oFeature.messages);
+				oFeature.additionalProperties = originalFeature.additionalProperties;
+			}
+			return oFeature;
+		}
+		if (oFeatureConfig.bundledFeatures) {
+			_.forEach(oFeatureConfig.bundledFeatures, function(oFeature, sName) {
+				oFeatureConfig.bundledFeatures[sName] = getNonTechnicalFeature(oFeature);
+			});
+		}
+		if (oFeatureConfig.optionalBundledFeatures) {
+			_.forEach(oFeatureConfig.optionalBundledFeatures, function(oFeature, sName) {
+				oFeatureConfig.optionalBundledFeatures[sName] = getNonTechnicalFeature(oFeature);
+			});
+		}
+	}
+
+	function addWebideTitlesAndIcons(oFeatureConfig) {
+		var webidePageTitle;
+		var webideLoadingTitle;
+		var isShowWebideBottomIcon;
+		var webidePageTitleCntr = 0;
+		var webideLoadingTitleCntr = 0;
+		var isShowWebideBottomIconCntr = 0;
+
+		var allBundledFeatures = _.extend({}, oFeatureConfig.bundledFeatures, oFeatureConfig.optionalBundledFeatures);
+		_.forEach(allBundledFeatures, function(oConfig) {
+			if (oConfig.webidePageTitle) {
+				webidePageTitle = oConfig.webidePageTitle;
+				webidePageTitleCntr++;
+			}
+			if (oConfig.webideLoadingTitle) {
+				webideLoadingTitle = oConfig.webideLoadingTitle;
+				webideLoadingTitleCntr++;
+			}
+
+			if (oConfig.isShowWebideBottomIcon) {
+				isShowWebideBottomIcon = oConfig.isShowWebideBottomIcon;
+				isShowWebideBottomIconCntr++;
+			}
+		});
+
+		// Load webIDE page title
+		document.title = (webidePageTitle && webidePageTitleCntr === 1) ? webidePageTitle : "SAP Web IDE";
+		
+		// Load the text above the progress bar
+		var sText = webideLoadingTitle && webideLoadingTitleCntr === 1? webideLoadingTitle :"SAP Web IDE";
+		$("#textAboveProgressBar").text(sText);
+		$("#textAboveProgressBar").addClass("visibleElemWithAnim");	
+
+		// Load Top/Bottom Icon
+		if (isShowWebideBottomIcon && isShowWebideBottomIcon === true && isShowWebideBottomIconCntr === 1) {//e.g. in case of BDH
+			$("#bottomIcon").addClass("visibleElemWithAnim");	
+		} else { //for webIDE hcp and Hana (or if BDH did not ask to show webIDE bottom icon we make sure that top webIDE icon will show)
+			$("#topIcon").addClass("visibleElemWithAnim");	
+		}
+	}
+
+	function buildFeature(vFeatureConfig, bSkipAddRootForNonDynamicConfig) {
+		// Check which configuration file to use. The logic is:
+		// 1. If vFeatureConfig is sent, use it (package.json format - URI or the content)
+		// 2. If root feature config is defined on the document, use it (package.json format).
+		//    If the feature config property value is "dynamic" perform a backend call to retrieve the configuration.
+		// 3. If root config is defined on the document, use it (config.json format - backwards compatibility)
+		// 4. Use default package.json in the current directory (package.json format)
+		var oFeatureAndURIPromise;
+		var bBuildFeatureMetadata = true;
+		var bAddRootFeature = !bSkipAddRootForNonDynamicConfig;
+		if (vFeatureConfig) {
+			if (typeof vFeatureConfig === "string") {
+				oFeatureAndURIPromise = getJsonAndURI(vFeatureConfig);
+			} else {
+				oFeatureAndURIPromise = Q({
+					json: vFeatureConfig,
+					uri: vFeatureConfig.baseURI || undefined
+				});
+			}
+		} else {
+			var sRootFeatureConfigFromEnv = getRootFeatureConfigURIFromEnv();
+			// Backwards compatibility for root config.json - used in tests
+			var sRootConfigFromEnv = getRootConfigURIFromEnv();
+
+			if (sRootConfigFromEnv && !sRootFeatureConfigFromEnv) {
+				bAddRootFeature = false;
+				oFeatureAndURIPromise = Q({
+					json: createRootFeatureWithConfigInclude(sRootConfigFromEnv),
+					uri: sRootConfigFromEnv
+				});
+			} else {
+				if (sRootConfigFromEnv) {
+					console.warn("Only one of root config and root feature config can be used. Using root feature config.");
+				}
+
+				if (sRootFeatureConfigFromEnv === ROOT_FEATURE_CONFIG_FROM_BACKEND) {
+					bAddRootFeature = false;
+					bBuildFeatureMetadata = false;
+				}
+
+				var sBaseURI = getRootFeatureConfigURI(sRootFeatureConfigFromEnv);
+				oFeatureAndURIPromise = getJsonAndURI(sBaseURI);
+			}
+		}
+
+		if (bBuildFeatureMetadata) {
+			oFeatureAndURIPromise = oFeatureAndURIPromise.then(function(oFeatureAndURI) {
+				return buildMetadataAsJsonObject(oFeatureAndURI.json, oFeatureAndURI.uri).then(function() {
+					return oFeatureAndURI;
+				});
+			});
+		}
+
+		if (bAddRootFeature) {
+			oFeatureAndURIPromise = oFeatureAndURIPromise.then(function(oFeatureAndURI) {
+				oFeatureAndURI.json = createRootFeatureWithBundledFeature(oFeatureAndURI.json);
+				return oFeatureAndURI;
+			});
+		}
+
+		var oFeaturePromise = oFeatureAndURIPromise.then(function(oFeatureAndURI) {
+			return oFeatureAndURI.json;
+		});
+
+		return oFeaturePromise;
+	}
+
+	function isFeatureEnabled(oUserEnabledFeaturesConfig, oFeature, bIncludeEnabledByDefault) {
+		if (sOptionalFeaturesLoadMode === OPTIONAL_FEATURES_LOAD_MODES.ALL) {
+			return true;
+		} else if (sOptionalFeaturesLoadMode === OPTIONAL_FEATURES_LOAD_MODES.NONE) {
+			return false;
+		} else if (sOptionalFeaturesLoadMode === OPTIONAL_FEATURES_LOAD_MODES.DEFAULT) {
+			return bIncludeEnabledByDefault && oFeature.enabledByDefault;
+		}
+		// Check if the feature is enabled based on the user preferences
+		var bFeatureEnabled = false;
+		if (bIncludeEnabledByDefault && oFeature.enabledByDefault) {
+			bFeatureEnabled = true;
+		}
+		if (!oUserEnabledFeaturesConfig) {
+			return bFeatureEnabled;
+		}
+		if (oUserEnabledFeaturesConfig.enabledFeatures &&
+			_.indexOf(oUserEnabledFeaturesConfig.enabledFeatures, oFeature.name) !== -1) {
+			bFeatureEnabled = true;
+		} else if (oUserEnabledFeaturesConfig.disabledFeatures &&
+			_.indexOf(oUserEnabledFeaturesConfig.disabledFeatures, oFeature.name) !== -1) {
+			bFeatureEnabled = false;
+		}
+		return bFeatureEnabled;
+	}
+
+	function setOptionalFeaturesLoadMode(sNewLoadMode) {
+		switch (sNewLoadMode) {
+			case OPTIONAL_FEATURES_LOAD_MODES.ALL:
+			case OPTIONAL_FEATURES_LOAD_MODES.NONE:
+			case OPTIONAL_FEATURES_LOAD_MODES.DEFAULT:
+				sOptionalFeaturesLoadMode = sNewLoadMode;
+				break;
+			default:
+				sOptionalFeaturesLoadMode = OPTIONAL_FEATURES_LOAD_MODES.USER_PREFERENCE;
+				break;
+
+		}
+	}
+
+	function setOptionalDFeaturesLoadModeFromURLParameter() {
+		setOptionalFeaturesLoadMode(sap.watt.getURLParameter("sap-ide-features"));
+	}
+
+	/**
+	 * Feature Configuration service
+	 */
+	var FeatureConfig = {
+
+		getRootFeatureConfig: function(vFeatureConfig) {
+			if (!vFeatureConfig) {
+				return Q(_.cloneDeep(_oRootFeatureConfig));
+			} else {
+				return buildFeature(vFeatureConfig);
+			}
+		},
+
+		load: function (vFeatureConfig, oInvalidPluginInfo, bSkipAddRootForNonDynamicConfig) {
+			// In case it was already set (from URL or explicitly), don't set it again
+			if (typeof (sOptionalFeaturesLoadMode) === "undefined") {
+				setOptionalDFeaturesLoadModeFromURLParameter();
+			}
+			var oFeaturePromise = buildFeature(vFeatureConfig, bSkipAddRootForNonDynamicConfig);
+			return getPluginsAndLoadFeature(oFeaturePromise, oInvalidPluginInfo);
+		},
+
+		loadAsRootFeature: function(vFeatureConfig, oInvalidPluginInfo) {
+			return this.load(vFeatureConfig, oInvalidPluginInfo, true);
+		},
+
+		isFeatureEnabled: function(oFeature, bIncludeEnabledByDefault) {
+			return Q(isFeatureEnabled(_oUserEnabledFeaturesConfig, oFeature, bIncludeEnabledByDefault));
+		},
+
+		areFeaturesLoadedFromUserPreferences: function() {
+			return sOptionalFeaturesLoadMode === OPTIONAL_FEATURES_LOAD_MODES.USER_PREFERENCE;
+		},
+
+		getOptionalFeaturesLoadMode: function () {
+			return sOptionalFeaturesLoadMode;
+		},
+
+		setOptionalFeaturesLoadMode: function (sNewLoadMode) {
+			setOptionalFeaturesLoadMode(sNewLoadMode);
+		}
+	};
+
+	return FeatureConfig;
+});

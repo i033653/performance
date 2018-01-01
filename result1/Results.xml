@@ -1,0 +1,933 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE Report
+[
+<!ELEMENT Report (General ,(Doc|BPT)) >
+<!ATTLIST Report ver CDATA #REQUIRED tmZone CDATA #REQUIRED>
+
+<!ELEMENT General ( DocLocation ) >
+<!ATTLIST General productName CDATA #REQUIRED productVer CDATA #REQUIRED os CDATA #REQUIRED host CDATA #REQUIRED qcserver CDATA #IMPLIED qcproject CDATA #IMPLIED SolManSolutionId CDATA #IMPLIED SolManProjectId CDATA #IMPLIED SolManTestPlanId CDATA #IMPLIED SolManTestPackageId CDATA #IMPLIED SolManUserInfoData CDATA #IMPLIED  >
+
+<!ELEMENT BPT (DName,Res,DVer?,TSet?,TInst?,NodeArgs,AdditionalInfo*,Doc*) >
+<!ATTLIST BPT rID ID #REQUIRED >
+
+<!ELEMENT Doc (DName,ConfName?,Res,DVer?,TSet?,TInst?,RunType?,DT?,AdditionalInfo*,Step*,DIter*,Step*,Action*,Doc*,Summary?,TestMaintenanceSummary*,NodeArgs?) >
+<!ATTLIST Doc rID ID #REQUIRED type (Test|BC|BPTWrapperTest|Flow|Group|Action) "Test" productName CDATA #REQUIRED BCIter CDATA #IMPLIED >
+
+<!ELEMENT RunType ( #PCDATA )>
+<!ATTLIST RunType fmStep (False|True) "False" batch (False|True) "False" upDesc (False|True) "False" upChk (False|True) "False" upAS (False|True) "False">
+
+<!ELEMENT DName ( #PCDATA ) >
+
+<!ELEMENT ConfName ( #PCDATA ) >
+
+<!ELEMENT Res ( #PCDATA ) >
+
+<!ELEMENT AdditionalInfo (AdditionalDataName,AdditionalDataValue ) >
+
+<!ELEMENT AdditionalDataName ( #PCDATA ) >
+
+<!ELEMENT AdditionalDataValue ( #PCDATA ) >
+
+<!ELEMENT DVer ( #PCDATA ) >
+
+<!ELEMENT TSet ( #PCDATA ) >
+
+<!ELEMENT TInst ( #PCDATA ) >
+
+<!ELEMENT DIter (Step*,Action+,Summary?,NodeArgs)>
+<!ATTLIST DIter rID ID #REQUIRED iterID CDATA #REQUIRED>
+
+<!ELEMENT DocLocation ( #PCDATA )>
+
+<!ELEMENT Action (AName,AIter*,(Step|HtmlStep|Action)*, Summary,ActionMaintenanceSummary*, NodeArgs ) >
+<!ATTLIST Action rID ID #REQUIRED>
+
+<!ELEMENT AIter ((Step|HtmlStep|Action)*,DataMapping?, Summary?,NodeArgs) >
+<!ATTLIST AIter rID ID #REQUIRED iterID CDATA #REQUIRED isCountable (False|True) "False" >
+
+<!ELEMENT AName ( #PCDATA ) >
+
+<!ELEMENT TestMaintenanceSummary (ActionMaintenanceSummary*) >
+<!ATTLIST TestMaintenanceSummary ObjectsAdded CDATA #REQUIRED ObjectsUpdated CDATA #REQUIRED StepsUpdated CDATA #REQUIRED StepsComments CDATA #REQUIRED><!ELEMENT ActionMaintenanceSummary (ObjectChange* ) >
+<!ATTLIST ActionMaintenanceSummary Action CDATA #REQUIRED Objects CDATA #REQUIRED Updated CDATA #REQUIRED LinesTotal CDATA #REQUIRED Added CDATA #REQUIRED LinesUpdated CDATA #REQUIRED>
+
+<!ELEMENT ObjectChange  (Hierarchy, PropertyChangeList* ) >
+<!ATTLIST ObjectChange Operation CDATA #IMPLIED OriginalRepository CDATA #IMPLIED>
+
+<!ELEMENT PropertyChangeList (PropertyDef*) >
+
+<!ELEMENT PropertyDef (OriginalValue, NewValue) >
+<!ATTLIST PropertyDef PropName CDATA #REQUIRED OriginRegularExpression (True|False) "False" NewRegularExpression (True|False) "False" AddedProperty (True|False) "False" >
+
+<!ELEMENT OriginalValue ( #PCDATA )>
+
+<!ELEMENT NewValue ( #PCDATA )>
+
+<!ELEMENT Hierarchy  (ObjectName, Hierarchy*) >
+<!ATTLIST Hierarchy MicClass CDATA #REQUIRED>
+
+<!ELEMENT ObjectName  ( #PCDATA ) >
+
+<!ELEMENT Step (Obj,Details,Time,TimeTick* ,(Step|HtmlStep|Doc)*, DataMapping?, NodeArgs) >
+<!ATTLIST Step rID ID #REQUIRED retval CDATA #IMPLIED>
+
+<!ELEMENT HtmlStep (HTML,TimeTick*,(Step|HtmlStep|Doc)*,NodeArgs) >
+<!ATTLIST HtmlStep rID ID #REQUIRED >
+
+<!ELEMENT Obj ( #PCDATA ) >
+<!ATTLIST Obj plainTxt (False|True) "True">
+
+<!ELEMENT Details ( #PCDATA ) >
+<!ATTLIST Details plainTxt (False|True) "True">
+
+<!ELEMENT Time ( #PCDATA ) >
+
+<!ELEMENT HTML ( #PCDATA ) >
+
+<!ELEMENT Disp ( #PCDATA ) >
+
+<!ELEMENT TimeTick ( #PCDATA ) >
+
+<!ELEMENT DataMapping ( DataMappedItem* )>
+<!ELEMENT DataMappedItem EMPTY >
+<!ATTLIST DataMappedItem dsName CDATA #REQUIRED >
+<!ATTLIST DataMappedItem rowId CDATA #REQUIRED >
+
+<!ELEMENT NodeArgs (Disp,TopPane?,BtmPane?,ExtendedInfo? )>
+<!ATTLIST NodeArgs eType CDATA #REQUIRED icon CDATA #REQUIRED nRep CDATA #REQUIRED UserNote CDATA #IMPLIED filter (False|True) "True">
+<!ATTLIST NodeArgs status (Passed|Failed|Done|Warning|Information) "Done">
+<!ATTLIST NodeArgs iconSel CDATA #IMPLIED nType CDATA #IMPLIED MovieMarker CDATA "">
+<!ATTLIST NodeArgs Source CDATA #IMPLIED SourceLine CDATA #IMPLIED StepFlowItemKey CDATA #IMPLIED >
+
+<!ELEMENT TopPane (Path)>
+
+<!ELEMENT BtmPane ( (Path|WR)?,ASHilite?)>
+<!ATTLIST BtmPane vType CDATA "HTML">
+
+<!ELEMENT Path ( #PCDATA ) >
+
+<!ELEMENT ASHilite ( #PCDATA ) >
+
+<!ELEMENT WR ( #PCDATA ) >
+
+<!ELEMENT ExtendedInfo ( StepData ) >
+
+<!ATTLIST ExtendedInfo StepType CDATA #REQUIRED>
+<!ELEMENT DT (NodeArgs) >
+<!ATTLIST DT rID ID #REQUIRED>
+
+<!ELEMENT Summary (Param*)>
+<!ATTLIST Summary sTime CDATA #IMPLIED eTime CDATA #IMPLIED passed CDATA #IMPLIED failed CDATA #IMPLIED warnings CDATA #IMPLIED retval CDATA #IMPLIED stopped (False|True) "False" >
+
+<!ELEMENT Param (ParamName,ParamVal)+ >
+<!ATTLIST Param paramInOut (In|Out) "In">
+
+<!ELEMENT ParamName ( #PCDATA ) >
+
+<!ELEMENT ParamVal ( #PCDATA ) >
+
+]
+>
+<Report ver="2.0" tmZone="Jerusalem Standard Time">
+<General productName="Vugen" productVer="12" os="" host="TLVV60215669H"><DocLocation><![CDATA[C:\Users\nwperf.PERFLAB\Desktop\LSP\LSP_script]]></DocLocation></General>
+<Doc rID="T1"   productName= "Vugen"  >
+<DName><![CDATA[LSP]]></DName>
+<Res><![CDATA[result1]]></Res>
+<Action rID="T2">
+<AName><![CDATA[Authenticate_Di]]></AName>
+<Step rID="T3">
+<Obj plainTxt="False" ><![CDATA[Service: Set Sockets Option]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Set socket option <STRONG><FONT COLOR=#00AF00>SSL_VERSION</FONT></STRONG> with value <STRONG><FONT COLOR=#00AF00>TLS</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:53]]></Time>
+<TimeTick>1514107613</TimeTick>
+<NodeArgs eType="General" icon="3" nRep="6" >
+<Disp><![CDATA[Service: Set Sockets Option]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T4">
+<Obj plainTxt="False" ><![CDATA[Service: Set Max Html Param Len]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Maximum length of a HTML string that can be retrieved and saved set to <STRONG><FONT COLOR=#00AF00>50000</FONT></STRONG> characters</CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:53]]></Time>
+<TimeTick>1514107613</TimeTick>
+<NodeArgs eType="General" icon="4" nRep="7" >
+<Disp><![CDATA[Service: Set Max Html Param Len]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T5">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param RegExp]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName = <STRONG><FONT COLOR=#00AF00>CorrelationParameter</FONT></STRONG><BR>RegExp = <STRONG><FONT COLOR=#00AF00>name="SAMLRequest"\ value="(.*?)"/><input\ type</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>[param not passed in call]</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:53]]></Time>
+<TimeTick>1514107613</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="8" >
+<Disp><![CDATA[Service: Reg Save Param RegExp]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T6">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param RegExp]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName = <STRONG><FONT COLOR=#00AF00>CorrelationParameter_1</FONT></STRONG><BR>RegExp = <STRONG><FONT COLOR=#00AF00>url\.length\)\{var\ anchorCookie='(.*?)_anchor</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>[param not passed in call]</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:53]]></Time>
+<TimeTick>1514107613</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="9" >
+<Disp><![CDATA[Service: Reg Save Param RegExp]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T7">
+<Obj plainTxt="False" ><![CDATA[Url: {URL}]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Step completed successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="10" status="Passed" >
+<Disp><![CDATA[Url: {URL}]]></Disp>
+<BtmPane vType="HTMLSNSH" >
+<Path><![CDATA[\Iteration1\t3.inf]]></Path>
+</BtmPane>
+</NodeArgs>
+</Step>
+<Step rID="T8">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>SAMLRequest_2</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB="SAMLRequest" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="11" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T9">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>RelayState_2</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB="RelayState" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="12" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T10">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>initial_post_parameters</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=sap.com/initial_post_parameters" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="13" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T11">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>j_salt</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=j_salt" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="14" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T12">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>IDP_Response</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB=</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="15" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T13">
+<Obj plainTxt="False" ><![CDATA[Submit Data: submit user to ilperf125]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Step completed successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="7" nRep="16" status="Passed" >
+<Disp><![CDATA[Submit Data: submit user to ilperf125]]></Disp>
+<BtmPane vType="HTMLSNSH" >
+<Path><![CDATA[\Iteration1\t4.inf]]></Path>
+</BtmPane>
+</NodeArgs>
+</Step>
+<Step rID="T14">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>SAMLResponse</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB="SAMLResponse" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="17" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T15">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>RelayState_3</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB="RelayState" value="</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00>Ord=1</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="18" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T16">
+<Obj plainTxt="False" ><![CDATA[Submit Data: submit user to ilperf125]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Step completed successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:55]]></Time>
+<TimeTick>1514107615</TimeTick>
+<NodeArgs eType="General" icon="7" nRep="19" status="Passed" >
+<Disp><![CDATA[Submit Data: submit user to ilperf125]]></Disp>
+<BtmPane vType="HTMLSNSH" >
+<Path><![CDATA[\Iteration1\t5.inf]]></Path>
+</BtmPane>
+</NodeArgs>
+</Step>
+<Step rID="T17">
+<Obj plainTxt="False" ><![CDATA[Submit Form: test]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Step completed successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="8" nRep="20" status="Passed" >
+<Disp><![CDATA[Submit Form: test]]></Disp>
+<BtmPane vType="HTMLSNSH" >
+<Path><![CDATA[\Iteration1\t6.inf]]></Path>
+</BtmPane>
+</NodeArgs>
+</Step>
+<Step rID="T18">
+<Obj plainTxt="False" ><![CDATA[Service: Add Header]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Add the following header to the next HTTP request :<BR><STRONG><FONT COLOR=#00AF00>X-CSRF-Token: Fetch</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="9" nRep="21" >
+<Disp><![CDATA[Service: Add Header]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T19">
+<Obj plainTxt="False" ><![CDATA[Service: Save Header]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Start saving response headers into parameter: <STRONG><FONT COLOR=#00AF00>response header</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="3" nRep="22" >
+<Disp><![CDATA[Service: Save Header]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T20">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>TOKEN</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=X-CSRF-Token: </FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB=</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="23" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T21">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>WORKSPACE</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB="id":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="}</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="24" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T22">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>GetWorkspaceResponse</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB=</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="25" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T23">
+<Obj plainTxt="False" ><![CDATA[Url: get workspace]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="26" status="Passed" >
+<Disp><![CDATA[Url: get workspace]]></Disp>
+</NodeArgs>
+</Step>
+<Summary sTime="24/12/2017 - 11:26:53" eTime="24/12/2017 - 11:26:56" passed="5" failed="0" warnings="0" ></Summary>
+<NodeArgs eType="StartAction" icon="2" nRep="5" status="Passed" >
+<Disp><![CDATA[Authenticate_Di Summary]]></Disp>
+</NodeArgs>
+</Action>
+<DIter rID="T24" iterID="1" >
+<Action rID="T25">
+<AName><![CDATA[LSP_Start]]></AName>
+<Step rID="T26">
+<Obj plainTxt="False" ><![CDATA[Service: Add Header]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Add the following header to the next HTTP request :<BR><STRONG><FONT COLOR=#00AF00>X-CSRF-Token: D8F4F7C5063C0794F3391D6A340518EF</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="9" nRep="30" >
+<Disp><![CDATA[Service: Add Header]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T27">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="31" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T28">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=Language server start triggered</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:56]]></Time>
+<TimeTick>1514107616</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="32" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T29">
+<Obj plainTxt="False" ><![CDATA[Custom Request: start]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:57]]></Time>
+<TimeTick>1514107617</TimeTick>
+<NodeArgs eType="General" icon="12" nRep="33" status="Passed" >
+<Disp><![CDATA[Custom Request: start]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T30">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:57]]></Time>
+<TimeTick>1514107617</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="34" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T31">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:57]]></Time>
+<TimeTick>1514107617</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="35" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T32">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:57]]></Time>
+<TimeTick>1514107617</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="36" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T33">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:59]]></Time>
+<TimeTick>1514107619</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="37" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T34">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:59]]></Time>
+<TimeTick>1514107619</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="38" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T35">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:26:59]]></Time>
+<TimeTick>1514107619</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="39" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T36">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:01]]></Time>
+<TimeTick>1514107621</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="40" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T37">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:01]]></Time>
+<TimeTick>1514107621</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="41" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T38">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:01]]></Time>
+<TimeTick>1514107621</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="42" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T39">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:03]]></Time>
+<TimeTick>1514107623</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="43" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T40">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:03]]></Time>
+<TimeTick>1514107623</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="44" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T41">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:03]]></Time>
+<TimeTick>1514107623</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="45" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T42">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:05]]></Time>
+<TimeTick>1514107625</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="46" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T43">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:05]]></Time>
+<TimeTick>1514107625</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="47" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T44">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:05]]></Time>
+<TimeTick>1514107625</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="48" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T45">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:07]]></Time>
+<TimeTick>1514107627</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="49" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T46">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:07]]></Time>
+<TimeTick>1514107627</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="50" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T47">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:07]]></Time>
+<TimeTick>1514107627</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="51" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T48">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:09]]></Time>
+<TimeTick>1514107629</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="52" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T49">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:09]]></Time>
+<TimeTick>1514107629</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="53" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T50">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:09]]></Time>
+<TimeTick>1514107629</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="54" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T51">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:11]]></Time>
+<TimeTick>1514107631</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="55" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T52">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:11]]></Time>
+<TimeTick>1514107631</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="56" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T53">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:12]]></Time>
+<TimeTick>1514107632</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="57" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T54">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:14]]></Time>
+<TimeTick>1514107634</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="58" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T55">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:14]]></Time>
+<TimeTick>1514107634</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="59" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T56">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:14]]></Time>
+<TimeTick>1514107634</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="60" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T57">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:16]]></Time>
+<TimeTick>1514107636</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="61" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T58">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:16]]></Time>
+<TimeTick>1514107636</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="62" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T59">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:16]]></Time>
+<TimeTick>1514107636</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="63" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T60">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:18]]></Time>
+<TimeTick>1514107638</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="64" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T61">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:18]]></Time>
+<TimeTick>1514107638</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="65" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T62">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:18]]></Time>
+<TimeTick>1514107638</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="66" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T63">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:20]]></Time>
+<TimeTick>1514107640</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="67" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T64">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:20]]></Time>
+<TimeTick>1514107640</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="68" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T65">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:20]]></Time>
+<TimeTick>1514107640</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="69" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T66">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:22]]></Time>
+<TimeTick>1514107642</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="70" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T67">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:22]]></Time>
+<TimeTick>1514107642</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="71" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T68">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:22]]></Time>
+<TimeTick>1514107642</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="72" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T69">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:24]]></Time>
+<TimeTick>1514107644</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="73" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T70">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:24]]></Time>
+<TimeTick>1514107644</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="74" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T71">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:24]]></Time>
+<TimeTick>1514107644</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="75" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T72">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:26]]></Time>
+<TimeTick>1514107646</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="76" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T73">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:26]]></Time>
+<TimeTick>1514107646</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="77" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T74">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:26]]></Time>
+<TimeTick>1514107646</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="78" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T75">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:28]]></Time>
+<TimeTick>1514107648</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="79" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T76">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:28]]></Time>
+<TimeTick>1514107648</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="80" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T77">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:29]]></Time>
+<TimeTick>1514107649</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="81" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T78">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_START_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00>LB=status":"</FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00>RB="</FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:31]]></Time>
+<TimeTick>1514107651</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="82" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T79">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:31]]></Time>
+<TimeTick>1514107651</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="83" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T80">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:31]]></Time>
+<TimeTick>1514107651</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="84" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Summary sTime="24/12/2017 - 11:26:56" eTime="24/12/2017 - 11:27:33" passed="18" failed="0" warnings="0" ></Summary>
+<NodeArgs eType="StartAction" icon="2" nRep="29" status="Passed" >
+<Disp><![CDATA[LSP_Start Summary]]></Disp>
+</NodeArgs>
+</Action>
+<Action rID="T81">
+<AName><![CDATA[LSP_delete]]></AName>
+<Step rID="T82">
+<Obj plainTxt="False" ><![CDATA[Service: Add Header]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>Add the following header to the next HTTP request :<BR><STRONG><FONT COLOR=#00AF00>X-CSRF-Token: D8F4F7C5063C0794F3391D6A340518EF</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:33]]></Time>
+<TimeTick>1514107653</TimeTick>
+<NodeArgs eType="General" icon="9" nRep="87" >
+<Disp><![CDATA[Service: Add Header]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T83">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:33]]></Time>
+<TimeTick>1514107653</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="88" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T84">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=Language server deleted</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:33]]></Time>
+<TimeTick>1514107653</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="89" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T85">
+<Obj plainTxt="False" ><![CDATA[Custom Request: delete]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:35]]></Time>
+<TimeTick>1514107655</TimeTick>
+<NodeArgs eType="General" icon="12" nRep="90" status="Passed" >
+<Disp><![CDATA[Custom Request: delete]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T86">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Save Param]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER>ParamName =<STRONG><FONT COLOR=#00AF00>LSP_STATUS</FONT></STRONG><BR>Left Boundary = <STRONG><FONT COLOR=#00AF00></FONT></STRONG><BR>Right Boundary = <STRONG><FONT COLOR=#00AF00></FONT></STRONG><BR>Instance = <STRONG><FONT COLOR=#00AF00></FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:35]]></Time>
+<TimeTick>1514107655</TimeTick>
+<NodeArgs eType="General" icon="5" nRep="91" >
+<Disp><![CDATA[Service: Reg Save Param]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T87">
+<Obj plainTxt="False" ><![CDATA[Service: Reg Find]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#00AF00>Text=200</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:35]]></Time>
+<TimeTick>1514107655</TimeTick>
+<NodeArgs eType="General" icon="11" nRep="92" >
+<Disp><![CDATA[Service: Reg Find]]></Disp>
+</NodeArgs>
+</Step>
+<Step rID="T88">
+<Obj plainTxt="False" ><![CDATA[Url: Poll Task]]></Obj>
+<Details plainTxt="False" ><![CDATA[<CENTER><STRONG><FONT COLOR=#009A63>Resource of content type ""DummyContentType"" loaded successfully</FONT></STRONG></CENTER>]]></Details>
+<Time><![CDATA[24/12/2017 - 11:27:35]]></Time>
+<TimeTick>1514107655</TimeTick>
+<NodeArgs eType="General" icon="6" nRep="93" status="Passed" >
+<Disp><![CDATA[Url: Poll Task]]></Disp>
+</NodeArgs>
+</Step>
+<Summary sTime="24/12/2017 - 11:27:33" eTime="24/12/2017 - 11:27:37" passed="2" failed="0" warnings="0" ></Summary>
+<NodeArgs eType="StartAction" icon="2" nRep="86" status="Passed" >
+<Disp><![CDATA[LSP_delete Summary]]></Disp>
+</NodeArgs>
+</Action>
+<NodeArgs eType="StartIteration" icon="10" nRep="28" status="Passed" >
+<Disp><![CDATA[LSP Iteration 1 (Row 1)]]></Disp>
+</NodeArgs>
+</DIter>
+<Action rID="T89">
+<AName><![CDATA[vuser_end]]></AName>
+<Summary sTime="24/12/2017 - 11:27:37" eTime="24/12/2017 - 11:27:37" passed="0" failed="0" warnings="0" ></Summary>
+<NodeArgs eType="StartAction" icon="2" nRep="96" >
+<Disp><![CDATA[vuser_end Summary]]></Disp>
+</NodeArgs>
+</Action>
+<Summary sTime="24/12/2017 - 11:26:53" eTime="24/12/2017 - 11:27:37" passed="25" failed="0" warnings="0" ></Summary>
+<NodeArgs eType="StartTest" icon="1" nRep="4" status="Passed" >
+<Disp><![CDATA[Test LSP Summary]]></Disp>
+</NodeArgs>
+</Doc>
+</Report>

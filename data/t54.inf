@@ -1,0 +1,17 @@
+[t54]
+FileName1=t54.html
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/di/profile/prefs
+Total=4
+RequestHeaderFile=t54_RequestHeader.txt
+RequestBodyFile=t54_RequestBody.txt
+ResponseHeaderFile=t54_ResponseHeader.txt
+ContentType=application/json
+SnapshotXmlFile=snapshot_54.xml
+FileName2=t54_log.txt
+URL2=https://trackerexta90daed17.hana.ondemand.com/tracker/log?e_c=ide_UiPartToggleState&e_a=console%20true&idsite=7a7ab2fe-3cf9-4eab-892a-9dc80cad0ca5&rec=1&r=472298&h=14&m=7&s=13&url=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&urlref=https%3A%2F%2Fdiperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com%2F&_id=7cd32b5af1ea91a2&_idts=1506423901&_idvc=1&_idn=0&_refts=1506423901&_viewts=1506423901&_ref=http%3A%2F%2F10.26.156.125%3A50000%2Fsaml2%2Fidp%2Fsso&send_image=0&pdf=1&qt=0&realp=0&wma=0&dir=0&fla=0&java=0&gears=0&ag=0&cookie=1&res=1630x983&gt_ms=88&timezone=-180&locale=en-US&pageTitle=SAP+Web+IDE&pageWidth=787&pageHeight=877&custom1=Perspective&custom2=USAGE&custom3=NONE_SAP&custom4=&custom5=&custom6=171012&custom7=CANARY&custom8=&custom9=&custom10=wf1f52214&custom11=&event_type=custom&element_type=event
+FileName3=t54_splitter_horiz_grip.gif
+URL3=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/ui/commons/themes/base/img/splitter/splitter_horiz_grip.gif
+FileName4=t54_checkerboard.png
+URL4=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/ui/commons/themes/base/img/splitter/checkerboard.png
+[ProtocolInfo]
+ProtocolId=QTWeb

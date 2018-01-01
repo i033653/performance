@@ -1,0 +1,14 @@
+define(function() {
+	"use strict";
+	return {
+		getView: function() {
+			return this.context.service.tipsandtricksviewsfactory.buildShortcutView(
+				"sap.watt.platform.quickaccess.SimpleTipView.QuickAccessUsageTip",
+				"sap.watt.platform.quickaccess/img/quick-access.gif",
+				this.context.i18n.getText("quickAccessDialog_title"),
+				["quickaccess.quickAccessDialog"],
+				this.context.i18n.getText("quick_access_tip_text")
+			);
+		}
+	};
+});

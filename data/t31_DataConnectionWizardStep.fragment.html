@@ -1,0 +1,227 @@
+sap.ui
+	.jsfragment(
+	"sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.view.DataConnectionWizardStep", {
+
+		createContent: function(oController) {
+			var that = this;
+			var oDataConnectionsGrid = new sap.ui.layout.Grid({
+				vSpacing: 0,
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12"
+				})
+			});
+
+            var oIfNoDestinationExistsText = new sap.ui.commons.TextView({
+                text: "{i18n>dataConnectionWizardStep_IfNoDestinationExistsText}"
+            });
+
+            var oLink = new sap.ui.commons.Link({
+                text: "{i18n>dataConnectionWizardStep_configureDestinationLink}",
+                press: [oController._onConfigureDestinationsPress, oController]
+            }).addStyleClass("createDestText");
+
+			var oHorizontalLayout = new sap.ui.layout.HorizontalLayout({
+				id: "CreateDestinationsLayout",
+				visible: false,
+				content: [oIfNoDestinationExistsText, oLink],
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12"
+				})
+			});
+
+			oDataConnectionsGrid.addContent(oHorizontalLayout);
+			
+
+            var oSourcesGrid = new sap.ui.layout.Grid({
+				vSpacing: 0,
+				layoutData: new sap.ui.layout.GridData({
+					span: "L2 M2 S2"
+				})
+            });
+
+			var oSourcesLabel = new sap.ui.commons.Label({
+				text: "{i18n>dataConnectionWizardStep_oSourcesLabel}",
+				textAligh: "Left",
+				width: "100%",
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12"
+				})
+			}).addStyleClass("serviceCatalogHeaderLabel");
+
+			var oServiceCatalogListItem = new sap.ui.core.ListItem({
+				key: 0,
+				text:"{i18n>dataConnectionWizardStep_service_catalog}"
+			});
+			var oMTAServiceCatalogListItem = new sap.ui.core.ListItem({
+				key: 1,
+				text:"{i18n>dataConnectionWizardStep_MTA_service_catalog}"
+			});
+
+			var oRepositoryBrowserListItem = new sap.ui.core.ListItem({
+				text: "{i18n>dataConnectionWizardStep_repository_browser}",
+				width: "100%",
+				key: 2
+			});
+
+			var oFileSystemListItem = new sap.ui.core.ListItem({
+				text: "{i18n>dataConnectionWizardStep_file_system}",
+				width: "100%",
+				key: 3
+			});
+
+			var oPasteURLListItem = new sap.ui.core.ListItem({
+				text: "{i18n>dataConnectionWizardStep_paste_URL}",
+				width: "100%",
+				key: 4
+			});
+
+            var oApiHubListItem = new sap.ui.core.ListItem({
+                text: "{i18n>dataConnectionWizardStep_API_HUB}",
+                width: "100%",
+                key: 5
+            });
+
+			var aSourceItems = [oServiceCatalogListItem,oMTAServiceCatalogListItem,oRepositoryBrowserListItem, oFileSystemListItem,oPasteURLListItem,oApiHubListItem];
+
+			var oSelectorListBox = sap.ui.getCore().byId("DataConnectionListBox");
+			if (oSelectorListBox) {
+				oSelectorListBox.destroy();
+			}
+
+			var oSelectorListBox = new sap.ui.commons.ListBox("DataConnectionListBox", {
+				width: "100%",
+				select: [oController._onDataConnectionSelect, oController],
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12",
+					linebreak: true
+				}),
+				items: aSourceItems
+			});
+
+			oSourcesGrid.addContent(oSourcesLabel);
+			oSourcesGrid.addContent(oSelectorListBox);
+
+			oDataConnectionsGrid.addContent(oSourcesGrid);
+
+            var oServiceInfoAndDetailsGrid = new sap.ui.layout.Grid("ServiceInfoAndDetailsGrid",{
+				vSpacing: 0,
+				layoutData: new sap.ui.layout.GridData({
+					span: "L10 M10 S10"
+				}),
+				visible: {
+					parts: ["bVisibleServiceInfoAndDetailGrid"],
+					formatter: function(bVisible) {
+						return bVisible;
+					}
+				}
+            });
+
+			var oServiceInformationLabel = new sap.ui.commons.Label({
+				text: "{sServiceInformationLabel}",
+				textAligh: "Left",
+				width: "100%",
+				layoutData: new sap.ui.layout.GridData({
+					span: "L7 M7 S7"
+				})
+			}).addStyleClass("serviceCatalogHeaderLabel");
+			
+
+			var oDetailsLabel = new sap.ui.commons.Label({
+				text: "{i18n>dataConnectionWizardStep_oDetailsLabel}",
+				width: "100%",
+				layoutData: new sap.ui.layout.GridData({
+					span: "L5 M5 S5"
+				}),
+				visible: {
+					parts: ["iDataConnectionSelected", "mSelectionEnum", "bVisibleDetails"],
+					formatter: function(index, mSelectionEnum, bVisible) {
+						return !!mSelectionEnum && (index !== mSelectionEnum.ServiceCatalog) && bVisible;
+					}
+				}
+			}).addStyleClass("serviceCatalogHeaderLabel");
+
+			//Create data section grid
+			var oConnectionMainGrid = new sap.ui.layout.Grid({
+				vSpacing: 0,
+				layoutData: new sap.ui.layout.GridData({
+					span: "L7 M7 S7"
+				})
+			}).addStyleClass("serviceCatalogFileUploaderTextField");
+			
+			//Create details grid
+			var oDetailsGrid = new sap.ui.layout.Grid("DataConnectionWizardStep--detailsGrid",{
+				layoutData: new sap.ui.layout.GridData({
+					span: "L5 M5 S5"
+				})
+			});
+			
+			oServiceInfoAndDetailsGrid.addContent(oServiceInformationLabel);
+			oServiceInfoAndDetailsGrid.addContent(oDetailsLabel);
+			oServiceInfoAndDetailsGrid.addContent(oConnectionMainGrid);
+			oServiceInfoAndDetailsGrid.addContent(oDetailsGrid);
+			
+			oDataConnectionsGrid.addContent(oServiceInfoAndDetailsGrid);
+			
+			this._addServiceCatalogContent(oDataConnectionsGrid, oController);
+			this._addRepositoryBrowserContent(oConnectionMainGrid, oController);
+			this._addFileSystemContent(oConnectionMainGrid, oController);
+		
+			return oDataConnectionsGrid;
+		},
+
+	
+		_addFileSystemContent: function(oGrid, oController) {
+			var oFileUploader = new sap.ui.commons.FileUploader("DataConnectionFileUploader", {
+				value: "{sFileUploaderText}",
+				visible: {
+					parts: ["iDataConnectionSelected", "mSelectionEnum"],
+					formatter: function(index, mSelectionEnum) {
+						return !!mSelectionEnum && index === mSelectionEnum.FileSystem;
+					}
+				},
+				change: [oController._onFileUploaderChange, oController],
+				uploadOnChange: true,
+				width: "100%",
+				sendXHR : true,
+				layoutData: new sap.ui.layout.GridData({
+					span: "L12 M12 S12"
+				})
+			}).addStyleClass("serviceCatalogFileUploader");
+			oGrid.addContent(oFileUploader);
+
+		},
+
+		_addRepositoryBrowserContent: function(oGrid, oController) {
+			var oRepositoryBrowserVisibilityContainer = new sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.ui.VisibilityContainer(
+				"DataConnectionRepositoryBrowserContent", {
+					visible: {
+						parts: ["iDataConnectionSelected", "mSelectionEnum"],
+						formatter: function(index, mSelectionEnum) {
+							return !!mSelectionEnum && index === mSelectionEnum.RepositoryBrowser;
+						}
+					},
+					layoutData: new sap.ui.layout.GridData({
+						span: "L12 M12 S12"
+					})
+				}).addStyleClass("serviceCatalogRepositoryBrowser serviceCatalogStepBottomMargin");
+			oGrid.addContent(oRepositoryBrowserVisibilityContainer);
+
+		},
+
+		_addServiceCatalogContent: function(oGrid, oController) {
+			var oServiceCatalogVisibilityContainer = new sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.ui.VisibilityContainer(
+				"DataConnectionServiceCatalogContent", {
+					visible: {
+						parts: ["iDataConnectionSelected", "mSelectionEnum"],
+						formatter: function(index, mSelectionEnum) {
+							return !!mSelectionEnum && (index === mSelectionEnum.ServiceCatalog || index === mSelectionEnum.PasteURL || index === mSelectionEnum.CurrentProject || index == mSelectionEnum.ApiHub);
+						}
+					},
+					layoutData: new sap.ui.layout.GridData({
+						span: "L10 M10 S10"
+					})
+				});
+			oGrid.addContent(oServiceCatalogVisibilityContainer);
+		}
+
+	});

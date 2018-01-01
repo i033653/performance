@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Cache-Control: private
+Expires: Thu, 01 Jan 1970 00:00:00 UTC
+Date: Sun, 24 Dec 2017 09:27:52 GMT
+Content-Type: application/octet-stream
+Content-Length: 23
+Server: SAP
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+

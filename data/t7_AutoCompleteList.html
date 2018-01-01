@@ -1,0 +1,226 @@
+sap.ui.define([
+	"sap/m/List",
+	"./AutoCompletePopover"
+], function(List, AutoCompletePopover) {
+	"use strict";
+
+	var AutoCompleteList = List.extend("sap.watt.ideplatform.plugin.intellisence.control.AutoCompleteList", {
+		
+		init: function() {
+			List.prototype.init.apply(this, arguments);
+			this._createPopover();
+			this._sPopoverDelayedCallId = undefined;
+			this._sPopoverDelayedCallIdKeyDownUp = undefined;
+			this._bInPopover = false;
+			this._oActiveItem = null;
+			this._oHoveredItem = null;
+			this.attachBrowserEvent("mouseleave", this._onMouseLeave, this);
+		},
+		
+		exit: function() {
+			List.prototype.exit.apply(this, arguments);
+			if (this._oPopover) {
+				this._oPopover.destroy();
+				this._oPopover = null;
+			}
+		},
+
+		onItemMouseEnter: function(oItem) {
+			// Handle multiple mouseenter events on scrolling that causes popover flickering
+			if (this._oHoveredItem === oItem) {
+				return;
+			}
+			this._setActiveItem(oItem);
+			this._oHoveredItem = oItem;
+			jQuery.sap.clearDelayedCall(this._sPopoverDelayedCallId);
+			this._sPopoverDelayedCallId = jQuery.sap.delayedCall(300, this, function() {
+				if (this._oPopover.isOpen()) {
+					this._oPopover.attachEventOnce("afterClose", function() {
+						//Check if item is still hovered
+						if (this._oHoveredItem === oItem) {
+							this._openPopoverForItem(oItem);
+						}
+					}, this);
+					this.closePopover();
+				} else {
+					if (this._oHoveredItem === oItem) {
+						this._openPopoverForItem(oItem);
+					}
+				}
+			});
+		},
+
+		_onMouseLeave: function() {
+			this._oHoveredItem = null;
+			jQuery.sap.clearDelayedCall(this._sPopoverDelayedCallId);
+			jQuery.sap.delayedCall(50, this, function() {
+				// If not inside popover close popover
+				if (!this._bInPopover && this._oPopover.isOpen()) {
+					this.closePopover();
+				}
+			});
+		},
+
+		_createPopover: function() {
+			this._oPopover = new AutoCompletePopover({
+				showHeader: false,
+				placement: sap.m.PlacementType.HorizontalPreferredRight
+			}).addStyleClass("sapUiSizeCompact sapWattIntellisencePopover");
+			
+			// Click inside the popover does not close it
+			this._oPopover.attachBrowserEvent("mouseup", function(oEvent) {
+				oEvent.stopPropagation();
+			});
+			
+			this._oPopover.attachBrowserEvent("mouseenter", function() {
+				this._bInPopover = true;
+			}, this);
+			
+			this._oPopover.attachBrowserEvent("mouseleave", function() {
+				this._bInPopover = false;
+				this._oPopover.close();
+			}, this);
+			
+			this._oPopover.attachBrowserEvent("contextmenu", function(oEvent) {
+				oEvent.preventDefault();
+			});
+		},
+		
+		_openPopoverForItem: function(oItem) {
+			var sTooTipDescription = oItem.getTooltipDescription();
+			if (!sTooTipDescription) {
+				return;
+			}
+			var sHTMLFormattedText = sTooTipDescription.replace(/[{}]/g, "");
+			var oContent = "<span>" + sHTMLFormattedText + "<span>";
+			var oContentHTML = new sap.ui.core.HTML({
+				content: oContent,
+				sanitizeContent: true
+			});
+
+			var oTooltipPanelToolbar = new sap.m.Toolbar({
+				content: [new sap.m.Title({
+					level: sap.ui.core.TitleLevel.H4,
+					titleStyle: sap.ui.core.TitleLevel.H4,
+					text: oItem.getTitle().replace(/[{}]/g, "\\$&")
+				})]
+			});
+
+			var oPanel = new sap.m.Panel({
+				headerToolbar: [oTooltipPanelToolbar],
+				tooltip: oItem.getTitle().replace(/[{}]/g, "\\$&"),
+				width: "500px",
+				height: "220px",
+				content: [oContentHTML],
+				backgroundDesign: sap.m.BackgroundDesign.Transparent
+			});
+
+			var oExternalLink = new sap.m.Link({
+				text: oItem.getLinkDescription(),
+				target: "_blank",
+				href: oItem.getLinkHref()
+			});
+			this._oPopover.removeAllContent();
+			this._oPopover.addContent(oPanel);
+			this._oPopover.setFooter(oExternalLink);
+			this._oPopover.openBy(oItem);
+		},
+		
+		onAfterRendering: function() {
+			var oFirstItem = this.getItems()[0];
+			if (oFirstItem) {
+				this._setActiveItem(oFirstItem);
+			}
+		},
+		
+		_setActiveItem: function(oItem, bScrollToItem) {
+			if (this._oActiveItem === oItem) {
+				return;
+			}
+			
+			oItem.setIsActive(true);
+			if (this._oActiveItem) {
+				this._oActiveItem.setIsActive(false);	
+			}
+			this._oActiveItem = oItem;
+			if (bScrollToItem) {
+				oItem.getDomRef().scrollIntoView(false);
+			}
+		},
+		
+		navigateToNextItem: function() {
+			var iSelectedItemIndex = this.indexOfItem(this._oActiveItem);
+			if (iSelectedItemIndex < this.getItems().length - 1) {
+				this._setActiveItem(this.getItems()[iSelectedItemIndex + 1], true);
+				this._openPopoverForItemFromUpDownKey(this.getItems()[iSelectedItemIndex + 1]);
+			}
+		},
+		
+		navigateToPreviousItem: function() {
+			var iSelectedItemIndex = this.indexOfItem(this._oActiveItem);
+			if (iSelectedItemIndex > 0) {
+				this._setActiveItem(this.getItems()[iSelectedItemIndex - 1], true);
+				this._openPopoverForItemFromUpDownKey(this.getItems()[iSelectedItemIndex - 1]);
+			}
+		},
+
+		_openPopoverForItemFromUpDownKey:function(oItem){
+			jQuery.sap.clearDelayedCall(this._sPopoverDelayedCallIdKeyDownUp);
+			this._sPopoverDelayedCallIdKeyDownUp = jQuery.sap.delayedCall(300, this, function() {
+				if (this._oPopover.isOpen()) {
+					this._oPopover.attachEventOnce("afterClose", function() {
+						this._openPopoverForItem(oItem);
+					}, this);
+					this.closePopover();
+				} else {
+					this._openPopoverForItem(oItem);
+				}
+			});
+	},
+		
+		navigateToNextPage: function() {
+			var iPageSize = Math.round(this.getParent().$().height() / this.getItems()[0].$().height());
+			var iSelectedItemIndex = this.indexOfItem(this._oActiveItem);
+			var iIndexToNavigate = Math.min(iSelectedItemIndex + iPageSize, this.getItems().length - 1);
+			this._setActiveItem(this.getItems()[iIndexToNavigate], true);
+		},
+		
+		navigateToPreviousPage: function() {
+			var iPageSize = Math.round(this.getParent().$().height() / this.getItems()[0].$().height());
+			var iSelectedItemIndex = this.indexOfItem(this._oActiveItem);
+			var iIndexToNavigate = Math.max(iSelectedItemIndex - iPageSize, 0);
+			this._setActiveItem(this.getItems()[iIndexToNavigate], true);
+		},
+		
+		navigateToLastItem: function() {
+			var aItems = this.getItems();
+			var iLastItemIndex = aItems.length - 1;
+			this._setActiveItem(aItems[iLastItemIndex], true);
+		},
+		
+		navigateToFirstItem: function() {
+			this._setActiveItem(this.getItems()[0], true);
+		},
+		
+		destroyItems: function() {
+			List.prototype.destroyItems.apply(this, arguments);
+			this._oActiveItem = null;
+			this._oHoveredItem = null;
+		},
+		
+		getActiveItem: function() {
+			return this._oActiveItem;	
+		},
+
+		closePopover: function() {
+			jQuery.sap.clearDelayedCall(this._sPopoverDelayedCallId);
+			if (this._oPopover.isOpen()) {
+				this._oPopover.close();
+			}
+		},
+		
+		renderer: {}
+	});
+
+	return AutoCompleteList;
+});

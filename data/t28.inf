@@ -1,0 +1,11 @@
+[t28]
+FileName1=t28.htm
+URL1=https://diperf-wf1f52214.dispatcher.int.sap.hana.ondemand.com/resources/~5cfddba6c4c93a9574da8795b231db9795ec15e1~/sap/watt/saptoolsets/fiori/common/plugin/welcomescreenimpl/WhatsNewVideo.html
+Total=1
+RequestHeaderFile=t28_RequestHeader.txt
+RequestBodyFile=NONE
+ResponseHeaderFile=t28_ResponseHeader.txt
+ContentType=text/html
+SnapshotXmlFile=snapshot_28.xml
+[ProtocolInfo]
+ProtocolId=QTWeb

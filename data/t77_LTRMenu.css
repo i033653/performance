@@ -1,0 +1,32 @@
+/* show and align shortcut texts in menu items */
+.WattMenu .sapUiMnuItmSCut {
+  display: inline-table;
+  position: relative;
+  float: right;
+  right: -20px;
+  /* compensate space for submenu disclosure triangles */
+  color: #7a7a7a;
+  font-weight: normal;
+  /* Avoid line breaks in IE if shortcut is empty: http://stackoverflow.com/a/27508184
+  (see ticket 1580096752) */
+  min-height: 1px;
+}
+
+/* float left since right floated shortcut (above) jumps in Firefox */
+.WattMenu .sapUiMnuItmL {
+  float: left;
+}
+
+.WattMenu .sapUiMnuItmTxt {
+  float: left;
+}
+
+/* selected and disabled items: reset colors to UI5 defaults*/
+.WattMenu .sapUiMnuItmHov .sapUiMnuItmSCut {
+  color: #ffffff;
+}
+
+.WattMenu .sapUiMnuItmDsbl .sapUiMnuItmSCut {
+  color: rgba(0, 0, 0, 0.5);
+}
+

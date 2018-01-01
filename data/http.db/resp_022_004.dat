@@ -1,0 +1,18 @@
+define(function () {
+  "use strict";
+
+  var debugPlatform;
+
+  return {
+    initialize: function () {
+      var that = this;
+
+      require(["sap/watt/ideplatform/debug/core/service/DebugPlatform"], function (DebugPlatform) {
+        debugPlatform = DebugPlatform;
+
+        // cache context for further usage
+        debugPlatform.context = that.context;
+      });
+    }
+  };
+});

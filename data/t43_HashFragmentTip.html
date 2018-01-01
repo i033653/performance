@@ -1,0 +1,23 @@
+define([], function() {
+
+	"use strict";
+
+	function _getView() {
+		return this.context.service.tipsandtricksviewsfactory.buildSimpleTipView(
+			"sap.watt.ideplatform.run.SimpleTipView.HashFragment",
+			"sap.watt.ideplatform.run/img/HashFragment.gif",
+			this.context.i18n.getText("hash_fragment_tip_title"),
+			this.context.i18n.getText("hash_fragment_tip_text")
+		);
+	}
+
+	function _isAvailable() {
+		var sServerType = sap.watt.getEnv("server_type");
+		return sServerType !== "xs2";
+	}
+
+	return {
+		getView: _getView,
+		isAvailable: _isAvailable
+	};
+});

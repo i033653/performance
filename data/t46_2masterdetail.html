@@ -1,0 +1,76 @@
+define([], function() {
+	return function() {
+		return {
+			/**
+			 *	SAPUI5 Web IDE templates 1.34
+			 */
+
+			/**
+			 * Applies template logic before generating the template resources in the provided zip file.
+			 *
+			 * This method is executed before passing the model into the template resources,
+			 * and is therefore ideal for model manipulations.
+			 *
+			 * Note that this method is not called for templates that do not include resources.
+			 *
+			 * @param templateZip The zip bundle containing the template resources that are about to be generated,
+			 * as provided by the template.
+			 *
+			 * @param model The template model as passed from the generation wizard based on the user selections.
+			 */
+			onBeforeTemplateGenerate: function(templateZip, model) {
+				// check if the selected destiantion was defined in the cockpit as a "full_url" destination 
+				if (model.connectionData && model.connectionData.destination && model.connectionData.destination.additionalData) {
+					model.isFullUrl = model.connectionData.destination.additionalData.indexOf("full_url") !== -1 ? true : false;
+				}
+				else {
+					model.isFullUrl = false;
+				}
+				
+				// register HandleBars helpers
+				this._registerHandlebarsHelpers(model);
+				
+				return [templateZip, model];
+			},
+
+			_registerHandlebarsHelpers: function(model) {
+				Handlebars.registerHelper('if_eq', function(s1, s2, opts) {
+					if (s1 === s2) {
+						return opts.fn(this);
+					} else {
+						return opts.inverse(this);
+					}
+				});
+			},
+
+			/**
+			 * Applies template logic after generating the template resources according to the template model
+			 * and bundling the generated resources into the provided zip file.
+			 *
+			 * This method is executed after passing the model into the template resources
+			 * but before extracting the generated project zip file to the SAP RDE workspace.
+			 * Therefore, this method is ideal for manipulating the generated project files
+			 * (for example, renaming files according to the template model).
+			 *
+			 * @param projectZip The zip bundle containing all the generated project resources,
+			 * after applying the model parameters on the template resources.
+			 *
+			 * @param model The template model as passed from the generation wizard based on the user selections.
+			 */
+			onAfterGenerate: function(projectZip, model) {
+                var that = this,
+                    aProjectSettings = [
+                        "sap.watt.uitools.ide.fiori"
+                    ];
+                return that.context.service.repositorybrowser.getSelection().then(function(oSelection) {
+					return that.context.service.filesystem.documentProvider.getDocument(oSelection[0].document.getEntity().getFullPath()).then(function(oProjectDocument) {
+						if (oProjectDocument) {
+							that.context.service.projectType.setProjectTypes(oProjectDocument, aProjectSettings).done();
+						}
+						return [projectZip, model];
+                	});
+                });
+			}
+		};
+	};
+});

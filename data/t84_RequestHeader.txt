@@ -1,0 +1,12 @@
+GET /l1.dat?v=3&cv=9.11.14393.0&os=10.0.14393.0.0&pg=4A72F430-B40C-4D36-A068-CE33ADA5ADF9 HTTP/1.1
+Accept: */*
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; Trident/7.0; Touch; rv:11.0) like Gecko
+Host: c.urs.microsoft.com
+Connection: Keep-Alive
+UA-CPU: AMD64
+Accept-Encoding: gzip, deflate, peerdist
+DNT: 1
+Cookie: SRCHD=AF=NOFORM; SRCHUSR=DOB=20170514; MUID=03363BA987E367043FA1312383E36167; optimizelyEndUserId=oeu1495469716696r0.6036088116151879; MC1=GUID=b6f664c96b0e457e817158e8f6ff125b&HASH=b6f6&LV=201705&V=4&LU=1495469720460; MSFPC=ID=b6f664c96b0e457e817158e8f6ff125b&CS=3&LV=201705&V=1; A=I&I=AxUFAAAAAAAxCQAAuFXVH2RBFlJ4uAmiSdnleA!!&V=4
+X-P2P-PeerDist: Version=1.1
+X-P2P-PeerDistEx: MinContentInformation=1.0, MaxContentInformation=2.0
+

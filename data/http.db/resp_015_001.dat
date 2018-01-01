@@ -1,0 +1,449 @@
+var popup = '&nowrapper=2';
+var popupq = '?nowrapper=2';
+
+function AddPopup(url)
+{
+	if(url.indexOf('?') >=0)
+	{
+		return url + popup
+	}
+	return url + popupq;
+}
+
+function OpenCBS(url) {
+	        open("/global/scripts/jump_frame.epx?content=" + url,"CBS","width=575,height=515,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+}
+
+function OpenDemo(url) {
+	        open("/global/scripts/jump_frame.epx?content=" + url,"demo","width=610,height=410,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+}
+
+function OpenOnlineDemo(url) {
+	        open("/global/scripts/jump_frame.epx?content=" + url,"onlinedemo","width=810,height=625,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+}
+	
+function OpenPDF(url,closelabel) {
+	if(!closelabel) closelabel="";
+	        open("/global/scripts/jump_frame.epx?content=" + url + "&CloseLabel=" + closelabel,"pdf","width=610,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes");
+}
+
+function OpenVideo(url) {
+	        open("/global/scripts/jump_frame.epx?content=" + url,"video","width=545,height=420,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+}
+
+function OpenMediaPlayer(url,closelabel,country) {
+	        open("/global/scripts/jump_frame.epx?CloseLabel=" + closelabel + "&country=" + country + "&content=" + url,"video","width=545,height=420,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+}
+
+function OpenSite(url,width,height,closelabel) {
+	if(!closelabel) closelabel="";
+	        open("/global/scripts/jump_frame.epx?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width="+width+",height="+height+",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+}
+
+function OpenSite640(url,closelabel) {
+	var url = unescape(url);
+
+	if(url.indexOf('/mk/get/sap_cfe?') >= 0)
+	{
+		var query = url.substring(url.indexOf('?') + 1);
+		query = query.replace(/PDF_URL1/i, 'collateral');
+		query = query.replace(/Atype/i, 'type');
+		location.replace('/cdrp/index.epx?referrer=' + escape(location.href) + '&' + query);
+	}else{
+		if(!closelabel) closelabel="";
+			open("/global/scripts/jump_frame.epx?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=640,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+	}
+}
+
+function OpenSitePrebooking(url,closelabel,title,country) {
+	if(!closelabel) closelabel="";
+	        open("/global/scripts/jump_frame.epx?pagetitle=" + title + "&country=" + country + "&content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=640,height=480,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+}
+
+
+		function nameParent(newName,url) {
+		window.name = newName;
+	        OpenSite800(url)
+}
+
+function OpenSite800(url,closelabel) {
+	if(!closelabel) closelabel="";
+	        open("/global/scripts/jump_frame.epx?content=" + escape(url) + "&CloseLabel=" + closelabel,"site","width=800,height=520,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+}
+
+function OpenCSP() {
+	        open('/partners/software/directory/directory.asp','csp','width=650,height=450,left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=yes');
+}
+
+function OpenCalc(url,title,width,height) {
+	        open("/global/scripts/jump_frame.epx?CalcDisplay=1&content=" + escape(url) +"&title=" + escape(title),"site","width="+width+",height="+height+",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=yes,status=no,dependent=no,scrollbars=no");
+}
+
+function OpenCalc_(url) {
+	        open( url,'calc','width=900,height=600,menubar=yes,toolbar=yes,locationbar=yes,resizable=yes,status=no,dependent=no,scrollbars=yes');
+}
+
+function OpenWebcast (url, title) {
+    		open(AddPopup(url), title, 'width=840,height=610,left=20,top=20,menubar=no,toolbar=no,locationbar=no,directories=no,resizable=yes,status=no,dependent=no,scrollbars=yes');
+}  
+function openBrWindow(theURL,winName,features){
+  	window.open(theURL,winName,features);
+}
+function OpenDiscussion (url, title) {
+  		discussion = window.open(AddPopup(url), title, "width=820,height=760,left=20,top=20,menubar=no,toolbar=no,locationbar=no,directories=no,resizable=yes,status=no,dependent=no,scrollbars=yes"); discussion.focus();
+}
+
+function OpenDragonAnalyzer (url, title, thisaction) {
+ 	if (thisaction.length>0) ACTION=thisaction;
+	window.open(url,title,'width=716,height=600,scrollbars=yes,menubar=yes');
+}
+
+function Search_SpecChar(){
+   if(document.SAPcom_search.ct.value=="poland"){
+	var search_query;
+	var query_len;
+	search_query=document.SAPcom_search.q1.value;
+	query_len=search_query.length;
+	var ucode;
+	ucode="";
+
+	for(i=0;i<query_len;i++){
+		if(i==query_len-1){
+			ucode=ucode + search_query.charCodeAt(i);
+		}else{
+			ucode=ucode + search_query.charCodeAt(i) + "-";
+		}
+	}
+	document.SAPcom_search.q2.name="q1";
+	document.SAPcom_search.q2.value=ucode;
+	document.SAPcom_search.q1.name="q2";
+    }
+}
+
+/***********************************************************
+Added 8/11/2004 By C5054450
+Search
+Site Roles 
+***********************************************************/
+function searchPressed(obj, postback)
+{
+	var evt;
+	var etype;
+	
+	if(window.event)
+	{
+		evt = window.event;
+		etype = 1;
+	}
+	else if(arguments.callee)
+	{
+		evt = arguments.callee.caller.arguments[0];
+		etype = 2;
+	}
+	if(evt)
+	{
+		var keyCode = evt.keyCode ? evt.keyCode : evt.which ? evt.which : evt.charCode;
+		if(keyCode == 13)
+		{
+			eval(postback);
+
+			if(etype == 1)
+			{
+				evt.cancelBubble = true;
+				evt.returnValue = false;
+			}else{
+				return false;
+			}
+		}
+	}
+}
+
+function changeRole(strValue)
+{
+	if (strValue != "")
+	{
+		var dt = new Date();
+		dt.setDate(dt.getDate() + 10);
+		document.cookie = "role=" + escape(strValue) + "; path=/; expires=" + dt.toGMTString();
+	}
+}
+/*
+function changeRole(select)
+{
+	if (select != null && select.selectedIndex != -1)
+	{
+		var dt = new Date();
+		dt.setDate(dt.getDate() + 10);
+
+		document.cookie = "role=" + escape(select.options[select.selectedIndex].text) + "; path=/; expires=" + dt.toGMTString();
+		alert(document.cookie);
+	}
+}
+*/
+function cleanForm()
+{
+	for(i = 0; i < document.forms[0].length; i++)
+	{
+		var el = document.forms[0][i];
+		if(el.type == 'text' || el.type == 'textarea')
+		{
+			while(el.value.indexOf('>') >= 0 || el.value.indexOf('<') >= 0 || el.value.indexOf('javascript') >= 0 || el.value.indexOf('onkeypress') >= 0)
+			{
+				el.value = el.value.replace('<', '').replace('>', '').replace('javascript', '').replace('onkeypress', '');
+			}
+		}
+	}
+}
+
+function win(url)
+{
+	window.open(url,"x","width=670, height=575")
+}
+
+
+function launchCollateral()
+{
+	var width = CollateralWindowWidth;
+	var height = CollateralWindowHeight;
+	var url = collateralURL;
+
+	if(isPDF)
+	{
+		window.open(collateralURL, '', 'menubar=yes, toolbar=yes, locationbar=yes, resizable=yes, status=yes, scrollbars=yes');
+	}
+	else if(isFlash)
+	{		
+		if(location.search.indexOf('flash_detection.epx') >= 0)
+		{
+			if(width == null || width == 0)
+				width = 670;
+			if(height == null || height == 0)
+				height = 575;
+			window.open(url,"x","width=" + width + ", height=" + height + ", resizable=yes")
+		}
+		else
+		{
+			url = "/global/scripts/jump_frame.epx?content=" + url;
+			if(width == null || width == 0)
+				width = 810;
+			if(height == null || height == 0)
+				height = 625;
+
+			window.open(url,"onlinedemo","width=" + width + ",height=" + height + ",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+		}
+	}		
+	else if(isVideo)
+	{
+		url = "/global/scripts/jump_frame.epx?content=" + url;
+
+		if(width == null || width == 0)
+			width = 545;
+		if(height == null || height == 0)
+			height = 625;
+		
+		window.open(url,"video","width=" + width + ",height=" + height + ",left=20,top=20,menubar=no,toolbar=no,locationbar=no,resizable=no,status=no,dependent=no,scrollbars=no");
+	}
+	else if(isDownload)
+	{
+		location.href = collateralURL;
+	}
+	else
+	{
+		window.open(collateralURL, '', 'menubar=yes, toolbar=yes, locationbar=yes, resizable=yes, status=yes, scrollbars=yes');
+	}
+	return false;
+}
+
+function CampaignCodeOnload()
+{
+	var key = 'campaigncode=';
+	var search = location.search.toLowerCase();
+	if(search.indexOf(key) >= 0)
+	{
+		var campaign_code = search.substring(search.indexOf(key) + key.length);
+		if(campaign_code.indexOf('&') >= 0)
+			campaign_code = campaign_code.substring(0, campaign_code.indexOf('&'));
+		if(!(document.cookie.indexOf('cmpgn.init.code') >= 0))
+			document.cookie = "cmpgn.init.code=" + campaign_code + "; Path=/";
+	}
+	AddToSiteCookie("cmpgn.url", location.href);
+}
+
+function launchCallMeNow(template,thisaction)
+{
+	if (thisaction.length>0) ACTION=thisaction;
+	webVoicePop('Template='+template);
+}
+
+function GetCookie(Name) 
+{
+	var search = Name + "="
+	var returnvalue = "";
+	if (document.cookie.length > 0) 
+	{
+		offset = document.cookie.indexOf(search)
+		if (offset != -1) 
+		{ 
+			offset += search.length
+			end = document.cookie.indexOf(";", offset);
+			if (end == -1) 
+				end = document.cookie.length;
+			returnvalue=unescape(document.cookie.substring(offset, end))
+		}
+	}
+	return returnvalue;
+}
+
+function SetCookie(Name, Value, Expires) 
+{
+	var today = new Date();
+	today.setTime( today.getTime() );
+
+	if (Expires) Expires = Expires * 1000 * 60 * 60 * 24;
+	var expires_date = new Date(today.getTime() + (Expires));
+	
+	var domain="";
+	if (document.domain.indexOf(".sap.com")>-1)
+		domain = ".sap.com";
+	
+
+	document.cookie = Name + "=" +escape(Value) +
+	((Expires) ? ";expires=" + expires_date.toGMTString() : "" ) + ";path=/;" +
+	((domain) ? ";domain=" + domain : "" );
+}
+
+function DeleteCookie(Name) 
+{
+	if (GetCookie(Name))
+		SetCookie(Name,'',-1);
+}
+
+function AddToSiteCookie(Key, Value)
+{
+	var cookie = GetCookie("SAP.SITE.COOKIE");
+	var items = new Array();
+	items = cookie.split("&");
+	var added = false;
+
+	if(items.length > 0)
+	{
+		cookie = '';
+		for(i = 0; i < items.length -1; i++)
+		{
+			if(items[i] != '')
+			{
+				if(items[i].indexOf(Key + "=") >= 0)
+				{
+					cookie += Key + "=" + escape(Value) + "&";
+					added = true;
+				}else{
+					cookie += items[i] + "&";
+				}
+			}
+		}
+		cookie = cookie.substring(0, cookie.length - 1);
+		if(!added)
+			cookie += Key + "=" + escape(Value);
+	}else{
+		if(cookie.length != 0)
+			cookie += "&";
+		cookie += Key + "=" + escape(Value);
+	}
+	cookie = "SAP.SITE.COOKIE=" + cookie + "; path=/; "
+	if (strDomain && strDomain != null && strDomain != '')
+		cookie += 'domain=' + strDomain;
+	document.cookie = cookie;
+}
+
+
+function CreateMailMessage(subject,message)
+{
+  var lnk="mailto:?";
+  (subject.length>0)?lnk+="subject="+escape(subject)+"&":lnk=lnk;
+  (message.length>0)?lnk+="body="+escape(message):lnk=lnk;
+  location.href=lnk;
+}
+
+
+function __track(url,ref,ip)
+{
+	if (url.length>0){
+		var imgurl="/global/images/sitetracker.gif?";
+		imgurl+="url="+url;
+		if (ref.length>0) imgurl+="&ref="+escape(ref);
+		else imgurl+="&ref="+location.pathname;
+		imgurl+="&ip="+ip;
+		imgurl+="&rr="+parseInt(Math.random()*Math.pow(10,7));
+		var trkimg = new Image();
+		trkimg.src = imgurl;
+		//trkimg="";
+	}
+}
+
+function OpenTrackedItem(url,ref,newwin,title,features)
+{
+	if (url.length>0){
+		__track(url,ref,'');
+		if(newwin)
+		{
+			var nwin=window.open(url,title,features);
+			if(!nwin) alert("It appears pop-up blocking is preventing this item from opening.\n\nPlease enable pop-ups for www.SAP.com and try again.");
+		}
+		else location.href=url;
+	}
+}
+function GetPosition(object, offset)
+{
+	var totaloffset = ((offset == 'top') ? object.offsetTop : object.offsetLeft );
+	var parent = object.offsetParent;
+	if (parent != null)
+		totaloffset += GetPosition(parent, offset);
+	
+	return totaloffset;
+}
+function GetWindowInfo()
+{
+	var top, left, width, height;
+	
+	if( typeof( window.pageYOffset ) == 'number' ) {
+		top = window.pageYOffset;
+		left = window.pageXOffset;
+	} else if( document.documentElement) {
+		top = document.documentElement.scrollTop;
+		left = document.documentElement.scrollLeft;
+	} else if( document.body) {
+		top = document.body.scrollTop;
+		left = document.body.scrollLeft;
+	}
+	
+	if( typeof( window.innerWidth ) == 'number' ) {
+		width = window.innerWidth;
+		height = window.innerHeight;
+	} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+		width = document.documentElement.clientWidth;
+		height = document.documentElement.clientHeight;
+	} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+		width = document.body.clientWidth;
+		height = document.body.clientHeight;
+	}
+	
+	return {top:top, left:left, width:width, height:height};
+}
+function GetObjectInfo(o)
+{
+	var top, left, width, height;
+	if( typeof( o.innerWidth ) == 'number' ) {
+		width = o.innerWidth;
+		height = o.innerHeight;
+	} else if( o && ( o.clientWidth || o.clientHeight ) ) {
+		width = o.clientWidth;
+		height = o.clientHeight;
+	} else if(o.style.width){
+		width = parseInt(o.style.width, 10)
+		height = parseInt(o.style.height, 10)
+	}
+	top = GetPosition(o, 'top');
+	left = GetPosition(o, 'left');
+
+	return {top:top, left:left, width:width, height:height};
+}

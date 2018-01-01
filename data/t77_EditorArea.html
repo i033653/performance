@@ -1,0 +1,68 @@
+sap.ui.define([
+	"sap/ui/core/Control"
+], function(Control) {
+	"use strict";
+
+	var EditorArea = Control.extend("sap.watt.platform.content.control.EditorArea",
+		/** @lends sap.watt.platform.content.control.EditorArea.prototype */ {
+		metadata: {
+			aggregations: {
+				containers: {type: "sap.watt.platform.content.control.EditorContainer", multiple: true, singularName: "container"}
+			},
+			associations: {
+				contentContainer: {type: "sap.watt.platform.content.control.EditorContainer", multiple: false}
+			}
+		},
+
+		renderer: function (oRm, oControl) {
+			oRm.write("<div");
+			oRm.writeControlData(oControl);
+			oRm.addClass("wattEditorArea");
+			oRm.writeClasses();
+			oRm.write(">");
+			oRm.renderControl(oControl.getContentContainer());
+			oRm.write("</div>");
+		}
+	});
+
+	EditorArea.prototype.getContainerByContentId = function(sContentId) {
+		var aContainers = this.getContainers(),
+			oContent = null,
+			iIndex = 0, iLen = aContainers.length;
+
+		for (; iIndex < iLen; iIndex++) {
+			oContent = aContainers[iIndex].getContent();
+			if (oContent && oContent.getId() === sContentId) {
+				return aContainers[iIndex];
+			}
+		}
+		return null;
+	};
+
+	EditorArea.prototype.addContainer = function(oContainer) {
+		// set internal aggregation
+		return this.addAggregation("containers", oContainer, true);
+	};
+
+	EditorArea.prototype.insertContainer = function(oContainer, iIndex) {
+		// set internal aggregation
+		return this.insertAggregation("containers", oContainer, iIndex, true);
+	};
+
+	EditorArea.prototype.setContentContainer = function(vContainer) {
+		if (vContainer instanceof sap.watt.platform.content.control.EditorContainer) {
+			vContainer = vContainer.getId();
+		} else if (typeof vContainer !== "string") {
+			vContainer = null;
+		}
+		this.setAssociation("contentContainer", vContainer);
+		return this;
+	};
+
+	EditorArea.prototype.getContentContainer = function() {
+		var vContainer = this.getAssociation("contentContainer");
+		return vContainer && sap.ui.getCore().byId(vContainer) || null;
+	};
+
+	return EditorArea;
+});

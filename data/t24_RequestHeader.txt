@@ -1,0 +1,15 @@
+POST /saml2/idp/sso HTTP/1.1
+Host: 10.26.156.125:50000
+Connection: keep-alive
+Content-Length: 5443
+Cache-Control: max-age=0
+Origin: http://10.26.156.125:50000
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Referer: http://10.26.156.125:50000/saml2/idp/sso
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,he-IL;q=0.8,he;q=0.6,en;q=0.4
+Cookie: com.sap.engine.security.authentication.original_application_url=POST#zcYjBoByP87noxCZDpcsC1jL9oCPyUYhp3AS2wjGnsBbiQra5E2zEZRU%2BKWGh9CAy5SZ7vmtBKdHqu1iC%2F3uagd2UPxtb1C9FsWXdaANSZM%3D; saplb_*=(J2EE2561320)2561350
+

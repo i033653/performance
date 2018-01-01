@@ -1,0 +1,838 @@
+jQuery.sap.declare("sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.ui.wizard.ServiceCatalogWizardStep");
+jQuery.sap.require("sap.watt.ideplatform.plugin.template.ui.wizard.WizardStepContent");
+jQuery.sap.require("sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.ui.VisibilityContainer");
+
+sap.watt.ideplatform.plugin.template.ui.wizard.WizardStepContent.extend(
+	"sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.ui.wizard.ServiceCatalogWizardStep", {
+
+		metadata: {
+			properties: {
+				"extensionFilters": "object",
+                "destinationCreationService" : "object",
+				"apiHubService" : "object"
+			}
+		},
+
+		_mDataConnectionEnum: {
+			ServiceCatalog: 0,
+			CurrentProject: 1,
+			RepositoryBrowser: 2,
+			FileSystem: 3,
+			PasteURL: 4,
+			ApiHub: 5
+		},
+		_CATALOG_RDL: "river",
+		_CATALOG_GENERIC: "odata_gen",
+		_CATALOG_APIMGMT: "api_mgmt",
+		_CATALOG_APIMGMT_PROXY: "api_mgmt_proxy",
+		_oServiceDiscoveryControl: null,
+		_oMTAServiceDiscoveryControl: null,
+        _oApiHubControl: null,
+        _apiHubService: null,
+
+		_previousDestination: undefined,
+		_oRespoitoryBrowserViewContent: null,
+		_oGrid: null,
+		_bDataConnectionStepDirty: false,
+		_apiKey: null,
+		// Use with caution! - the require for this member is async
+		_xmlUtil: null,
+		_bFioriEnv:true,
+		_bHanaDev:false,
+
+		init: function() {
+			var that = this;
+			require(["sap/watt/platform/plugin/utils/xml/XmlUtil"],function(oXMLUtils){
+				that._xmlUtil = oXMLUtils;
+			});
+			//this._bFioriEnv = !(sap.watt.getEnv("server_type") === "xs2");
+			if (!this._oGrid) {
+					this._createGrid();
+			}
+			this.addContent(this._oGrid);
+		},
+
+		onBeforeRendering: function() {
+			if (!this.bDoBeforeRendering) {
+				this.bDoBeforeRendering = true;
+				//Add i18n into the model of this wizard step
+				this.configureI18nResources();
+				var oDataConnectionListBox = sap.ui.getCore().byId("DataConnectionListBox");
+				var oCreateDestinationsText = sap.ui.getCore().byId("CreateDestinationsLayout");
+				var _oSelectedTemplate = this.getModel().getData().selectedTemplate;
+				if (sap.watt.getEnv("server_type") === "xs2") {
+					// Remove "Service Catalog" and "Service URL" item from the list
+                    oDataConnectionListBox.removeItem(5);
+					oDataConnectionListBox.removeItem(0);
+					oDataConnectionListBox.removeItem(3);
+					this._bFioriEnv = false;
+					this._bHanaDev = true;
+				}
+				else {
+					var _sSelectedTemplateType = _oSelectedTemplate.getType();
+					var _aDCItems = oDataConnectionListBox.getItems();
+					if (_sSelectedTemplateType === "module" && _aDCItems.length > 0 && _aDCItems[0].getProperty("key")	=== "0") {
+                        //enable label with link for destination creation only for fiori module
+                        if(this.getDestinationCreationService()){
+                            oCreateDestinationsText.setVisible(true);
+                            this.getDestinationCreationService().attachEvent("requestCompleted", this._onDestinationsUpdated, this);
+                        }
+                    }
+
+                    this._apiHubService = this.getApiHubService();
+                    if (!this._apiHubService){
+                        // If API Hub feature is not loaded - remove the "SAP API Business Hub" entry from the data connection sources list
+                        oDataConnectionListBox.removeItem(5);
+                    }
+
+                    if (_sSelectedTemplateType !== "module"){
+                        // If not an MTA project - remove the "Current Project" entry from the data connection sources list
+                        oDataConnectionListBox.removeItem(1);
+                    }
+                    this._bFioriEnv = true;
+				}
+				//if oData v4 template only "current project" and "service URL" entries should be available in sources list
+				if (_oSelectedTemplate.getSupportedODataVersions() && _.keyBy(_oSelectedTemplate.getSupportedODataVersions()).v4){
+					oDataConnectionListBox.removeItem(0);
+					oDataConnectionListBox.removeItem(2);
+					oDataConnectionListBox.removeItem(1);
+					oDataConnectionListBox.fireEvent("select", {
+						selectedIndex: 0,
+						selectedItem: oDataConnectionListBox.getItems()[0]
+				});
+				}else{
+					oDataConnectionListBox.fireEvent("select", {
+						selectedIndex: 0
+					});
+				}
+				oDataConnectionListBox.setSelectedIndex(0);
+			}
+		},
+
+        _apiHubEnableNextStepHandler: function(oEvent){
+            this.fireValidation({
+            	isValid: oEvent.params.isValid,
+                message: oEvent.params.message
+            });
+        },
+
+        _apiHubProcessingStartedHandler: function(){
+            this.fireProcessingStarted();
+        },
+
+        _apiHubProcessingEndedHandler: function(){
+            this.fireProcessingEnded();
+        },
+
+        _apiHubValueChangedHandler: function(oEvent){
+            this.fireValueChange({
+                id: oEvent.params.id,
+                value: oEvent.params.value
+            });
+        },
+
+        _apiHubServiceSelectionCompletedHandler: function(oEvent){
+            return this.onCatalogServiceSelectionSuccess(oEvent.params.connectionData);
+        },
+
+		_createGrid: function() {
+			var oData = {
+				iDataConnectionSelected: this._mDataConnectionEnum.ServiceCatalog,
+				sSelectedDataConnectionName: "",
+				mSelectionEnum: this._mDataConnectionEnum,
+				sServiceName: "",
+				bSelect: false,
+				bVisibleDetails: false,
+				bVisibleServiceInfoAndDetailGrid: false,
+				bPasteUrlTextFieldEditable: false,
+				bHasRelatedProduct: false,
+				sPasteUrlTextFieldValue: "",
+				sPasteURLComboBoxValue: "",
+				sFileUploaderText: "",
+				bAppKeyTextFieldVisible: false,
+				sAppKeyTextFieldValue: "",
+				bFullURL: true,
+				bApimgmt: false,
+				sCurrentSelectedFileLocation:null,
+				bIsFioriEnv:this._bFioriEnv,
+				sServiceInformationLabel:""
+			};
+
+			var oModel = new sap.ui.model.json.JSONModel();
+			oModel.setData({
+				modelData: oData
+			});
+			this._oGrid = sap.ui.jsfragment("sap.watt.saptoolsets.ui5.project.plugin.servicecatalog.view.DataConnectionWizardStep", this);
+
+			this._oGrid.setModel(oModel);
+
+			this._oGrid.bindElement("/modelData");
+
+		},
+
+		_createMTAServiceDiscovery : function(){
+			var that = this;
+			this.dataConnectionServiceCatalogContent = sap.ui.getCore().byId("DataConnectionServiceCatalogContent");
+
+			return this.getContext().service.mtacatalogviewer.getContent().then(function(oContent) {
+			    that._oMTAServiceDiscoveryControl = oContent;
+				that.dataConnectionServiceCatalogContent.addContent(that._oMTAServiceDiscoveryControl);
+			});
+		},
+
+		_createServiceDiscovery: function(sType, oContentGrid, sMetadata) {
+			if (this._oServiceDiscoveryControl && sMetadata) {
+				this._oServiceDiscoveryControl.refreshTreeView(sMetadata);
+				oContentGrid.addContent(this._oServiceDiscoveryControl);
+				return Q();
+			} else {
+				var that = this;
+				var sOdataVersion = that._getTemplateOdataVersion();
+				return this.getContext().service.servicediscovery.getContent(sOdataVersion).then(function(oContent) {
+					that._oServiceDiscoveryControl = oContent;
+					that._oServiceDiscoveryControl.setCatalogViewType(sType);
+					that._oServiceDiscoveryControl.setIsDetailVisible(sType != "ServiceTree");
+					if (sMetadata) {
+						that._oServiceDiscoveryControl.setEdmxContent(sMetadata);
+					}
+					oContentGrid.addContent(that._oServiceDiscoveryControl);
+				});
+			}
+		},
+
+        _createApiHubServiceDiscovery : function(){
+			if(this._apiHubService) {
+                var that = this;
+                //Attach events for Api Hub feature
+                this._apiHubService.attachEvent("apiHubEnableNextStep", this._apiHubEnableNextStepHandler , this);
+                this._apiHubService.attachEvent("apiHubProcessingStarted", this._apiHubProcessingStartedHandler , this);
+                this._apiHubService.attachEvent("apiHubProcessingEnded", this._apiHubProcessingEndedHandler , this);
+                this._apiHubService.attachEvent("apiHubValueChanged", this._apiHubValueChangedHandler , this);
+                this._apiHubService.attachEvent("apiHubServiceSelectionCompleted", this._apiHubServiceSelectionCompletedHandler , this);
+                this.dataConnectionServiceCatalogContent = sap.ui.getCore().byId("DataConnectionServiceCatalogContent");
+                return this._apiHubService.getContent()
+					.then(function (oContent) {
+						that._oApiHubControl = oContent;
+						that.dataConnectionServiceCatalogContent.addContent(that._oApiHubControl);
+					});
+            }
+        },
+
+		_onConfigureDestinationsPress: function(){
+			this.getDestinationCreationService().openDestinationCreationDialog().done();
+		},
+
+		//destinations in cockpit have been updated, update destination object
+		_onDestinationsUpdated: function(oEvent){
+			var that = this;
+			var bCreated = oEvent.params.bCreated;
+			if(bCreated && !!that._oServiceDiscoveryControl) {
+				var sCreatedDestinationName = oEvent.params.sDestinationName;
+				return that._oServiceDiscoveryControl.refreshCatalogComboBox(sCreatedDestinationName);
+			}
+		},
+
+		_onDataConnectionSelect: function(oEvent) {
+            var iSelected, sSelectedText = "";
+            if (oEvent.mParameters.selectedItem) {
+                iSelected = parseInt(oEvent.mParameters.selectedItem.getKey());
+                sSelectedText = oEvent.mParameters.selectedItem.getText();
+            }
+            else {
+            	iSelected = this._bHanaDev || this._bFioriEnv? 0:1; //no service catalog in idc
+            	sSelectedText = this._bHanaDev || this._bFioriEnv?
+	            		this.getContext().i18n.getText("i18n","dataConnectionWizardStep_service_catalog"):
+            			this.getContext().i18n.getText("i18n","dataConnectionWizardStep_MTA_service_catalog");
+            }
+
+			this._oGrid.getModel().setProperty("/modelData/iDataConnectionSelected", iSelected);
+			this._oGrid.getModel().setProperty("/modelData/sSelectedDataConnectionName", sSelectedText);
+			this.cleanDetailsDataGrid();
+			if (this._bDataConnectionStepDirty) {
+				this.fireValidation({
+					isValid: false
+				});
+			} else {
+				this._bDataConnectionStepDirty = true;
+			}
+			this._oGrid.getModel().setProperty("/modelData/sServiceName", "");
+			this._oGrid.getModel().setProperty("/modelData/sFileUploaderText", "");
+			this._oGrid.getModel().setProperty("/modelData/sPasteUrlTextFieldValue", "");
+			this._oGrid.getModel().setProperty("/modelData/sAppKeyTextFieldValue", "");
+			this._oGrid.getModel().setProperty("/modelData/bAppKeyTextFieldVisible", false);
+			var that = this;
+			switch (iSelected) {
+				case this._mDataConnectionEnum.ServiceCatalog:
+					this.dataConnectionServiceCatalogContent = sap.ui.getCore().byId("DataConnectionServiceCatalogContent");
+					this._oGrid.getModel().setProperty("/modelData/sCurrentSelectedFileLocation", null);
+					that._createServiceDiscovery("Generic", this.dataConnectionServiceCatalogContent).then(function () {
+						that._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", false);
+					});
+					break;
+				case this._mDataConnectionEnum.CurrentProject:
+					this.dataConnectionServiceCatalogContent = sap.ui.getCore().byId("DataConnectionServiceCatalogContent");
+					this._oGrid.getModel().setProperty("/modelData/sCurrentSelectedFileLocation", null);
+					that._createMTAServiceDiscovery().then(function () {
+						that._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", false);
+					});
+					break;
+				case this._mDataConnectionEnum.RepositoryBrowser:
+					this.onRepositoryBrowserSelect().then(function(oGrid) {
+						if (oGrid) {
+							var oRepositoryBrowserContainer = sap.ui.getCore().byId("DataConnectionRepositoryBrowserContent");
+							oRepositoryBrowserContainer.addContent(oGrid);
+						}
+					}).done();
+					this._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", true);
+					this._oGrid.getModel().setProperty("/modelData/sServiceInformationLabel",
+					this.getContext().i18n.getText("i18n","dataConnectionWizardStep_oServiceInformationLabel_WS"));
+					break;
+				case this._mDataConnectionEnum.FileSystem:
+					var oFileUploader = sap.ui.getCore().byId("DataConnectionFileUploader");
+					this._resetInputState(oFileUploader);
+					this._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", true);
+					this._oGrid.getModel().setProperty("/modelData/sServiceInformationLabel",
+                	        this.getContext().i18n.getText("i18n","dataConnectionWizardStep_oServiceInformationLabel_FS"));
+					break;
+				case this._mDataConnectionEnum.PasteURL:
+					this.dataConnectionServiceCatalogContent = sap.ui.getCore().byId("DataConnectionServiceCatalogContent");
+					this._oGrid.getModel().setProperty("/modelData/sCurrentSelectedFileLocation", null);
+					this._createServiceDiscovery("PasteURL", this.dataConnectionServiceCatalogContent).then(function() {
+						that._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", false);
+					});
+					this._oGrid.getModel().setProperty("/modelData/sServiceInformationLabel",
+                         this.getContext().i18n.getText("i18n","dataConnectionWizardStep_oServiceInformationLabel_URL"));
+					break;
+                case this._mDataConnectionEnum.ApiHub:
+                    this._createApiHubServiceDiscovery();
+                    this._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", true);
+                    this._oGrid.getModel().setProperty("/modelData/sServiceInformationLabel",
+                        this.getContext().i18n.getText("i18n","dataConnectionWizardStep_oServiceInformationLabel_API_HUB"));
+					break;
+			}
+		},
+
+		_checkInput: function(sInput, regx) {
+			var regex = new RegExp(regx);
+			return regex.test(sInput);
+		},
+
+		_markAsInvalid: function(oControl) {
+			sap.watt.ideplatform.plugin.template.ui.wizard.WizardStepContent.prototype.markAsInvalid.apply(this, [oControl]);
+		},
+
+		_resetInputState: function(oControl) {
+			oControl.removeStyleClass("inputConfirmed");
+			oControl.removeStyleClass("inputError");
+		},
+
+		_cleanInputFields: function() {
+			if (this.getModel()) {
+				this.getModel().oData.connectionData = undefined;
+				this._setDestinationToModel(null);
+				this._setDestinationWhiteListToModel(null);
+				this._previousDestination = undefined;
+			}
+		},
+
+		_getTemplateOdataVersion: function() {
+			var templateOdataVersion = this.getModel().oData.selectedTemplate.getSupportedODataVersions();
+			if (templateOdataVersion && templateOdataVersion[0] === "v4") {
+				return "v4";
+			} else {
+				return null;
+			}
+		},
+		
+		onServiceCatalogStepNext: function(bNextEnabled, sMessage, severity) {
+			if (sMessage) {
+				this.fireValidation({
+					isValid: bNextEnabled,
+					message: sMessage,
+					severity: severity
+				});
+			} else {
+				this.fireValidation({
+					isValid: bNextEnabled
+				});
+			}
+		},
+
+		_getServiceNameFromMetadata: function(sMetadataContent) {
+			var xmlFile = this._xmlUtil.stringToXml(sMetadataContent);
+			var oXMLSchemaNS = this._xmlUtil.getXmlParameters(xmlFile, "Schema", "Namespace");
+			var sServiceName = oXMLSchemaNS && oXMLSchemaNS[0] ? oXMLSchemaNS[0].name : "Service";
+			return sServiceName;
+		},
+
+		onCatalogServiceSelectionSuccess: function(oConnectionData) {
+			var that = this;
+            if(this.getModel()){
+                this.getModel().setProperty("/connectionData", oConnectionData);
+            }
+
+			if (oConnectionData) {
+
+            	if (this.getModel() && this.getModel().oData.selectedTemplate) {
+					oConnectionData.metadataPath = this.getModel().oData.selectedTemplate.getMetadataPath();
+				}
+
+				if (oConnectionData.serviceName === "") {
+					oConnectionData.serviceName = this._getServiceNameFromMetadata(oConnectionData.metadataContent);
+				}
+
+				this._apiKey = oConnectionData.apiKey;
+				this._setDestinationToModel(oConnectionData.destination);
+				this._setDestinationWhiteListToModel(oConnectionData.destination);
+
+				var sServiceNameMessage;
+				if (oConnectionData.productName) {
+					sServiceNameMessage = this.getContext().i18n.getText("i18n",
+						"serviceCatalogWizardStep_servicenamelabel_for_API_Mgmnt_product_details", [oConnectionData.productName, oConnectionData.serviceName]
+					);
+
+				} else {
+					sServiceNameMessage = this.getContext().i18n.getText("i18n",
+						"serviceCatalogWizardStep_servicenamelabel_service_details", [oConnectionData.serviceName]);
+				}
+
+				this._oGrid.getModel().setProperty("/modelData/sServiceName", sServiceNameMessage);
+				//for filesystem or repo
+				var sMetadataLocation = this._oGrid.getModel().getProperty("/modelData/sCurrentSelectedFileLocation");
+				if (sMetadataLocation){
+					oConnectionData.metadataLocation = sMetadataLocation;
+				}
+				
+				//For Current Project , in multi cloud (fiori env), this sPath property holds edmx file path
+				var iCurrentProjectSelected = this._oGrid.getModel().getProperty("/modelData/iDataConnectionSelected");
+				if( oConnectionData.sPath && this._bFioriEnv && iCurrentProjectSelected === this._mDataConnectionEnum.CurrentProject){
+					this._getFileLocation(oConnectionData.sPath).then(function(sMetadataPath){
+						oConnectionData.metadataLocation = sMetadataPath;
+					}).done();
+				}
+
+				var sSelectedText = this._oGrid.getModel().getProperty("/modelData/sSelectedDataConnectionName");
+				if (sSelectedText){
+					this.getModel().oData.selectedTemplate._mConfig.selectedDataConnectionName = sSelectedText;
+				}
+				//invalidate scenario when template odata version is v2 and service is v4
+				that.getContext().service.odatav4handler.isV4Version(oConnectionData.metadataContent).then(function(bServiceIsV4) {
+					//allow adding components with incompatible odata versions (add odata service scenario)
+					var v2TemplateV4Service = that.getContext().i18n.getText("i18n","v2_template_with_v4_service");
+					var v4TemplateV2Service = that.getContext().i18n.getText("i18n","v4_template_with_v2_service");
+					//allow adding components with incompatible odata versions (add odata service scenario)
+					if (that.getModel().oData.selectedTemplate._mConfig.templateType === "component") {
+						that.fireValidation({
+							isValid: true,
+							message: sServiceNameMessage,
+							severity: "info"
+						});
+					//v4 service with v2 template
+					} else if (bServiceIsV4 && that._getTemplateOdataVersion() !== "v4") {
+						that.fireValidation({
+							isValid: false,
+							message: v2TemplateV4Service,
+							severity: "error"
+						});
+					//v2 service with v4 template
+					} else if (!bServiceIsV4 && that._getTemplateOdataVersion() === "v4") {
+						that.fireValidation({
+							isValid: false,
+							message: v4TemplateV2Service,
+							severity: "error"
+						});
+					} else {
+						that.fireValidation({
+							isValid: true,
+							message: sServiceNameMessage,
+							severity: "info"
+						});
+					}
+				}).done(); 			
+			}
+		},
+		
+		_getFileLocation: function(sPath){
+			return this.getContext().service.filesystem.documentProvider.getDocument(sPath).then(function(oDocument){
+				var sMetadataPath = "";
+				if(oDocument && oDocument.getEntity()){
+					var oEntity = oDocument.getEntity();
+					var sBackendSrv = sap.watt.getEnv("orion_server");
+					sBackendSrv = sBackendSrv.lastIndexOf("/") === 0 ? sBackendSrv : sBackendSrv.substr(0, sBackendSrv.length - 1);
+					sMetadataPath = sBackendSrv + oEntity.getBackendData().fullLocationPath;
+				}
+				return sMetadataPath;
+			});
+		},
+
+		createDetailsContent: function(sMetadataContent) {
+			var that = this;
+
+			var oDetailsGird = sap.ui.getCore().byId("DataConnectionWizardStep--detailsGrid");
+			return this._createServiceDiscovery("ServiceTree", oDetailsGird, sMetadataContent).then(function() {
+				that._oGrid.getModel().setProperty("/modelData/bVisibleServiceInfoAndDetailGrid", true);
+			});
+		},
+
+		/**
+		 * This method handles with selecting files event. It validates the file type,
+		 * sets the text field with the file name and calls to <code>_getMetadataFileInput</code> in order to read the file's content
+		 * @param oEvent
+		 */
+		_onFileUploaderChange: function(oEvent) {
+			var that = this;
+			//In case of cancel
+			if (oEvent && oEvent.getParameter('newValue') === "") {
+				this.cleanDetailsDataGrid();
+				return;
+			}
+
+			var oFile = null;
+			//Check browser support
+			if (!(!!oEvent.getSource() && !!oEvent.getSource().oFileUpload && !!oEvent.getSource().oFileUpload.files &&
+					!!(oFile = oEvent.getSource().oFileUpload.files[0]) && oFile.size !== 0)) {
+				this._throwErrorHandler(this.getContext().i18n.getText("i18n", "serviceCatalogWizardStep_missing_parameters"));
+				return;
+			}
+
+			if (!this._isFileNameValid(oFile.name)) {
+				this.cleanDetailsDataGrid();
+				this.fireValidation({
+					isValid: false
+				});
+				this._throwErrorHandler(this.getContext().i18n.getText("i18n", "serviceCatalogWizardStep_invalid_document"));
+				return;
+			}
+
+			this._getMetadataFileInput(oEvent, oFile).then(function() {
+			
+			}).fail(function(oError) {
+				that._throwErrorHandler(oError.message);
+			}).done();
+
+		},
+
+		
+		/**
+		 *This method checks whether the file name is correct
+		 * valid file name *.xml or *.edmx
+		 * @param sFileName
+		 */
+		_isFileNameValid: function(sFileName) {
+			return this._checkInput(sFileName, "([a-zA-Z]:(\\w+)*\\[a-zA-Z0_9]+)?\.(xml|edmx)$");
+		},
+
+		/**
+		 * This method creates metadata object based on XML file
+		 * @param oFile The XML metadata file
+		 */
+		_getMetadataFileInput: function(oEvent, oFile) {
+			//Check for browser support
+			var deferred = Q.defer();
+			var oFileUploader = sap.ui.getCore().byId("DataConnectionFileUploader");
+			if (!!(window.File) && !!(window.FileReader)) {
+				var reader = new FileReader();
+				var that = this;
+				var sTempFile = URL.createObjectURL(oEvent.getSource().oFileUpload.files[0]);
+				reader.onload = function() {
+					//Upload the file metedata (to AST) and validate the metadata content with mock server
+					that.getContext().service.odataProvider.validateMetadata(reader.result).then(function() {
+						that._oGrid.getModel().setProperty("/modelData/sCurrentSelectedFileLocation", sTempFile);
+						that.createDetailsContent(reader.result).done();
+						deferred.resolve();
+					}).fail(function(oError) {
+						that.cleanDetailsDataGrid();
+						that._markAsInvalid(oFileUploader);
+						deferred.reject(oError);
+					}).done();
+				};
+				reader.readAsText(oFile);
+			}
+			return deferred.promise;
+		},
+
+		_throwErrorHandler: function(sError) {
+			this.fireValidation({
+				isValid: false,
+				message: sError
+			});
+		},
+
+		
+
+		_setDestinationWhiteListToModel: function(oDestination) {
+			var sApiKey = "apiKey";
+			var oModel = this.getModel();
+
+			if (oModel) {
+				if (!oModel.oData.neoapp) {
+					oModel.oData.neoapp = {
+						headerWhiteList: []
+					};
+				} else if (!oModel.oData.neoapp.headerWhiteList) {
+					oModel.oData.neoapp.headerWhiteList = [];
+				}
+				var aHeaderWhiteList = oModel.oData.neoapp.headerWhiteList;
+
+				if (oDestination) {
+					if (this._apiKey) {
+						//check if the apikey already exists 
+						for (var i = 0; i < aHeaderWhiteList.length; i++) {
+							if (aHeaderWhiteList[i] === sApiKey) {
+								return;
+							}
+						}
+						aHeaderWhiteList.push(sApiKey);
+					} else {
+						for (i = 0; i < aHeaderWhiteList.length; i++) {
+							if (aHeaderWhiteList[i] === sApiKey) {
+								aHeaderWhiteList.splice(i, 1);
+								break;
+							}
+						}
+					}
+				}
+			}
+		},
+
+        /**
+         * In case of API Hub destination - update destination to use doorway mapping (Forwarding from one HTML5
+         * application to another is enabled by setting the target type in a route.) to consume the destination defined
+         * in Web IDE's provider account
+         * TODO:    This code should be palced in the API Hub feature, not here, however currently the service catalog
+         *          does not support adding a destination using doorway mapping
+         * @param oDestination - a new destination to add
+         * @returns - The new destination
+         * @private
+         */
+        _updateApiHubDstination: function(oDestination) {
+            // Check if current destination is an API Hub destination
+            if(oDestination.path.indexOf("apihub_sandbox") >= 0){
+                // Get Web IDE's application name from the Url
+                var sWebIdeInstanceName = location.host.split('-');
+                if(sWebIdeInstanceName.length > 1){
+                    // Overwrite the destination
+                    oDestination.target.type = "application";
+                    oDestination.target.name = sWebIdeInstanceName[0];
+                    if(oDestination.path.indexOf("/") === 0){
+                        oDestination.target.entryPath = "/destinations" + oDestination.path;
+                    } else{
+                        oDestination.target.entryPath = "/destinations/" + oDestination.path;
+                    }
+                    // In case of module in an MTA project and missing '/' at the path beginning add it
+                    var _oSelectedTemplate = this.getModel().getData().selectedTemplate;
+                    if (_oSelectedTemplate && _oSelectedTemplate.getType() === "module"){
+                        //if there is no leading "/" add it to path
+                      	if(!(oDestination.path.indexOf("/") === 0)){
+                            oDestination.path = "/" + oDestination.path;
+                        }
+                    }
+                }
+            }
+            return oDestination;
+        },
+
+		_setDestinationToModel: function(oDestination) {
+			var oModel = this.getModel();
+			if (oModel) {
+				if (!oModel.oData.neoapp) {
+					oModel.oData.neoapp = {
+						destinations: []
+					};
+				} else if (!oModel.oData.neoapp.destinations) {
+					oModel.oData.neoapp.destinations = [];
+				}
+				var aDestinations = oModel.oData.neoapp.destinations;
+
+				if (this._previousDestination) {
+					//remove previous selection
+					for (var i = 0; i < aDestinations.length; i++) {
+						var sPath = this._previousDestination.path;
+						var sPrevWatUsage = this._previousDestination.wattUsage;
+						// in case that the path was set from the url (and not from the path parameter) then duplicated paths will 
+						//be exists in the neoapp file. cause the path of _previousDestination is diffrent then the oNewDestination
+						if(!sPath){
+							sPath = "/" + this._previousDestination.name;
+						}else if (sPrevWatUsage === this._CATALOG_RDL) {
+							sPath = this._previousDestination.url;
+						}
+						
+						if (aDestinations[i].path === sPath) {
+							aDestinations.splice(i, 1);
+							this._previousDestination = null;
+							break;
+						}
+					}
+				}
+
+				if (oDestination) {
+					//check if path already exists 
+					for (i = 0; i < aDestinations.length; i++) {
+						if (aDestinations[i].path === oDestination.path) {
+							return;
+						}
+					}
+					// handle RDL
+					var path = oDestination.path;
+					if (!path){
+						path = "/" +oDestination.name;
+					}else if (oDestination.wattUsage === this._CATALOG_RDL) {
+						path = oDestination.url;
+					}
+					var oNewDestination = {
+						"path": path,
+						"target": {
+							"type": "destination",
+							"name": oDestination.name
+						},
+						"description": oDestination.description
+					};
+					oNewDestination = (oDestination.entryPath) ? jQuery.extend(true, oNewDestination, {
+						"target": {
+							"entryPath": oDestination.entryPath
+						}
+					}) : oNewDestination;
+					// Overwrite the destination in case it is an API Hub destination
+					oNewDestination = this._updateApiHubDstination(oNewDestination);
+					aDestinations.push(oNewDestination);
+					this._previousDestination = oDestination;
+
+				}
+				oModel.oData.neoapp.destinations = aDestinations;
+			}
+		},
+
+		onRepositoryBrowserSelect: function(oEvent) {
+			var that = this;
+			var oContext = this.getContext();
+			var aExtensionFilters = this.getExtensionFilters();
+			if (oContext && !this._oRespoitoryBrowserViewContent) {
+				return oContext.service.repositoryBrowserFactory.create(null, {
+					filters: aExtensionFilters
+				}).then(function(repositoryBrowserInstance) {
+					return repositoryBrowserInstance.getContent().then(function(oRepositoryBrowserControl) {
+						//FIXME this is the better way to register changed event - not working why we need this?
+						oContext.service.selection.attachEvent("changed", that.onRepositorySelectFile, that);
+						that._oRespoitoryBrowserViewContent = oRepositoryBrowserControl;
+						if (oRepositoryBrowserControl) {
+							oRepositoryBrowserControl.setHeight("400px");
+							oRepositoryBrowserControl.setWidth("100%");
+							oRepositoryBrowserControl.setLayoutData(new sap.ui.layout.GridData({
+								span: "L12 M12 S12"
+							}));
+						}
+						//Handle select
+						//FIXME find a better way to do that in the controller
+						if (oRepositoryBrowserControl && oRepositoryBrowserControl.getContent().length > 0) {
+							oRepositoryBrowserControl.getContent()[0].attachSelectionChange(that.onRepositorySelectFile, that);
+						}
+						return oRepositoryBrowserControl;
+					});
+				}).fail(
+					function(oError) {
+						that._throwErrorHandler(that.getContext().i18n.getText("i18n",
+							"serviceCatalogWizardStep_error_repository_browser"));
+					});
+			} else {
+				return Q();
+			}
+		},
+
+		onRepositoryBrowserSelectButton: function() {
+			var that = this;
+			// clean previous selected file details and make 'next' disabled, until a new valid selection is made
+			// this.cleanDetailsDataGrid();
+			this.fireValidation({
+				isValid: false
+			});
+			var aSelectedDocument = this._oRespoitoryBrowserViewContent.getController().getSelection();
+			if (aSelectedDocument.length !== 1) {
+				this.cleanDetailsDataGrid();
+				this.fireValidation({
+					isValid: false
+				});
+				return;
+			}
+			var oSelectedDocument = aSelectedDocument[0];
+			var sFileName = "";
+			if (oSelectedDocument.document && oSelectedDocument.document.getType && oSelectedDocument.document.getType() === "file") {
+				sFileName = oSelectedDocument.document.getTitle();
+				if (sFileName && this._isFileNameValid(sFileName)) {
+					//Upload the file metedata and validate the metadata content with mock server
+					oSelectedDocument.document.getContent().then(function(sContent) {
+						that.getContext().service.odataProvider.validateMetadata(sContent).then(function() {
+							var sEntity = oSelectedDocument.document.getEntity();
+							var sBackendSrv = sap.watt.getEnv("orion_server");
+							sBackendSrv = sBackendSrv.lastIndexOf("/") === 0 ? sBackendSrv : sBackendSrv.substr(0, sBackendSrv.length - 1);
+							var sMetadataPath = (sEntity) ? sBackendSrv + sEntity.getBackendData().location : "";
+							that._oGrid.getModel().setProperty("/modelData/sCurrentSelectedFileLocation", sMetadataPath);
+							that.createDetailsContent(sContent).done();
+						//	that._onMetadataFileUpload(sContent, sMetadataPath);
+						
+						}).fail(function(oError) {
+							that.cleanDetailsDataGrid();
+							that._throwErrorHandler(oError.message);
+						}).done();
+					});
+				}
+			}
+		},
+
+		onRepositorySelectFile: function(oEvent) {
+			var sFileName = "";
+
+			if (!oEvent || !oEvent.getParameter) {
+				return;
+			}
+			var oRepositoryModel = this._oGrid.getModel();
+			var bSelect = false;
+
+			//check how many were selected
+			var aSelectedNode = oEvent.getParameter("nodes");
+			if (!aSelectedNode || aSelectedNode.length !== 1) {
+				bSelect = false;
+				oRepositoryModel.setProperty("/modelData/bSelect", bSelect);
+			} else {
+				sFileName = aSelectedNode[0].getText();
+				bSelect = (sFileName && this._isFileNameValid(sFileName));
+				oRepositoryModel.setProperty("/modelData/bSelect", bSelect);
+			}
+
+			if (!bSelect) {
+				this.cleanDetailsDataGrid();
+				this.fireValidation({
+					isValid: false
+				});
+			} else {
+				this.onRepositoryBrowserSelectButton();
+			}
+		},
+
+		cleanDetailsDataGrid: function() {
+			if (this._oServiceDiscoveryControl) {
+				this._oServiceDiscoveryControl.destroy();
+				this._oServiceDiscoveryControl = null;
+			}
+			if(this._oMTAServiceDiscoveryControl){
+                this._oMTAServiceDiscoveryControl.destroy();
+            	this._oMTAServiceDiscoveryControl = null;
+            }
+            if(this._oApiHubControl){
+                this._apiHubService.detachEvent("apiHubEnableNextStep", this._apiHubEnableNextStepHandler , this);
+                this._apiHubService.detachEvent("apiHubProcessingStarted", this._apiHubProcessingStartedHandler , this);
+                this._apiHubService.detachEvent("apiHubProcessingEnded", this._apiHubProcessingEndedHandler , this);
+                this._apiHubService.detachEvent("apiHubValueChanged", this._apiHubValueChangedHandler , this);
+                this._apiHubService.detachEvent("apiHubServiceSelectionCompleted", this._apiHubServiceSelectionCompletedHandler , this);
+                this._oApiHubControl.destroy();
+                this._oApiHubControl = null;
+			}
+		},
+
+		cleanStep: function() {
+			this.cleanDetailsDataGrid();
+			this._cleanInputFields();
+			this.bDoBeforeRendering = false;
+			this._bDataConnectionStepDirty = false;
+		},
+		renderer: {}
+	});

@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+server: SAP NetWeaver Application Server 7.40 / AS Java 7.31
+transfer-encoding: chunked
+set-cookie: com.sap.engine.security.authentication.original_application_url=POST#zcYjBoByP87noxCZDpcsC1jL9oCPyUYhp3AS2wjGnsBbiQra5E2zEZRU%2BKWGh9CAy5SZ7vmtBKdHqu1iC%2F3uagd2UPxtb1C9FsWXdaANSZM%3D;Path=/saml2/idp;HttpOnly
+content-type: text/html; charset=utf-8
+pragma: no-cache
+cache-control: no-cache
+expires: 0
+content-encoding: gzip
+date: Tue, 26 Sep 2017 11:03:53 GMT
+set-cookie: saplb_*=(J2EE2561320)2561350; Version=1; Path=/
+
